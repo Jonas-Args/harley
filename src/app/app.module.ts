@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { SMS } from '@ionic-native/sms/ngx';
+import { SQLite } from '@ionic-native/sqlite/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,6 +22,7 @@ import { SMS } from '@ionic-native/sms/ngx';
     SplashScreen,
     BarcodeScanner,
     SMS,
+    SQLite,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]

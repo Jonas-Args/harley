@@ -5,43 +5,47 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-item>
-        <ion-label>
-          <p>Panel Code:</p>
-        </ion-label>
-        <ion-input required type="text"></ion-input>
-      </ion-item>
-    <ion-button expand="full" fill="solid" (click)="scan()">SCAN</ion-button>
-    <ion-item>
-        <ion-label>
-          <p>Panel Name:</p>
-        </ion-label>
-        <ion-input required type="text"></ion-input>
-      </ion-item>
-    <ion-item>
-        <ion-label>
-          <p>GPS LOCATION:</p>
-        </ion-label>
-        <ion-input required type="text"></ion-input>
-      </ion-item>
-    <ion-item>
-        <ion-label>STATUS</ion-label>
-        <ion-select ok-text="Okay" cancel-text="Dismiss">
-          <ion-select-option *ngFor="let status of statuses" [value]="status.value">{{status.value | uppercase}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-    <ion-item>
-        <ion-label>
-          <p>REMARKS:</p>
-        </ion-label>
-        <ion-input required type="text"></ion-input>
-      </ion-item>
-    <ion-item>
-        <ion-label>
-          <p>RECEIPTED:</p>
-        </ion-label>
-        <ion-input required type="text"></ion-input>
-      </ion-item> 
+    <form [formGroup]="formPanel">
+        <ion-item>
+            <ion-label>
+              <p>Panel Code:</p>
+            </ion-label>
+            <ion-input formControlName="panel_code" type="text"></ion-input>
+          </ion-item>
+        <ion-button expand="full" fill="solid" (click)="scan()">SCAN</ion-button>
+        <ion-item>
+            <ion-label>
+              <p>Panel Name:</p>
+            </ion-label>
+            <ion-input formControlName="panel_name" type="text"></ion-input>
+          </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>GPS LOCATION:</p>
+            </ion-label>
+            <ion-input formControlName="panel_gps_location" type="text"></ion-input>
+          </ion-item>
+        <ion-item>
+            <ion-label>STATUS</ion-label>
+            <ion-select formControlName="panel_status" ok-text="Okay" cancel-text="Dismiss">
+              <ion-select-option value="" selectable=false> Select Status</ion-select-option>
+              <ion-select-option *ngFor="let status of statuses" [value]="status.value">{{status.value | uppercase}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>REMARKS:</p>
+            </ion-label>
+            <ion-input formControlName="panel_remarks" type="text"></ion-input>
+          </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>RECEIPTED:</p>
+            </ion-label>
+            <ion-input formControlName="panel_receipted" type="text"></ion-input>
+          </ion-item> 
+    </form>
+    
 
       <ion-grid>
         <ion-row>
@@ -49,7 +53,7 @@
                 <ion-button expand="full" fill="solid">SAVE/UPLOAD</ion-button>
             </ion-col>
             <ion-col size="6">
-                <ion-button expand="full" fill="solid">SEND SMS</ion-button>
+                <ion-button expand="full" fill="solid" (click)="sendSMS()">SEND SMS</ion-button>
             </ion-col>
         </ion-row>
       </ion-grid>

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { SMS } from '@ionic-native/sms/ngx';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { SqliteService } from '../../services/util/sqlite.service';
 
 @Component({
   selector: 'app-tagpanel',
@@ -8,7 +11,22 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 })
 export class tagpanelPage implements OnInit {
 
-  constructor(private barcodeScanner: BarcodeScanner) { }
+  formPanel: FormGroup;
+
+  constructor(
+    private barcodeScanner: BarcodeScanner,
+    private sms: SMS,
+    private fb: FormBuilder,
+    private sql: SqliteService) {
+      this.formPanel = fb.group({
+        panel_code: ['', [Validators.required]],
+        panel_name: ['', [Validators.required]],
+        panel_status: ['', [Validators.required]],
+        panel_gps_location: ['', [Validators.required]],
+        panel_remarks: [''],
+        panel_receipted: ['']
+      });
+     }
 
   statuses = [
     {value:"retrieved"},
@@ -27,6 +45,22 @@ export class tagpanelPage implements OnInit {
      }).catch(err => {
          console.log('Error', err);
      });
+  }
+
+  sendSMS(){
+    this.sql.createDb()
+    // this.sms.send('416123456', this.formatMessage());
+  }
+
+  formatMessage(){
+    let formValue = this.formPanel.value
+    let message = `${formValue.panel_code};`+
+                   `${formValue.panel_name};` +
+                   `${formValue.panel_gps_location};` +
+                   `${formValue.panel_status};` + 
+                   `${formValue.panel_remarks};` +
+                   `${formValue.panel_receipted}`
+    return message 
   }
 
 }
