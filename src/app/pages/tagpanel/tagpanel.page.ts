@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: 'app-tagpanel',
+  templateUrl: './tagpanel.page.html',
+  styleUrls: ['./tagpanel.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class tagpanelPage implements OnInit {
 
   constructor(private barcodeScanner: BarcodeScanner) { }
 
@@ -14,6 +14,7 @@ export class LoginPage implements OnInit {
     {value:"retrieved"},
     {value:"zero"},
     {value:"na"},
+    {value:"hatching"},
     {value:"invited"},
     {value:"dropped"}]
 
