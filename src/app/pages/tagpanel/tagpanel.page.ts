@@ -42,14 +42,14 @@ export class tagpanelPage implements OnInit {
   scan(){
     this.barcodeScanner.scan().then(barcodeData => {
       console.log('Barcode data', barcodeData);
+      this.formPanel.get('panel_code').setValue(barcodeData.text)
      }).catch(err => {
          console.log('Error', err);
      });
   }
 
   sendSMS(){
-    this.sql.createDb()
-    // this.sms.send('416123456', this.formatMessage());
+   this.sms.send('09177131456', this.formatMessage());
   }
 
   formatMessage(){
