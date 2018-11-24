@@ -37,14 +37,21 @@ export class tagpanelPage implements OnInit {
     {value:"dropped"}]
 
   ngOnInit() {
+    this.sql.showDataForLogging();
   }
 
   scan(){
     this.barcodeScanner.scan().then(barcodeData => {
       console.log('Barcode data', barcodeData);
+      this.formPanel.get('panel_code').setValue(barcodeData.text)
+      
      }).catch(err => {
          console.log('Error', err);
      });
+  }
+
+  saveTagPanel(values) {
+   this.sql.saveData(values)
   }
 
   sendSMS(){

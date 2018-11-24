@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { SMS } from '@ionic-native/sms/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
-
+import { Toast } from '@ionic-native/toast/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +23,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
     BarcodeScanner,
     SMS,
     SQLite,
+    Toast,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]
