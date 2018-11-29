@@ -6,28 +6,28 @@ import { Platform } from '@ionic/angular';
   providedIn: 'root'
 })
 export class SqliteService {
-  DB_NAME: any = 'dirmorlite.db'
-  TABLE_NAME: any = 'tblTagging'
-  private db: SQLiteObject
+  // DB_NAME: any = 'dirmorlite.db'
+  // TABLE_NAME: any = 'tblTagging'
+  // private db: SQLiteObject
 
-  constructor(private sqlite: SQLite,
-    private platForm: Platform) { }
+  // constructor(private sqlite: SQLite,
+  //   private platForm: Platform) { }
 
-  createDb(): Promise<SQLiteObject> {
-    return this.platForm.ready()
-      .then((readySource: string) => {
-        return this.sqlite.create({ 
-          name: this.DB_NAME,
-          location: 'default'
-        }).then((db: SQLiteObject) => {
-          this.db = db;
-          return this.db;
-        }).catch((error: Error) => {
-          console.log('Error on open or create database: ', error);
-          return Promise.reject(error.message || error);
-        });  
-      });  
-  }
+  // createDb(): Promise<SQLiteObject> {
+  //   return this.platForm.ready()
+  //     .then((readySource: string) => {
+  //       return this.sqlite.create({ 
+  //         name: this.DB_NAME,
+  //         location: 'default'
+  //       }).then((db: SQLiteObject) => {
+  //         this.db = db;
+  //         return this.db;
+  //       }).catch((error: Error) => {
+  //         console.log('Error on open or create database: ', error);
+  //         return Promise.reject(error.message || error);
+  //       });  
+  //     });  
+  // }
 
   // createDb(){
   //   this.sqlite.create({

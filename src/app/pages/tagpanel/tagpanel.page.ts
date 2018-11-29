@@ -29,6 +29,7 @@ export class tagpanelPage implements OnInit {
         panel_name: ['', [Validators.required]],
         panel_status: ['', [Validators.required]],
         panel_gps_location: ['', [Validators.required]],
+        panel_gps_location_accuracy: ['', [Validators.required]],
         panel_remarks: [''],
         panel_receipted: ['']
       });
@@ -54,8 +55,7 @@ export class tagpanelPage implements OnInit {
       console.log('Barcode data', barcodeData);
       this.isBarcodeScanned = true
       this.formPanel.get('panel_code').setValue(barcodeData.text)
-      console.log("location",`${this.location.latitude}, ${this.location.longitude}`)
-      this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
+      
      }).catch(err => {
          console.log('Error', err);
      });
@@ -63,27 +63,36 @@ export class tagpanelPage implements OnInit {
   }
 
   sendSMS(){
+    console.log("sending"+this.formatMessage())
+    this.showToast("sending"+this.formatMessage())
    this.sms.send('09177131456', this.formatMessage());
   }
 
   formatMessage(){
     let formValue = this.formPanel.value
-    let message = `${formValue.panel_code};`+
-                   `${formValue.panel_name};` +
-                   `${formValue.panel_gps_location};` +
-                   `${formValue.panel_status};` + 
-                   `${formValue.panel_remarks};` +
-                   `${formValue.panel_receipted}`
+    let message = `${formValue.panel_code||""};`+
+                   `${formValue.panel_name||""};` +
+                   `${formValue.panel_gps_location||""};` +
+                   `${formValue.panel_status||""};` + 
+                   `${formValue.panel_remarks||""};` +
+                   `${formValue.panel_receipted||""}`
     return message 
   }
   
   start(){
   
-    AdvancedGeolocation.start(function(success){
+    AdvancedGeolocation.start((success)=>{
 
         try{
-          var jsonObject = JSON.parse(success);
-          this.location = jsonObject
+          let jsonObject: any = JSON.parse(success);
+
+          if(!!jsonObject.latitude){
+            this.location = jsonObject
+            this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
+            this.formPanel.get('panel_gps_location_accuracy').setValue(`${this.location.accuracy} meters`)
+          }
+          
+     
           
           console.log("Provider now " +JSON.stringify(jsonObject));
           this.showToast(JSON.stringify(jsonObject))
@@ -118,7 +127,7 @@ export class tagpanelPage implements OnInit {
           console.log("Invalid JSON: " + exc);
         }
       },
-      function(error){
+      (error)=>{
         this.showToast(JSON.stringify(error))
         console.log("ERROR! " + JSON.stringify(error));
       },
