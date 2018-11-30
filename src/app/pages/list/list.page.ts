@@ -11,7 +11,7 @@ import { tagpanelPage } from '../tagpanel/tagpanel.page';
 })
 export class ListPage  {
 
-  // tagPanels=[];
+  tagPanels=[];
 
   // constructor(
   //   private sql: SqliteService,
