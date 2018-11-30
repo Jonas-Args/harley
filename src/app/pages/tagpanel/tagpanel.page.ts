@@ -90,12 +90,14 @@ export class tagpanelPage implements OnInit {
             this.location = jsonObject
             this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
             this.formPanel.get('panel_gps_location_accuracy').setValue(`${this.location.accuracy} meters`)
+          }else{
+            this.showToast("lat long not available")
           }
           
      
           
           console.log("Provider now " +JSON.stringify(jsonObject));
-          this.showToast(JSON.stringify(jsonObject))
+          // this.showToast(JSON.stringify(jsonObject))
           switch(jsonObject.provider){
             case "gps":
               //TODO
