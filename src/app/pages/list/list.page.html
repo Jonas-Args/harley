@@ -6,15 +6,20 @@
 
 <ion-content padding>
   <!-- List of Text Items -->
-  <!-- <ion-list>
-    <ion-item *ngFor="let row of tagPanels; let i = index">
-      <ion-col>{{i}}</ion-col>
-      <ion-col>{{row.panel_code}}</ion-col>
-      <ion-col>{{row.panel_name}}</ion-col>
-      <ion-col>{{row.panel_gps_location}}</ion-col>
-      <ion-col>{{row.panel_remarks}}</ion-col>
-      <ion-col>{{row.panel_receipted}}</ion-col>
-    </ion-item>
+  <ion-list>
+    <ng-container  *ngFor="let row of tagPanels; let i = index">
+      <ion-item [routerLink]="['/tagpanel']" [queryParams]="{ key: row.key}">
+        <ion-col >{{i}}</ion-col>
+        <ion-col>{{row.panel_code}}</ion-col>
+        <ion-col>{{row.panel_name}}</ion-col>
+        <ion-col>{{row.panel_gps_location}}</ion-col>
+        <ion-col>{{row.panel_remarks}}</ion-col>
+        <ion-col>{{row.panel_receipted}}</ion-col>
+        <ion-col>{{row.panel_status}}</ion-col>
+        </ion-item>
+        <ion-col (click)="removeTagPanel(row.key); $event.stopPropagation()">remove</ion-col>
+    </ng-container>
+    
   </ion-list>
   <ion-grid>
     <ion-row>
@@ -24,6 +29,6 @@
             </ion-button>
         </ion-col>
     </ion-row>
-  </ion-grid> -->
+  </ion-grid>
 
 </ion-content>

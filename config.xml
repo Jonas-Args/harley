@@ -3,7 +3,7 @@
     <name>MyApp</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://172.20.10.3:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -87,5 +87,6 @@
     <plugin name="cordova-sqlite-storage" spec="2.5.1" />
     <plugin name="cordova-plugin-advanced-geolocation" spec="https://github.com/esri/cordova-plugin-advanced-geolocation.git" />
     <plugin name="cordova-plugin-x-toast" spec="~2.7.2" />
+    <allow-navigation href="http://172.20.10.3:8100" sessionid="4577814b" />
     <engine name="android" spec="7.1.2" />
 </widget>

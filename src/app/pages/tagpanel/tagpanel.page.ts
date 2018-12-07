@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { SMS } from '@ionic-native/sms/ngx';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { SqliteService } from '../../services/util/sqlite.service';
 import { Toast } from '@ionic-native/toast/ngx';
+import { StorageService } from '../../services/util/storage.service';
+import { ActivatedRoute } from '@angular/router';
 
 declare var AdvancedGeolocation:any;
 
@@ -17,13 +18,15 @@ export class tagpanelPage implements OnInit {
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
+  tagPanelObj;
   
   constructor(
     private barcodeScanner: BarcodeScanner,
     private sms: SMS,
+    private storage: StorageService,
     private fb: FormBuilder,
-    private sql: SqliteService,
-    private toast: Toast) {
+    private toast: Toast,
+    private route: ActivatedRoute) {
       this.formPanel = fb.group({
         panel_code: ['', [Validators.required]],
         panel_name: ['', [Validators.required]],
@@ -45,6 +48,19 @@ export class tagpanelPage implements OnInit {
 
     ngOnInit() {
       this.start()
+      console.log("tag panel init")
+      this.route.queryParams
+      .subscribe(params => {
+        console.log("params",params)
+        if(!!params.key){
+          this.storage.getItem(params.key).then(
+            data=>{ this.tagPanelObj = data 
+            this.formPanel.patchValue(data)
+          },
+            error => console.error(error))
+        }
+        console.log(params); // {order: "popular"
+      });
       
     }
   
@@ -151,6 +167,14 @@ export class tagpanelPage implements OnInit {
         "bufferSize":3,         // Max elements in buffer
         "signalStrength":false // Return cell signal strength data
       });
+  }
+
+  save(value){
+    if(!!this.tagPanelObj && !!this.tagPanelObj.key){
+      value = Object.assign({key:this.tagPanelObj.key},value)
+    }
+
+    this.storage.setItem("tagpanel",value)
   }
 
   showToast(message){

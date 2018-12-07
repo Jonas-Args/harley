@@ -12,6 +12,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { SMS } from '@ionic-native/sms/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { Toast } from '@ionic-native/toast/ngx';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { Toast } from '@ionic-native/toast/ngx';
     SMS,
     SQLite,
     Toast,
+    NativeStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]

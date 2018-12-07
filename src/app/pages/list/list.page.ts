@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SqliteService } from '../../services/util/sqlite.service';
 import { Platform, NavController } from '@ionic/angular';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
-import { tagpanelPage } from '../tagpanel/tagpanel.page';
+import { StorageService } from '../../services/util/storage.service';
 
 @Component({
   selector: 'app-list',
@@ -11,22 +9,40 @@ import { tagpanelPage } from '../tagpanel/tagpanel.page';
 })
 export class ListPage  {
 
-  tagPanels=[];
+  tagPanels:any;
 
-  // constructor(
-  //   private sql: SqliteService,
-  //   private plt: Platform,
-  //   public navCtrl: NavController,
-  // ) { }
+  constructor(
+    public navCtrl: NavController,
+    public storage: StorageService
+  ) { }
 
 
-  // ionViewDidEnter () {
-  //   this.sql.createDatabase()
-  // }
+  ionViewDidEnter () {
+   this.getAllItems()
+  }
 
-  // addTagPanel(){
-  //   this.navCtrl.navigateForward('/tagpanel');
-  // }
+  addTagPanel(){
+    this.navCtrl.navigateForward('/tagpanel');
+  }
+
+  removeTagPanel(key){
+    this.storage.removeItem(key).then(
+      data => { 
+        this.getAllItems()
+      },
+      error => console.error(error)
+    )
+  }
+
+  getAllItems(){
+    this.storage.getAllItem().then(
+      data => { 
+        console.log("list",data)
+        this.tagPanels = data
+      },
+      error => console.error(error)
+    )
+  }
 
   // private setTagPanels(){
   //   this.sql.tagPanelsSubject.subscribe(res=>{

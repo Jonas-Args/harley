@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content padding>
-    <form [formGroup]="formPanel">
+    <form [formGroup]="formPanel" (ngSubmit)='save(formPanel.value)'>
         <ion-item>
             <ion-label>
               <p>Panel Code:</p>
@@ -50,18 +50,18 @@
             </ion-label>
             <ion-input formControlName="panel_receipted" type="text"></ion-input>
           </ion-item> 
-    </form>
     
+          <ion-grid>
+            <ion-row>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" type="submit">SAVE/UPLOAD</ion-button>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" (click)="sendSMS()">SEND SMS</ion-button>
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
 
-      <ion-grid>
-        <ion-row>
-            <ion-col size="6">
-                <ion-button expand="full" fill="solid">SAVE/UPLOAD</ion-button>
-            </ion-col>
-            <ion-col size="6">
-                <ion-button expand="full" fill="solid" (click)="sendSMS()">SEND SMS</ion-button>
-            </ion-col>
-        </ion-row>
-      </ion-grid>
   
 </ion-content>
