@@ -84,7 +84,21 @@ export class tagpanelPage implements OnInit {
   sendSMS(){
     console.log("sending"+this.formatMessage())
     this.showToast("sending"+this.formatMessage())
-   this.sms.send('09177131456', this.formatMessage());
+   this.sms.send('09177131456', this.formatMessage()).then(
+    () => {
+      console.log("message sent")
+      
+      if(!!this.tagPanelObj && !!this.tagPanelObj.Id){
+        let newObj = Object.assign({sent:true},this.formPanel.value)
+        // this.tagPanelObj = Object.assign(this.tagPanelObj,newObj)
+        this.storage.setItem("tagpanel",newObj)
+      }else{
+        this.save(Object.assign({sent:true},this.formPanel.value))
+      }
+    } ,
+    error => console.error('Error removing item', error)
+    );
+   
   }
 
   formatMessage(){
@@ -176,9 +190,8 @@ export class tagpanelPage implements OnInit {
 
   save(value){
     if(!!this.tagPanelObj && !!this.tagPanelObj.Id){
-      value = Object.assign({Id:this.tagPanelObj.Id},value)
+      value = Object.assign(this.tagPanelObj,value)
     }
-
     this.storage.setItem("tagpanel",value)
   }
 

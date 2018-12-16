@@ -13,6 +13,7 @@
         <ion-col>{{row.panel_code}}</ion-col>
         <ion-col>{{row.panel_name}}</ion-col>
         <ion-col>{{row.panel_week_code}}</ion-col>
+        <ion-col *ngIf="row.sent==true">S</ion-col>
         <!-- add field here -->
         </ion-item>
         <ion-col (click)="removeTagPanel(row.Id); $event.stopPropagation()">remove</ion-col>
