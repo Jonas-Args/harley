@@ -174,7 +174,6 @@ export class tagpanelPage implements OnInit {
   }
 
   save(value){
-    value = this.formatValue(value)
     if(!!this.tagPanelObj && !!this.tagPanelObj.key){
       value = Object.assign({Id:this.tagPanelObj.key},value)
     }
@@ -182,23 +181,23 @@ export class tagpanelPage implements OnInit {
     this.storage.setItem("tagpanel",value)
   }
 
-  formatValue(value){
+  // formatValue(value){
 
-    let obj = {
-      PanelCode: value.panel_code,
-      PanelNAme: value.panel_name,
-      GPSLoc: value.panel_gps_location,
-      GPSAccuracy: value.panel_gps_location_accuracy,
-      Status: value.panel_status,
-      REmarks: value.panel_remarks,
-      REceipted: value.panel_receipted,
-      WeekCode: value.panel_week_code
-    }
-    // add field here 
+  //   let obj = {
+  //     PanelCode: value.panel_code,
+  //     PanelNAme: value.panel_name,
+  //     GPSLoc: value.panel_gps_location,
+  //     GPSAccuracy: value.panel_gps_location_accuracy,
+  //     Status: value.panel_status,
+  //     REmarks: value.panel_remarks,
+  //     REceipted: value.panel_receipted,
+  //     WeekCode: value.panel_week_code
+  //   }
+  //   // add field here 
 
-    return obj
+  //   return obj
 
-  }
+  // }
 
   showToast(message){
     message = message || "null"
