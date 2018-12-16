@@ -57,7 +57,6 @@ export class tagpanelPage implements OnInit {
         if(!!params.Id){
           this.storage.getItem(params.Id).then(
             data=>{ this.tagPanelObj = data 
-              debugger
             this.formPanel.patchValue(data)
           },
             error => console.error(error))
@@ -87,11 +86,11 @@ export class tagpanelPage implements OnInit {
    this.sms.send('09177131456', this.formatMessage()).then(
     () => {
       console.log("message sent")
-      
+      let hey = this.tagPanelObj
       if(!!this.tagPanelObj && !!this.tagPanelObj.Id){
         let newObj = Object.assign({sent:true},this.formPanel.value)
         // this.tagPanelObj = Object.assign(this.tagPanelObj,newObj)
-        this.storage.setItem("tagpanel",newObj)
+        this.save(newObj)
       }else{
         this.save(Object.assign({sent:true},this.formPanel.value))
       }
