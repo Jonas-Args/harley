@@ -54,9 +54,10 @@ export class tagpanelPage implements OnInit {
       this.route.queryParams
       .subscribe(params => {
         console.log("params",params)
-        if(!!params.key){
-          this.storage.getItem(params.key).then(
+        if(!!params.Id){
+          this.storage.getItem(params.Id).then(
             data=>{ this.tagPanelObj = data 
+              debugger
             this.formPanel.patchValue(data)
           },
             error => console.error(error))
@@ -174,8 +175,8 @@ export class tagpanelPage implements OnInit {
   }
 
   save(value){
-    if(!!this.tagPanelObj && !!this.tagPanelObj.key){
-      value = Object.assign({Id:this.tagPanelObj.key},value)
+    if(!!this.tagPanelObj && !!this.tagPanelObj.Id){
+      value = Object.assign({Id:this.tagPanelObj.Id},value)
     }
 
     this.storage.setItem("tagpanel",value)

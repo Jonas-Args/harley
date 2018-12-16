@@ -8,7 +8,7 @@
   <!-- List of Text Items -->
   <ion-list>
     <ng-container  *ngFor="let row of tagPanels; let i = index">
-      <ion-item [routerLink]="['/tagpanel']" [queryParams]="{ key: row.key}">
+      <ion-item [routerLink]="['/tagpanel']" [queryParams]="{ Id: row.Id}">
         <ion-col >{{i}}</ion-col>
         <ion-col>{{row.panel_code}}</ion-col>
         <ion-col>{{row.panel_name}}</ion-col>
