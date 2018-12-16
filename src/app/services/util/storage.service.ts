@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -7,20 +8,24 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 })
 export class StorageService {
 
-  constructor(private nativeStorage: NativeStorage) { }
+  constructor(private nativeStorage: NativeStorage,
+    private router: Router) { }
 
   setItem(type,object:any){
-    let key
-    if(!!object.key){
-      key = object.key
+    let Id
+    if(!!object.Id){
+      Id = object.Id
     }else{
-      key = type+this.getKey()
-      object = Object.assign({key:key},object)
+      Id = type+this.getKey()
+      object = Object.assign({Id:Id},object)
     }
    
-    this.nativeStorage.setItem(key, object)
+    this.nativeStorage.setItem(Id, object)
     .then(
-      () => console.log('Stored item!'),
+      () => {
+        console.log('Stored item!')
+        this.router.navigateByUrl('/list');
+      },
       error => console.error('Error storing item', error)
     );
   }

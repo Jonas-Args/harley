@@ -34,8 +34,10 @@ export class tagpanelPage implements OnInit {
         panel_gps_location: ['', [Validators.required]],
         panel_gps_location_accuracy: ['', [Validators.required]],
         panel_remarks: [''],
-        panel_receipted: ['']
+        panel_receipted: [''],
+        panel_week_code: ['']
       });
+      // add field here
      }
 
   statuses = [
@@ -91,7 +93,9 @@ export class tagpanelPage implements OnInit {
                    `${formValue.panel_gps_location||""};` +
                    `${formValue.panel_status||""};` + 
                    `${formValue.panel_remarks||""};` +
-                   `${formValue.panel_receipted||""}`
+                   `${formValue.panel_receipted||""}` +
+                   `${formValue.panel_week_code||""}`
+    // add field here 
     return message 
   }
   
@@ -170,11 +174,30 @@ export class tagpanelPage implements OnInit {
   }
 
   save(value){
+    value = this.formatValue(value)
     if(!!this.tagPanelObj && !!this.tagPanelObj.key){
-      value = Object.assign({key:this.tagPanelObj.key},value)
+      value = Object.assign({Id:this.tagPanelObj.key},value)
     }
 
     this.storage.setItem("tagpanel",value)
+  }
+
+  formatValue(value){
+
+    let obj = {
+      PanelCode: value.panel_code,
+      PanelNAme: value.panel_name,
+      GPSLoc: value.panel_gps_location,
+      GPSAccuracy: value.panel_gps_location_accuracy,
+      Status: value.panel_status,
+      REmarks: value.panel_remarks,
+      REceipted: value.panel_receipted,
+      WeekCode: value.panel_week_code
+    }
+    // add field here 
+
+    return obj
+
   }
 
   showToast(message){

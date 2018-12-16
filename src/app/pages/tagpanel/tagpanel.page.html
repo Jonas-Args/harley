@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>tagpanel</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -18,7 +21,14 @@
               <p>Panel Name:</p>
             </ion-label>
             <ion-input formControlName="panel_name" type="text"></ion-input>
-          </ion-item>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Week Code:</p>
+          </ion-label>
+          <ion-input formControlName="panel_week_code" type="text"></ion-input>
+        </ion-item>
+         <!-- add field here -->
         <ion-item>
             <ion-label>
               <p>GPS LOCATION:</p>
