@@ -107,7 +107,7 @@ export class tagpanelPage implements OnInit {
                    `${formValue.panel_gps_location||""};` +
                    `${formValue.panel_status||""};` + 
                    `${formValue.panel_remarks||""};` +
-                   `${formValue.panel_receipted||""}` +
+                   `${formValue.panel_receipted||""};` +
                    `${formValue.panel_week_code||""}`
     // add field here 
     return message 
@@ -214,7 +214,7 @@ export class tagpanelPage implements OnInit {
 
   showToast(message){
     message = message || "null"
-    this.toast.show(message, '5000', 'center').subscribe(
+    this.toast.show(message, '5000', 'top').subscribe(
       toast => {
         console.log(toast);
       }
