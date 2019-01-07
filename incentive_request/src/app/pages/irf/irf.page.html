@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Incentive Request Form</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <form [formGroup]="formPanel" (ngSubmit)='save(formPanel.value)'>
+        <ion-grid>
+            <ion-row>
+              <ion-col size="8">
+                  <ion-item>
+                      <ion-label>
+                        <p>Panel Code:</p>
+                      </ion-label>
+                      <ion-input formControlName="panel_code" type="text"></ion-input>
+                    </ion-item>
+              </ion-col>
+              <ion-col size="4" >
+                  <ion-button expand="full" fill="solid" (click)="scan()">SCAN</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        <ion-item>
+            <ion-label>
+              <p>Panel Name:</p>
+            </ion-label>
+            <ion-input formControlName="panel_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Request ID:</p>
+          </ion-label>
+          <ion-input formControlName="request_id" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Delivery Mode:</p>
+          </ion-label>
+          <ion-select placeholder="Select One" formControlName="delivery_mode">
+            <ion-select-option value="door-to-door">door-to-door</ion-select-option>
+            <ion-select-option value="LBC branch pickup">LBC branch pickup</ion-select-option>
+            <ion-select-option value="Authorize a person">Authorize a perso</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="showBranchName">
+          <ion-label>
+            <p>Branch Name:</p>
+          </ion-label>
+          <ion-input formControlName="branch_name" type="text"></ion-input>
+        </ion-item>
+          <ion-grid>
+            <ion-row>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" [routerLink]="['/']" >Cancel</ion-button>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" type="submit">ENTER REQUEST</ion-button>
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+
+  
+</ion-content>

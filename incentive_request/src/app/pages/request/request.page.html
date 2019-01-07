@@ -1,0 +1,84 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Incentive Request Form</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <mat-autocomplete>
+        <mat-option *ngFor="let option of ['1','2','3']" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    <form [formGroup]="formPanel" (ngSubmit)='save(formPanel.value)'>
+        <ion-item>
+            <ion-label>
+              <p>Panel Name:</p>
+            </ion-label>
+            <ion-input formControlName="panel_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Request ID:</p>
+          </ion-label>
+          <ion-input formControlName="request_id" type="text"></ion-input>
+        </ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="7">
+                <ion-item>
+                    <ion-label>
+                      <p>Item Desc:</p>
+                    </ion-label>
+                    <mat-form-field class="example-full-width">
+                        <input #itemDesc='' type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="item_desc" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)='selectDescription($event,itemDesc)'>
+                          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                            {{option.ItemDesc}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    <!-- <ion-input formControlName="item_desc" type="text"></ion-input> -->
+                  </ion-item>
+            </ion-col>
+            <ion-col size="5" >
+              <ion-item>
+                <ion-label>
+                  <p>Quantity:</p>
+                </ion-label>
+                <ion-input formControlName="quantity" type="text"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+          <ion-grid>
+            <ion-row>
+                <ion-col size="3">
+                    <ion-button expand="full" fill="solid" type="submit" >Save</ion-button>
+                </ion-col>
+              <ion-col size="3">
+                  <ion-button expand="full" fill="solid" (click)="sendSMS()" >SEND</ion-button>
+              </ion-col>
+              <ion-col size="3">
+                <ion-button expand="full" fill="solid" [routerLink]="['/irf']" >Cancel</ion-button>
+            </ion-col>
+            </ion-row>
+          </ion-grid>
+    </form>
+  <ion-list>
+    <ng-container  *ngFor="let row of requestList; let i = index">
+      <ion-row>
+        <ion-col size="1" >{{i+1}}</ion-col>
+        <ion-col  size="3">{{row.ItemCode}}</ion-col>
+        <ion-col size="6">{{row.ItemDesc}}</ion-col>
+        <ion-col size="2" >{{row.PointsRequired}}</ion-col>
+        <!-- add field here -->
+      </ion-row>
+    </ng-container>
+    
+  </ion-list>
+  
+</ion-content>
