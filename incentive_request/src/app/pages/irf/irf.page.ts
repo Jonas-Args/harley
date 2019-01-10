@@ -19,8 +19,10 @@ export class irfPage implements OnInit {
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
-  tagPanelObj;
+  irfObj;
   showBranchName=false;
+  irdId;
+  requests;
   
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -56,10 +58,14 @@ export class irfPage implements OnInit {
       this.route.queryParams
       .subscribe(params => {
         console.log("params",params)
-        if(!!params.Id){
-          this.storage.getItem(params.Id).then(
-            data=>{ this.tagPanelObj = data 
+        if(!!params.irfId){
+          this.irdId = params.irfId
+          this.storage.getItem(params.irfId).then(
+            data=>{ 
+              console.log("retrieved",data)
+            this.irfObj = data 
             this.formPanel.patchValue(data)
+            this.getAllItems()
           },
             error => console.error(error))
         }
@@ -67,6 +73,13 @@ export class irfPage implements OnInit {
       });
       
     }
+
+    ionViewDidEnter () {
+      if(!!this.formPanel.value["panel_code"]){
+        this.getAllItems()
+      }
+     }
+   
   
 
   scan(){
@@ -82,38 +95,6 @@ export class irfPage implements OnInit {
 
   }
 
-  sendSMS(){
-    console.log("sending"+this.formatMessage())
-    this.showToast("sending"+this.formatMessage())
-   this.sms.send('09177131456', this.formatMessage()).then(
-    () => {
-      console.log("message sent")
-      let hey = this.tagPanelObj
-      if(!!this.tagPanelObj && !!this.tagPanelObj.Id){
-        let newObj = Object.assign({sent:true},this.formPanel.value)
-        // this.tagPanelObj = Object.assign(this.tagPanelObj,newObj)
-        this.save(newObj)
-      }else{
-        this.save(Object.assign({sent:true},this.formPanel.value))
-      }
-    } ,
-    error => console.error('Error removing item', error)
-    );
-   
-  }
-
-  formatMessage(){
-    let formValue = this.formPanel.value
-    let message = `${formValue.panel_code||""};`+
-                   `${formValue.panel_name||""};` +
-                   `${formValue.panel_gps_location||""};` +
-                   `${formValue.panel_status||""};` + 
-                   `${formValue.panel_remarks||""};` +
-                   `${formValue.panel_receipted||""};` +
-                   `${formValue.panel_week_code||""}`
-    // add field here 
-    return message 
-  }
 
   formatDate(date){
     // mm/dd/yy format
@@ -125,36 +106,31 @@ export class irfPage implements OnInit {
 
 
   save(value){
-    // if(!!this.tagPanelObj && !!this.tagPanelObj.Id){
-    //   value = Object.assign(this.tagPanelObj,value)
-    // }
-    this.nativeStorage.setItem("irf",value)
-    .then(
-      () => {
-        console.log('Stored item!')
-        this.router.navigate(['/request']);
-      },
-      error => console.error('Error storing item', error)
-    );
+    if(!!this.irfObj && !!this.irfObj.Id){
+      value = Object.assign(this.irfObj,value)
+      console.log("storing a",value)
+      this.storage.setItem("irf",value,`/request`,{queryParams: {irfId: this.irfObj.Id}})
+    }else{
+      console.log("storing b",value)
+      
+      this.storage.setItem("irf",value)
+      this.router.navigate([`/request`], {queryParams: {irfId: this.storage.itemId}})
+    }
   }
 
-  // formatValue(value){
 
-  //   let obj = {
-  //     PanelCode: value.panel_code,
-  //     PanelNAme: value.panel_name,
-  //     GPSLoc: value.panel_gps_location,
-  //     GPSAccuracy: value.panel_gps_location_accuracy,
-  //     Status: value.panel_status,
-  //     REmarks: value.panel_remarks,
-  //     REceipted: value.panel_receipted,
-  //     WeekCode: value.panel_week_code
-  //   }
-  //   // add field here 
-
-  //   return obj
-
-  // }
+  getAllItems(){
+    this.storage.getAllItem().then(
+      data => { 
+        let objects = <any[]>data;
+        console.log("objects",objects)
+        console.log("formpanelvalue",this.formPanel.value)
+        this.requests = objects.filter(res=>!!res["Id"] && res["Id"].includes('request') && res["panel_code"]==this.formPanel.value["panel_code"])
+        console.log("requests",this.requests)
+      },
+      error => console.error(error)
+    )
+  }
 
   showToast(message){
     message = message || "null"

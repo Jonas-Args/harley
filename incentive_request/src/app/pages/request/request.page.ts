@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { SMS } from '@ionic-native/sms/ngx';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Toast } from '@ionic-native/toast/ngx';
 import { StorageService } from '../../services/util/storage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { IncentiveService } from '../../services/api/Incentive.service';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-
 declare var AdvancedGeolocation:any;
 
 @Component({
@@ -21,11 +20,13 @@ export class requestPage implements OnInit  {
 
   formPanel: FormGroup;
   requestList = [];
-  requestObj:any;
+  irfObj:any;
   options  = [{value:'One'}, {value:'Two'}, {value:'Three'}];
   filteredOptions;
   proxyValue: any; onSelectionChanged(event$) { this.proxyValue = event$.option.value.ItemDesc; }
   itemDesc="";
+  list;
+  irfId;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -35,7 +36,9 @@ export class requestPage implements OnInit  {
     private toast: Toast,
     private route: ActivatedRoute,
     private nativeStorage: NativeStorage,
-    private incentiveService: IncentiveService) {
+    private incentiveService: IncentiveService,
+    private router: Router) {
+
       this.formPanel = fb.group({
         panel_code: ['', [Validators.required]],
         panel_name: ['', [Validators.required]],
@@ -43,44 +46,29 @@ export class requestPage implements OnInit  {
         delivery_mode: ['', [Validators.required]],
         branch_name: ['', [Validators.required]],
         item_desc: ['', [Validators.required]],
+        item_code: ['', [Validators.required]],
+        pointsrequired: ['', [Validators.required]],
         quantity: ['', [Validators.required]]
       });
-      let a = [{a:'a'}]
-      // add field here
-      this.nativeStorage.getItem("irf")
-      .then(
-        (data) => {
-          this.formPanel.patchValue(data)
-        },
-        error => console.error('Error storing item', error)
-      );
+
     }
 
     ngOnInit() {
-      this.incentiveService.getIncentives().subscribe(res=>{
-        console.log("result is", res)
-        this.requestList = res.records
-      })
-      this.filteredOptions = this.formPanel.get('item_desc').valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
-    }
-
-    private _filter(value): string[] {
-      if(typeof value === 'string'){
-        const filterValue = value.toLowerCase();
-        console.log('filtervalue',filterValue)
-  
-        return this.requestList.filter(option => {
-          console.log("value",option.ItemDesc.toLowerCase().includes(filterValue))
-         return option.ItemDesc.toLowerCase().includes(filterValue)
-        });
-      }else{
-        return []
-      }
-      
+      this.route.queryParams
+      .subscribe(params => {
+        console.log("params",params)
+        if(!!params.irfId){
+          this.irfId = params.irfId
+          this.nativeStorage.getItem(this.irfId)
+          .then(
+            (data) => {
+              this.irfObj = data
+              this.formPanel.patchValue(data)
+            },
+            error => console.error('Error storing item', error)
+          );
+          }
+      });
     }
 
     selectDescription(value, element){
@@ -90,25 +78,17 @@ export class requestPage implements OnInit  {
   
 
   save(value){
-    value["item_desc"] = this.itemDesc
-    if(!!this.requestObj && !!this.requestObj.Id){
-      value = Object.assign(this.requestObj,value)
-    }
-    this.storage.setItem("request",value)
+      this.storage.setItem("request",value)
+      this.router.navigate([`/irf`], {queryParams: {irfId: this.irfId}})
   }
 
   sendSMS(){
     this.showToast("sending"+this.formatMessage())
+    console.log("sending",this.formatMessage())
    this.sms.send('09177131456', this.formatMessage()).then(
     () => {
+      this.save(this.formPanel.value)
       console.log("message sent")
-      if(!!this.requestObj && !!this.requestObj.Id){
-        // let newObj = Object.assign({sent:true},this.formPanel.value)
-        // this.tagPanelObj = Object.assign(this.tagPanelObj,newObj)
-        // this.save(newObj)
-      }else{
-        this.save(this.formPanel.value)
-      }
     } ,
     error => console.error('Error removing item', error)
     );
@@ -120,12 +100,12 @@ export class requestPage implements OnInit  {
     let message = `${formValue.panel_code||""};`+
                    `${formValue.panel_name||""};` +
                    `${formValue.request_id||""};` +
-                   `${formValue.delivery_mode||""};`
-    if(formValue.delivery_mode ==' LBC branch pickup' ){
-      message = message + `${formValue.branch_name||""};` 
-    }
-    message = message + `${this.itemDesc||""};` +
-              `${formValue.quantity||""};`
+                   `${formValue.item_desc||""};` +
+                   `${formValue.item_code||""};` +
+                   `${formValue.pointsrequired||""};` +
+                   `${formValue.quantity||""};` +
+                   `${formValue.delivery_mode||""};` +
+                   `${formValue.branch_name||""};`
     // add field here 
     return message 
   }
@@ -139,4 +119,7 @@ export class requestPage implements OnInit  {
     );
     
   }
+
+
+
 }

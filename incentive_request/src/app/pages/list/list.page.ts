@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Platform, NavController } from '@ionic/angular';
 import { StorageService } from '../../services/util/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -12,7 +13,7 @@ export class ListPage  {
   list:any;
 
   constructor(
-    public navCtrl: NavController,
+    private router: Router,
     public storage: StorageService
   ) { }
 
@@ -22,7 +23,7 @@ export class ListPage  {
   }
 
   addIncentiveRequest(){
-    this.navCtrl.navigateForward('/irf');
+    this.router.navigateByUrl('/irf')
   }
 
   removeTagPanel(key){
@@ -38,8 +39,9 @@ export class ListPage  {
     this.storage.getAllItem().then(
       data => { 
         let objects = <any[]>data;
-        this.list = objects.filter(res=>!!res["Id"] && res["Id"].includes('request'))
-        console.log("list",this.list)
+        console.log("objects",objects)
+        this.list = objects.filter(res=>!!res["Id"] && res["Id"].includes('irf'))
+        
       },
       error => console.error(error)
     )

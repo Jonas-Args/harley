@@ -43,7 +43,7 @@
           <ion-select placeholder="Select One" formControlName="delivery_mode">
             <ion-select-option value="door-to-door">door-to-door</ion-select-option>
             <ion-select-option value="LBC branch pickup">LBC branch pickup</ion-select-option>
-            <ion-select-option value="Authorize a person">Authorize a perso</ion-select-option>
+            <ion-select-option value="Authorize a person">Authorize a person</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item *ngIf="showBranchName">
@@ -62,7 +62,21 @@
                 </ion-col>
             </ion-row>
           </ion-grid>
-        </form>
+    </form>
+    <ion-list>
+      <ng-container  *ngFor="let request of requests; let i = index">
+        <ion-item>
+          <ion-col >{{i}}</ion-col>
+          <ion-col>{{request.item_desc}}</ion-col>
+          <ion-col>{{request.quantity}}</ion-col>
+          <ion-col>{{request.item_code}}</ion-col>
+          <ion-col>{{request.pointsrequired}}</ion-col>
+          <!-- add field here -->
+          </ion-item>
+          <!-- <ion-col (click)="removeTagPanel(row.Id); $event.stopPropagation()">remove</ion-col> -->
+      </ng-container>
+      
+    </ion-list>
 
   
 </ion-content>

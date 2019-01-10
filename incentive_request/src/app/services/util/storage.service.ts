@@ -8,10 +8,12 @@ import { Router } from '@angular/router';
 })
 export class StorageService {
 
+  itemId;
+
   constructor(private nativeStorage: NativeStorage,
     private router: Router) { }
-    
-  setItem(type,object:any){
+  
+  setItem(type,object:any,url=null, params=null){
     let Id
     if(!!object.Id){
       Id = object.Id
@@ -19,12 +21,14 @@ export class StorageService {
       Id = type+this.getKey()
       object = Object.assign({Id:Id},object)
     }
-   
+    this.itemId = Id
     this.nativeStorage.setItem(Id, object)
     .then(
       () => {
         console.log('Stored item!')
-        this.router.navigateByUrl('/list');
+        if(url!=null){
+          this.router.navigate([url], params)
+        }
       },
       error => console.error('Error storing item', error)
     );

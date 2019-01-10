@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>list</ion-title>
+    <ion-title>Incentive Request Form</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,8 +8,8 @@
   <!-- List of Text Items -->
   <ion-list>
     <ng-container  *ngFor="let row of list; let i = index">
-      <ion-item>
-        <ion-col >{{i}}</ion-col>
+      <ion-item [routerLink]="['/irf']" [queryParams]="{ irfId: row.Id}">
+        <ion-col >{{i+1}}</ion-col>
         <ion-col>{{row.panel_code}}</ion-col>
         <ion-col>{{row.panel_name}}</ion-col>
         <ion-col>{{row.request_id}}</ion-col>
