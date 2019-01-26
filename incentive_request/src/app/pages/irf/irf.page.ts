@@ -118,6 +118,9 @@ export class irfPage implements OnInit {
     }
   }
 
+  editRequest(requestId){
+    this.router.navigate([`/request`], {queryParams: {irfId: this.storage.itemId, requestId:requestId}})
+  }
 
   getAllItems(){
     this.storage.getAllItem().then(
@@ -140,5 +143,14 @@ export class irfPage implements OnInit {
       }
     );
     
+  }
+
+  removeRequest(key){
+    this.storage.removeItem(key).then(
+      data => { 
+        this.getAllItems()
+      },
+      error => console.error(error)
+    )
   }
 }

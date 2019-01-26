@@ -20,13 +20,15 @@ export class requestPage implements OnInit  {
 
   formPanel: FormGroup;
   requestList = [];
-  irfObj:any;
   options  = [{value:'One'}, {value:'Two'}, {value:'Three'}];
   filteredOptions;
   proxyValue: any; onSelectionChanged(event$) { this.proxyValue = event$.option.value.ItemDesc; }
   itemDesc="";
   list;
   irfId;
+  irfObj:any;
+  requestId;
+  requestObj;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -68,6 +70,17 @@ export class requestPage implements OnInit  {
             error => console.error('Error storing item', error)
           );
           }
+          if(!!params.requestId){
+            this.requestId = params.requestId
+            this.nativeStorage.getItem(this.requestId)
+            .then(
+              (data) => {
+                this.requestObj = data
+                this.formPanel.patchValue(data)
+              },
+              error => console.error('Error storing item', error)
+            );
+            }
       });
     }
 
@@ -78,8 +91,14 @@ export class requestPage implements OnInit  {
   
 
   save(value){
+    console.log(value)
+    if(!!this.requestId){
+      value = Object.assign({Id:this.requestId},value)
       this.storage.setItem("request",value)
-      this.router.navigate([`/irf`], {queryParams: {irfId: this.irfId}})
+    }else{
+      this.storage.setItem("request",value)
+    }
+    this.router.navigate([`/irf`], {queryParams: {irfId: this.irfId}})
   }
 
   sendSMS(){
@@ -119,7 +138,5 @@ export class requestPage implements OnInit  {
     );
     
   }
-
-
 
 }

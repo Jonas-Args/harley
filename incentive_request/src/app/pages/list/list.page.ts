@@ -26,7 +26,7 @@ export class ListPage  {
     this.router.navigateByUrl('/irf')
   }
 
-  removeTagPanel(key){
+  removeIrf(key){
     this.storage.removeItem(key).then(
       data => { 
         this.getAllItems()

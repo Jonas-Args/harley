@@ -65,6 +65,7 @@
     </form>
     <ion-list>
       <ng-container  *ngFor="let request of requests; let i = index">
+        <!-- <ion-item (click)="editRequest(request.Id)"> -->
         <ion-item>
           <ion-col >{{i}}</ion-col>
           <ion-col>{{request.item_desc}}</ion-col>
@@ -73,7 +74,7 @@
           <ion-col>{{request.pointsrequired}}</ion-col>
           <!-- add field here -->
           </ion-item>
-          <!-- <ion-col (click)="removeTagPanel(row.Id); $event.stopPropagation()">remove</ion-col> -->
+          <ion-col (click)="removeRequest(request.Id); $event.stopPropagation()">remove</ion-col>
       </ng-container>
       
     </ion-list>
