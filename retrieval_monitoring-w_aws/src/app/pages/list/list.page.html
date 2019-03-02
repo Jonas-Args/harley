@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <!-- List of Text Items -->
+  <ion-list>
+    <ng-container  *ngFor="let row of list; let i = index">
+      <ion-item [routerLink]="['/irf']" [queryParams]="{ irfId: row.Id}">
+        <ion-col >{{i+1}}</ion-col>
+        <ion-col>{{row.panel_code}}</ion-col>
+        <ion-col>{{row.panel_name}}</ion-col>
+        <ion-col>{{row.request_id}}</ion-col>
+        <ion-col>{{row.delivery_mode}}</ion-col>
+        <ion-col *ngIf="row.delivery_mode=='LBC branch pickup'">{{row.branch_name}}</ion-col>
+        <ion-col>{{row.item_desc}}</ion-col>
+        <ion-col>{{row.quantity}}</ion-col>
+        <!-- add field here -->
+        </ion-item>
+        <ion-col (click)="removeIrf(row.Id); $event.stopPropagation()">remove</ion-col>
+    </ng-container>
+    
+  </ion-list>
+  <ion-grid>
+    <ion-row>
+        <ion-col>
+            <ion-button expand="full" fill="solid" (click)="retrieveTagPanel()">
+              Retrieve Tag Panel
+            </ion-button>
+        </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

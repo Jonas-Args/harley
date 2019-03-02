@@ -4,8 +4,8 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 export const environment = {
   production: false,
-  // API_URL: 'https://8dc5e6d7.ngrok.io'
-  API_URL: 'http://localhost:8888'
+  API_URL: 'http://e50e552e.ngrok.io'
+  // API_URL: 'http://localhost:8888'
 };
 
 

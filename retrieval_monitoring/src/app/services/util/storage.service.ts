@@ -18,7 +18,7 @@ export class StorageService {
     if(!!object.Id){
       Id = object.Id
     }else{
-      Id = type+this.getKey()
+      Id = type+this.tagPanelKey(object)
       object = Object.assign({Id:Id},object)
     }
     this.itemId = Id
@@ -63,6 +63,10 @@ export class StorageService {
     let date = new Date();
     let str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     return str
+  }
+
+  private tagPanelKey(object){
+   return object["panel_code"]+object["week_code"]
   }
 }
 

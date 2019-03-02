@@ -22,7 +22,7 @@ export class ListPage  {
    this.getAllItems()
   }
 
-  addIncentiveRequest(){
+  retrieveTagPanel(){
     this.router.navigateByUrl('/irf')
   }
 
@@ -41,11 +41,11 @@ export class ListPage  {
         let objects = <any[]>data;
         console.log("objects",objects)
         this.list = objects.filter(res=>!!res["Id"] && res["Id"].includes('irf'))
-        
       },
       error => console.error(error)
     )
   }
+
 
   // private setTagPanels(){
   //   this.sql.tagPanelsSubject.subscribe(res=>{

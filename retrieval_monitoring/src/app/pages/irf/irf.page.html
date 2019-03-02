@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Incentive Request Form</ion-title>
+    <ion-title>Retrieval Form</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -8,7 +8,45 @@
 </ion-header>
 
 <ion-content padding>
-    <form [formGroup]="formPanel" (ngSubmit)='save(formPanel.value)'>
+    <form [formGroup]="formPanel" (ngSubmit)='search(formPanel.value)'>
+        <ion-item>
+            <ion-label>
+              <p>Period:</p>
+            </ion-label>
+            <ion-input formControlName="period" type="text"></ion-input>
+        </ion-item>
+        <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                  <ion-item>
+                      <ion-label>
+                        <p>Week:</p>
+                      </ion-label>
+                      <ion-input formControlName="week" type="text"></ion-input>
+                    </ion-item>
+              </ion-col>
+              <ion-col size="8" >
+                  <ion-item>
+                      <ion-label>
+                        <p>Week Code:</p>
+                      </ion-label>
+                      <ion-input formControlName="week_code" type="text"></ion-input>
+                    </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-item>
+              <ion-label>
+                <p>Date Retrieved:</p>
+              </ion-label>
+              <ion-input formControlName="date_retrieved" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+              <ion-label>
+                <p>Date Received:</p>
+              </ion-label>
+              <ion-input formControlName="date_received" type="text"></ion-input>
+          </ion-item>
         <ion-grid>
             <ion-row>
               <ion-col size="8">
@@ -26,42 +64,20 @@
           </ion-grid>
         <ion-item>
             <ion-label>
-              <p>Panel Name:</p>
+              <p>Accuracy:</p>
             </ion-label>
-            <ion-input formControlName="panel_name" type="text"></ion-input>
+            <ion-input disabled="true" formControlName="accuracy" type="text"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label>
-            <p>Request ID:</p>
-          </ion-label>
-          <ion-input formControlName="request_id" type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>
-            <p>Delivery Mode:</p>
-          </ion-label>
-          <ion-select placeholder="Select One" formControlName="delivery_mode">
-            <ion-select-option value="door-to-door">door-to-door</ion-select-option>
-            <ion-select-option value="LBC branch pickup">LBC branch pickup</ion-select-option>
-            <ion-select-option value="Authorize a person">Authorize a person</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item *ngIf="showBranchName">
-          <ion-label>
-            <p>Branch Name:</p>
-          </ion-label>
-          <ion-input formControlName="branch_name" type="text"></ion-input>
-        </ion-item>
-          <ion-grid>
-            <ion-row>
-                <ion-col size="6">
-                    <ion-button expand="full" fill="solid" [routerLink]="['/']" >Cancel</ion-button>
-                </ion-col>
-                <ion-col size="6">
-                    <ion-button expand="full" fill="solid" type="submit">ENTER REQUEST</ion-button>
-                </ion-col>
-            </ion-row>
-          </ion-grid>
+        <ion-grid>
+          <ion-row>
+              <ion-col size="6">
+                  <ion-button expand="full" fill="solid" (click)="clear()" >CLEAR</ion-button>
+              </ion-col>
+              <ion-col size="6">
+                  <ion-button expand="full" fill="solid" type="submit">SEARCH</ion-button>
+              </ion-col>
+          </ion-row>
+        </ion-grid>
     </form>
     <ion-list>
       <ng-container  *ngFor="let request of requests; let i = index">

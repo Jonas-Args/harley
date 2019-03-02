@@ -6,6 +6,7 @@ import { Toast } from '@ionic-native/toast/ngx';
 import { StorageService } from '../../services/util/storage.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { bindingUpdated } from '@angular/core/src/render3/instructions';
 
 declare var AdvancedGeolocation:any;
 
@@ -34,53 +35,36 @@ export class irfPage implements OnInit {
     private router: Router,
     private nativeStorage: NativeStorage,
     ) {
-      this.formPanel = fb.group({
-        panel_code: ['', [Validators.required]],
-        panel_name: ['', [Validators.required]],
-        request_id: ['', [Validators.required]],
-        delivery_mode: ['', [Validators.required]],
-        branch_name: ['', [Validators.required]],
-      });
-      // add field here
-      this.formPanel.get('panel_code').valueChanges.subscribe(value=>{
-        this.formPanel.get('request_id').setValue(value+this.formatDate(new Date()))
-      })
-      this.formPanel.get('delivery_mode').valueChanges.subscribe(value=>{
-        if(value=="LBC branch pickup"){
-          this.showBranchName = true;
-        }else{
-          this.showBranchName = false;
-        }
-      })
+      this.initForm()
      }
 
     ngOnInit() {
-      this.route.queryParams
-      .subscribe(params => {
-        console.log("params",params)
-        if(!!params.irfId){
-          this.irdId = params.irfId
-          this.storage.getItem(params.irfId).then(
-            data=>{ 
-              console.log("retrieved",data)
-            this.irfObj = data 
-            this.formPanel.patchValue(data)
-            this.getAllItems()
-          },
-            error => console.error(error))
-        }
-        console.log(params); // {order: "popular"
-      });
-      
+      this.start()
     }
 
-    ionViewDidEnter () {
-      if(!!this.formPanel.value["panel_code"]){
-        this.getAllItems()
-      }
-     }
+    initForm(){
+      this.formPanel = this.fb.group({
+        period: ['', [Validators.required]],
+        week: ['', [Validators.required]],
+        week_code: ['', [Validators.required]],
+        accuracy: ['', [Validators.required]],
+        date_retrieved: [new Date().toLocaleString().split(',')[0], [Validators.required]],
+        date_received: [new Date().toLocaleString().split(',')[0], [Validators.required]],
+        panel_code: ['', [Validators.required]],
+      });
+      // add field here
+      this.formPanel.get('period').valueChanges.subscribe(value=>{
+        this.formPanel.get('week_code').setValue(
+          value + "." + this.formPanel.value["week"]
+          )
+      })
+      this.formPanel.get('week').valueChanges.subscribe(value=>{
+        this.formPanel.get('week_code').setValue(
+          this.formPanel.value["period"] + "." + value
+          )
+      })
+    }
    
-  
 
   scan(){
     this.isBarcodeScanned = false
@@ -95,6 +79,80 @@ export class irfPage implements OnInit {
 
   }
 
+  start(){
+    AdvancedGeolocation.start((success)=>{
+
+        try{
+          let jsonObject: any = JSON.parse(success);
+
+          if(!!jsonObject.latitude){
+            this.location = jsonObject
+            this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
+            this.formPanel.get('panel_gps_location_accuracy').setValue(`${this.location.accuracy} meters`)
+          }else{
+            this.showToast("lat long not available")
+          }
+          
+     
+          
+          console.log("Provider now " +JSON.stringify(jsonObject));
+          // this.showToast(JSON.stringify(jsonObject))
+          switch(jsonObject.provider){
+            case "gps":
+              //TODO
+              break;
+
+            case "network":
+              //TODO
+              break;
+
+            case "satellite":
+              //TODO
+              break;
+
+            case "cell_info":
+              //TODO
+              break;
+
+            case "cell_location":
+              //TODO
+              break;
+
+            case "signal_strength":
+              //TODO
+              break;
+          }
+        }
+        catch(exc){
+          //this.showToast("value"+exc)
+          console.log("Invalid JSON: " + exc);
+        }
+      },
+      (error)=>{
+        this.showToast(JSON.stringify(error))
+        console.log("ERROR! " + JSON.stringify(error));
+      },
+      ////////////////////////////////////////////
+      //
+      // REQUIRED:
+      // These are required Configuration options!
+      // See API Reference for additional details.
+      //
+      ////////////////////////////////////////////
+      {
+        "minTime":500,         // Min time interval between updates (ms)
+        "minDistance":1,       // Min distance between updates (meters)
+        "noWarn":true,         // Native location provider warnings
+        "providers":"gps",     // Return GPS, NETWORK and CELL locations
+        "useCache":true,       // Return GPS and NETWORK cached locations
+        "satelliteData":true, // Return of GPS satellite info
+        "buffer":true,        // Buffer location data
+        "bufferSize":3,         // Max elements in buffer
+        "signalStrength":false // Return cell signal strength data
+      });
+  }
+
+
 
   formatDate(date){
     // mm/dd/yy format
@@ -106,30 +164,57 @@ export class irfPage implements OnInit {
 
 
   save(value){
-    if(!!this.irfObj && !!this.irfObj.Id){
-      value = Object.assign(this.irfObj,value)
-      console.log("storing a",value)
-      this.storage.setItem("irf",value,`/request`,{queryParams: {irfId: this.irfObj.Id}})
-    }else{
-      console.log("storing b",value)
-      
-      this.storage.setItem("irf",value)
-      this.router.navigate([`/request`], {queryParams: {irfId: this.storage.itemId}})
-    }
+    this.storage.setItem("irf",value)
+    this.router.navigate([`/tagpanel`], {queryParams: {irfId: this.storage.itemId}})
   }
 
-  editRequest(requestId){
-    this.router.navigate([`/request`], {queryParams: {irfId: this.storage.itemId, requestId:requestId}})
+  search(value){
+    let panelcode = this.formPanel.value["panel_code"]
+    let weekcode = this.formPanel.value["week_code"]
+    let id = "irf"+panelcode+weekcode
+    //find by panel_code week_code name
+
+    this.storage.getItem(id).then(
+      data=>{ 
+        console.log("retrieved",data)
+        let foundData:any = data
+        if(!!foundData.Id){
+          this.router.navigate([`/tagpanel`], {queryParams: {irfId:  foundData.Id}})
+        }else{
+          this.findName(panelcode)
+        }
+    },
+      error => {
+      }
+    )
+
+
   }
 
-  getAllItems(){
+  clear(){
+    this.initForm()
+  }
+
+  findName(panelcode){
     this.storage.getAllItem().then(
       data => { 
         let objects = <any[]>data;
-        console.log("objects",objects)
-        console.log("formpanelvalue",this.formPanel.value)
-        this.requests = objects.filter(res=>!!res["Id"] && res["Id"].includes('request') && res["panel_code"]==this.formPanel.value["panel_code"])
-        console.log("requests",this.requests)
+        let item = objects.filter(res=>!!res["panel_code"] && res["panel_code"]== panelcode)
+
+        if(item.length > 0){
+
+          //with name
+          if(!!item[0]["panel_name"]){
+            let object = Object.assign({panel_name:item[0]["panel_name"]},this.formPanel.value)
+            this.save(object)
+          }else{
+            this.save(this.formPanel.value)
+          }
+          
+        }else{
+          //wala
+          this.save(this.formPanel.value)
+        }
       },
       error => console.error(error)
     )
@@ -145,12 +230,6 @@ export class irfPage implements OnInit {
     
   }
 
-  removeRequest(key){
-    this.storage.removeItem(key).then(
-      data => { 
-        this.getAllItems()
-      },
-      error => console.error(error)
-    )
-  }
 }
+
+

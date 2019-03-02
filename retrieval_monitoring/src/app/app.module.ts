@@ -20,11 +20,13 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSelectModule, MatInputModule} from '@angular/material';
+import { TagPanelService } from './services/api/tagpanel.service';
 
 const APP_PROVIDERS = [
   CommonService,
   HttpService,
-  IncentiveService
+  IncentiveService,
+  TagPanelService
 ]
 
 @NgModule({
