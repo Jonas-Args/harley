@@ -116,7 +116,7 @@ export class requestPage implements OnInit  {
 
   formatMessage(){
     let formValue = this.formPanel.value
-    let message = `${formValue.panel_code||""};`+
+    let message = "IRF:"+`${formValue.panel_code||""};`+
                    `${formValue.panel_name||""};` +
                    `${formValue.request_id||""};` +
                    `${formValue.item_desc||""};` +
