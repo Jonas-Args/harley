@@ -40,13 +40,11 @@ export class tagpanelPage implements OnInit {
       // add field here
      }
 
-  statuses = [
-    {value:"retrieved"},
-    {value:"zero"},
-    {value:"na"},
-    {value:"hatching"},
-    {value:"invited"},
-    {value:"dropped"}]
+     statuses = [
+      {value:"my location"},
+      {value:"invited"},
+      {value:"visited"},
+      {value:"other"}]
 
     ngOnInit() {
       this.start()
@@ -102,7 +100,7 @@ export class tagpanelPage implements OnInit {
 
   formatMessage(){
     let formValue = this.formPanel.value
-    let message = `${formValue.panel_code||""};`+
+    let message = "TAG;"+`${formValue.panel_code||""};`+
                    `${formValue.panel_name||""};` +
                    `${formValue.panel_gps_location||""};` +
                    `${formValue.panel_status||""};` + 
