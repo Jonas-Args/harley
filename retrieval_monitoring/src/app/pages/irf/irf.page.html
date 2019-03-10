@@ -11,41 +11,30 @@
     <form [formGroup]="formPanel" (ngSubmit)='search(formPanel.value)'>
         <ion-item>
             <ion-label>
-              <p>Period:</p>
+              <p>Period (YYYY.PP):</p>
             </ion-label>
             <ion-input formControlName="period" type="text"></ion-input>
         </ion-item>
-        <ion-grid>
-            <ion-row>
-              <ion-col size="4">
-                  <ion-item>
-                      <ion-label>
-                        <p>Week:</p>
-                      </ion-label>
-                      <ion-input formControlName="week" type="text"></ion-input>
-                    </ion-item>
-              </ion-col>
-              <ion-col size="8" >
-                  <ion-item>
-                      <ion-label>
-                        <p>Week Code:</p>
-                      </ion-label>
-                      <ion-input formControlName="week_code" type="text"></ion-input>
-                    </ion-item>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
+        <ion-item>
+          <ion-label>
+            <p>Week:</p>
+          </ion-label>
+          <ion-select formControlName="week" ok-text="Okay" cancel-text="Dismiss">
+            <ion-select-option value="" selectable=false selected="true"> Select Week</ion-select-option>
+            <ion-select-option *ngFor="let week of [1,2,3,4]" [value]="week">{{ week }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Week Code:</p>
+          </ion-label>
+          <ion-input formControlName="week_code" type="text"></ion-input>
+        </ion-item>
           <ion-item>
               <ion-label>
                 <p>Date Retrieved:</p>
               </ion-label>
               <ion-input formControlName="date_retrieved" type="text"></ion-input>
-          </ion-item>
-          <ion-item>
-              <ion-label>
-                <p>Date Received:</p>
-              </ion-label>
-              <ion-input formControlName="date_received" type="text"></ion-input>
           </ion-item>
         <ion-grid>
             <ion-row>
@@ -62,12 +51,6 @@
               </ion-col>
             </ion-row>
           </ion-grid>
-        <ion-item>
-            <ion-label>
-              <p>Accuracy:</p>
-            </ion-label>
-            <ion-input disabled="true" formControlName="accuracy" type="text"></ion-input>
-        </ion-item>
         <ion-grid>
           <ion-row>
               <ion-col size="6">

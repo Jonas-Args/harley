@@ -24,6 +24,7 @@ export class tagpanelPage implements OnInit {
   showZeroRemarks = false;
   irfId;
   irfObj;
+  date_send;
   
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -61,14 +62,12 @@ export class tagpanelPage implements OnInit {
      }
 
     statuses = [
-      {value:"retrieved"},
-      {value:"my location"},
-      {value:"zero"},	      
-      {value:"invited"},
-      {value:"na"},	      
-      {value:"visited"},
-      {value:"hatching"},	      
-      {value:"other"}]
+      {value:"RETRIEVED"},
+      {value:"ZERO"},	      
+      {value:"NA"},	      
+      {value:"HATCHING"},	   
+      {value:"DROPPED"},   
+      {value:"MY LOCATION"}]
 
     ngOnInit() {
 
@@ -109,16 +108,18 @@ export class tagpanelPage implements OnInit {
   }
 
   sendSMS(){
-    this.showToast("sending"+this.formatMessage())
-    console.log("sending",this.formatMessage())
-   this.sms.send('09177131456', this.formatMessage()).then(
-    () => {
-      this.save(this.formPanel.value)
-      console.log("message sent")
-    } ,
-    error => console.error('Error removing item', error)
-    );
-   
+    if(this.isDataValid(this.formPanel.value)){
+      this.showToast("sending"+this.formatMessage())
+      console.log("sending",this.formatMessage())
+      this.date_send = new Date().toLocaleString()
+      this.sms.send('09177131456', this.formatMessage()).then(
+      () => {
+        this.save(this.formPanel.value)
+        console.log("message sent")
+      } ,
+      error => console.error('Error removing item', error)
+      );
+    }
   }
 
   formatMessage(){
@@ -131,7 +132,8 @@ export class tagpanelPage implements OnInit {
                    `${formValue.gps_location||""};` +
                    `${formValue.accuracy||""};` +
                    `${formValue.panel_remarks||""};` +
-                   `${formValue.panel_receipted||""}`
+                   `${formValue.panel_receipted||""};` +
+                   `${this.date_send}`
     // add field here 
     return message 
   }
@@ -146,7 +148,7 @@ export class tagpanelPage implements OnInit {
           if(!!jsonObject.latitude){
             this.location = jsonObject
             this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
-            this.formPanel.get('panel_gps_location_accuracy').setValue(`${this.location.accuracy} meters`)
+            this.formPanel.get('panel_gps_location_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))} meters`)
           }else{
             this.showToast("lat long not available")
           }
@@ -211,12 +213,28 @@ export class tagpanelPage implements OnInit {
   }
 
   save(value){
-    if(!!this.irfObj && !!this.irfObj.Id){
-      value = Object.assign(this.irfObj,value)
+    if(this.isDataValid(this.formPanel.value)){
+      value["date_send"] = this.date_send
+      if(!!this.irfObj && !!this.irfObj.Id){
+        value = Object.assign(this.irfObj,value)
+      }
+      console.log("storing a",value)
+      this.storage.setItem("irf",value)
+      this.router.navigate([`/irf`], {})
     }
-    console.log("storing a",value)
-    this.storage.setItem("irf",value)
-    this.router.navigate([`/irf`], {})
+  }
+
+  isDataValid(value){
+    if(value.panel_status=="ZERO" && value.panel_remarks==""){
+      this.showToast("Zero Remarks shout not be blank")
+      return false
+    }
+    else if(value.panel_status==""){
+      this.showToast("Status should not be blank")
+      return false
+    }else{
+      return true
+    }
   }
 
   showToast(message){

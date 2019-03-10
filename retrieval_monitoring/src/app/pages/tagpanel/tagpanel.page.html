@@ -62,7 +62,7 @@
         <ion-item>
             <ion-label>STATUS</ion-label>
             <ion-select formControlName="panel_status" ok-text="Okay" cancel-text="Dismiss">
-              <ion-select-option value="" selectable=false> Select Status</ion-select-option>
+              <ion-select-option value="" selectable=false selected="true"> Select Status</ion-select-option>
               <ion-select-option *ngFor="let status of statuses" [value]="status.value">{{status.value | uppercase}}</ion-select-option>
             </ion-select>
           </ion-item>

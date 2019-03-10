@@ -7,6 +7,7 @@ import { StorageService } from '../../services/util/storage.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { bindingUpdated } from '@angular/core/src/render3/instructions';
+import { Platform } from '@ionic/angular';
 
 declare var AdvancedGeolocation:any;
 
@@ -34,12 +35,23 @@ export class irfPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private nativeStorage: NativeStorage,
+    private platform: Platform
     ) {
       this.initForm()
      }
 
     ngOnInit() {
-      this.start()
+      this.get_last_saved()
+    }
+
+    save_last_saved(){
+      this.nativeStorage.setItem("last_saved", this.formPanel.value)
+      .then(
+        () => {
+          console.log('Stored last item!')
+        },
+        error => console.error('Error storing item', error)
+      );
     }
 
     initForm(){
@@ -47,9 +59,7 @@ export class irfPage implements OnInit {
         period: ['', [Validators.required]],
         week: ['', [Validators.required]],
         week_code: ['', [Validators.required]],
-        accuracy: ['', [Validators.required]],
         date_retrieved: [new Date().toLocaleString().split(',')[0], [Validators.required]],
-        date_received: [new Date().toLocaleString().split(',')[0], [Validators.required]],
         panel_code: ['', [Validators.required]],
       });
       // add field here
@@ -59,10 +69,28 @@ export class irfPage implements OnInit {
           )
       })
       this.formPanel.get('week').valueChanges.subscribe(value=>{
-        this.formPanel.get('week_code').setValue(
-          this.formPanel.value["period"] + "." + value
-          )
+        if(!!value){
+          this.formPanel.get('week_code').setValue(
+            this.formPanel.value["period"] + "." + value
+            )
+        }
       })
+      this.formPanel.valueChanges.subscribe(value => {
+        this.save_last_saved()
+      });
+    }
+
+    get_last_saved(){
+      this.nativeStorage.getItem("last_saved")
+      .then(
+        (data) => {
+          console.log("retrieved last item",data)
+          if(!!data){
+            this.formPanel.patchValue(data)
+          }
+        },
+        error => console.error('Error storing item', error)
+      );
     }
    
 
@@ -88,7 +116,7 @@ export class irfPage implements OnInit {
           if(!!jsonObject.latitude){
             this.location = jsonObject
             this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
-            this.formPanel.get('panel_gps_location_accuracy').setValue(`${this.location.accuracy} meters`)
+            this.formPanel.get('panel_gps_location_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))} meters`)
           }else{
             this.showToast("lat long not available")
           }
@@ -169,26 +197,28 @@ export class irfPage implements OnInit {
   }
 
   search(value){
-    let panelcode = this.formPanel.value["panel_code"]
-    let weekcode = this.formPanel.value["week_code"]
-    let id = "irf"+panelcode+weekcode
-    //find by panel_code week_code name
-
-    this.storage.getItem(id).then(
-      data=>{ 
-        console.log("retrieved",data)
-        let foundData:any = data
-        if(!!foundData.Id){
-          this.router.navigate([`/tagpanel`], {queryParams: {irfId:  foundData.Id}})
-        }else{
-          this.findName(panelcode)
+    if(value.week == ""){
+      this.showToast("Week should not be blank")
+    }else{
+      let panelcode = this.formPanel.value["panel_code"]
+      let weekcode = this.formPanel.value["week_code"]
+      let id = "irf"+panelcode+weekcode
+      //find by panel_code week_code name
+  
+      this.storage.getItem(id).then(
+        data=>{ 
+          console.log("retrieved",data)
+          let foundData:any = data
+          if(!!foundData.Id){
+            this.router.navigate([`/tagpanel`], {queryParams: {irfId:  foundData.Id}})
+          }else{
+            this.findName(panelcode)
+          }
+      },
+        error => {
         }
-    },
-      error => {
-      }
-    )
-
-
+      )
+    }
   }
 
   clear(){
