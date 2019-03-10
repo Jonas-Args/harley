@@ -68,6 +68,9 @@ export class irfPage implements OnInit {
       this.formPanel.valueChanges.subscribe(value => {
         this.save_last_saved()
       });
+      this.formPanel.get('panel_code').valueChanges.subscribe(value => {
+        this.findByPanelCode(value)
+      });
     }
 
     get_last_saved(){
@@ -96,78 +99,6 @@ export class irfPage implements OnInit {
      });
 
   }
-
-  start(){
-    AdvancedGeolocation.start((success)=>{
-
-        try{
-          let jsonObject: any = JSON.parse(success);
-
-          if(!!jsonObject.latitude){
-            this.location = jsonObject
-            this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
-            this.formPanel.get('panel_gps_location_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))} meters`)
-          }else{
-            this.showToast("lat long not available")
-          }
-          console.log("Provider now " +JSON.stringify(jsonObject));
-          // this.showToast(JSON.stringify(jsonObject))
-          switch(jsonObject.provider){
-            case "gps":
-              //TODO
-              break;
-
-            case "network":
-              //TODO
-              break;
-
-            case "satellite":
-              //TODO
-              break;
-
-            case "cell_info":
-              //TODO
-              break;
-
-            case "cell_location":
-              //TODO
-              break;
-
-            case "signal_strength":
-              //TODO
-              break;
-          }
-        }
-        catch(exc){
-          //this.showToast("value"+exc)
-          console.log("Invalid JSON: " + exc);
-        }
-      },
-      (error)=>{
-        this.showToast(JSON.stringify(error))
-        console.log("ERROR! " + JSON.stringify(error));
-      },
-      ////////////////////////////////////////////
-      //
-      // REQUIRED:
-      // These are required Configuration options!
-      // See API Reference for additional details.
-      //
-      ////////////////////////////////////////////
-      {
-        "minTime":500,         // Min time interval between updates (ms)
-        "minDistance":1,       // Min distance between updates (meters)
-        "noWarn":true,         // Native location provider warnings
-        "providers":"gps",     // Return GPS, NETWORK and CELL locations
-        "useCache":true,       // Return GPS and NETWORK cached locations
-        "satelliteData":true, // Return of GPS satellite info
-        "buffer":true,        // Buffer location data
-        "bufferSize":3,         // Max elements in buffer
-        "signalStrength":false // Return cell signal strength data
-      });
-  }
-
-
 
   formatDate(date){
     // mm/dd/yy format
@@ -216,6 +147,27 @@ export class irfPage implements OnInit {
     this.initForm()
   }
 
+  findByPanelCode(panelcode){
+    this.storage.getAllItem().then(
+      data => { 
+        let objects = <any[]>data;
+        console.log("objects",objects)
+        let item = objects.filter(res=>!!res["panel_code"] && res["panel_code"]== panelcode && res["last"]== true)
+
+        console.log("last item",item)
+        if(item.length > 0){
+
+          //with name
+          if(!!item[0]["panel_code"]){
+            let object = {proj_type:item[0]["proj_type"],region:item[0]["region"],panel_name:item[0]["panel_name"] }
+            this.formPanel.patchValue(object,{emitEvent: false, onlySelf: true})
+          }
+        }
+      },
+      error => console.error(error)
+    )
+  }
+
   findName(panelcode){
     this.storage.getAllItem().then(
       data => { 
@@ -227,8 +179,8 @@ export class irfPage implements OnInit {
         if(item.length > 0){
 
           //with name
-          if(!!item[0]["panel_name"]){
-            let object = Object.assign({panel_name:item[0]["panel_name"],finame:item[0]["finame"],region:item[0]["region"] },this.formPanel.value)
+          if(!!item[0]["panel_code"]){
+            let object = Object.assign({proj_type:item[0]["proj_type"],region:item[0]["region"],panel_name:item[0]["panel_name"] },this.formPanel.value)
             this.save(object)
           }else{
             this.save(this.formPanel.value)

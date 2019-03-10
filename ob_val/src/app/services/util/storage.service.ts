@@ -66,7 +66,7 @@ export class StorageService {
   }
 
   private tagPanelKey(object){
-   return object["panel_code"]
+   return object["panel_code"] + object["week"] + object["period"]
   }
 }
 
