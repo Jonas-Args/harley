@@ -124,7 +124,7 @@ export class irfPage implements OnInit {
     }else{
       let panelcode = this.formPanel.value["panel_code"]
       let weekcode = this.formPanel.value["week_code"]
-      let id = "irf"+panelcode
+      let id = "irf"+panelcode + value["week"] + value["period"]
       //find by panel_code week_code name
   
       this.storage.getItem(id).then(
