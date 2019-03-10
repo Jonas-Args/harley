@@ -120,9 +120,6 @@ export class irfPage implements OnInit {
           }else{
             this.showToast("lat long not available")
           }
-          
-     
-          
           console.log("Provider now " +JSON.stringify(jsonObject));
           // this.showToast(JSON.stringify(jsonObject))
           switch(jsonObject.provider){
@@ -229,13 +226,15 @@ export class irfPage implements OnInit {
     this.storage.getAllItem().then(
       data => { 
         let objects = <any[]>data;
-        let item = objects.filter(res=>!!res["panel_code"] && res["panel_code"]== panelcode)
+        console.log("objects",objects)
+        let item = objects.filter(res=>!!res["panel_code"] && res["panel_code"]== panelcode && res["last"]== true)
 
+        console.log("last item",item)
         if(item.length > 0){
 
           //with name
           if(!!item[0]["panel_name"]){
-            let object = Object.assign({panel_name:item[0]["panel_name"]},this.formPanel.value)
+            let object = Object.assign({panel_name:item[0]["panel_name"],finame:item[0]["finame"],region:item[0]["region"] },this.formPanel.value)
             this.save(object)
           }else{
             this.save(this.formPanel.value)

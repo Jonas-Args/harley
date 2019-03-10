@@ -52,7 +52,7 @@ export class tagpanelPage implements OnInit {
 
        // add field here
        this.formPanel.get('panel_status').valueChanges.subscribe(value=>{
-        if(value=="zero"){
+        if(value=="ZERO"){
           this.showZeroRemarks = true
         }else{
           this.showZeroRemarks = false
@@ -131,6 +131,7 @@ export class tagpanelPage implements OnInit {
                    `${formValue.region||""};` + 
                    `${formValue.gps_location||""};` +
                    `${formValue.accuracy||""};` +
+                   `${formValue.panel_status||""};` +
                    `${formValue.panel_remarks||""};` +
                    `${formValue.panel_receipted||""};` +
                    `${this.date_send}`
@@ -213,8 +214,14 @@ export class tagpanelPage implements OnInit {
   }
 
   save(value){
-    if(this.isDataValid(this.formPanel.value)){
+    this.resetOthePanelCodesLast()
+  }
+
+  actualSave(){
+    let value = this.formPanel.value
+    if(this.isDataValid(value)){
       value["date_send"] = this.date_send
+      value["last"] = true
       if(!!this.irfObj && !!this.irfObj.Id){
         value = Object.assign(this.irfObj,value)
       }
@@ -223,6 +230,26 @@ export class tagpanelPage implements OnInit {
       this.router.navigate([`/irf`], {})
     }
   }
+
+
+  resetOthePanelCodesLast(){
+    this.storage.getAllItem().then(
+      data => { 
+        let objects = <any[]>data;
+        let items = objects.filter(res=>!!res["panel_code"] && res["panel_code"]== this.formPanel.value.panel_code && res["last"] == true)
+        items.forEach(value=>{
+          console.log("setting to false",value)
+          value["last"] = false
+          this.storage.setItem("irf",value)
+        })
+        setTimeout(() => {},500);
+        this.actualSave()
+
+      },
+      error => console.error(error)
+    )
+  }
+
 
   isDataValid(value){
     if(value.panel_status=="ZERO" && value.panel_remarks==""){
