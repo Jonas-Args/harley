@@ -143,7 +143,8 @@ export class tagpanelPage implements OnInit {
 
           if(!!jsonObject.latitude){
             this.location = jsonObject
-            this.formPanel.get('panel_gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
+            
+            this.formPanel.get('gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
             this.formPanel.get('loc_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))} meters`)
           }else{
             this.showToast("lat long not available")
