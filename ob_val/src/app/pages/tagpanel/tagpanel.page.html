@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Panel Visit</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <form [formGroup]="formPanel" (ngSubmit)='save(formPanel.value)'>
+        <ion-item *ngIf="false">
+            <ion-label>
+              <p>Id:</p>
+            </ion-label>
+            <ion-input formControlName="Id" type="text"></ion-input>
+          </ion-item>  
+          <ion-item>
+            <ion-label>
+              <p>Loc Accu:</p>
+            </ion-label>
+            <ion-input disabled="true" formControlName="loc_accuracy" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <p>GPM ID:</p>
+            </ion-label>
+            <ion-input formControlName="panel_code" type="text"></ion-input>
+          </ion-item>
+        <ion-button expand="full" fill="solid" (click)="scan()">SCAN</ion-button>
+        <ion-item>
+            <ion-label>
+              <p>Panelist Name:</p>
+            </ion-label>
+            <ion-input formControlName="panel_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>FW Result:</p>
+          </ion-label>
+          <ion-select formControlName="fw_result" ok-text="Okay" cancel-text="Dismiss">
+            <ion-select-option value="" selectable=false selected="true"> Select Result </ion-select-option>
+            <ion-select-option *ngFor="let result of ['Valid','Invalid']" [value]="type">{{ result }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>FW Type:</p>
+          </ion-label>
+          <ion-select formControlName="fw_type" ok-text="Okay" cancel-text="Dismiss">
+            <ion-select-option value="" selectable=false selected="true"> Select Type </ion-select-option>
+            <ion-select-option *ngFor="let type of ['OB','Val']" [value]="type">{{ type }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Panelist's Comment:</p>
+            </ion-label>
+            <ion-input formControlName="panelist_comment" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Feedback on Panelist:</p>
+          </ion-label>
+          <ion-input formControlName="gl_remarks_panel" type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <p>Feedback on FI:</p>
+        </ion-label>
+        <ion-input formControlName="gl_remarks_fi" type="text"></ion-input>
+      </ion-item>
+         <!-- add field here -->
+        <ion-item *ngIf="false">
+            <ion-label>
+              <p>GPS LOCATION:</p>
+            </ion-label>
+            <ion-input formControlName="gps_location" type="text"></ion-input>
+          </ion-item>
+          <ion-grid>
+            <ion-row>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" type="submit">SAVE</ion-button>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" (click)="sendSMS()">SEND SMS</ion-button>
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+
+  
+</ion-content>
