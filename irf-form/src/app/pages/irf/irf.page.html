@@ -38,17 +38,10 @@
         </ion-item>
         <ion-item>
           <ion-label>
-            <p>Zip Code:</p>
+            <p>Region:</p>
           </ion-label>
-          <mat-form-field class="example-full-width">
-              <input #zipDesc='' type="text"   matInput formControlName="zip_code" [matAutocomplete]="zip">
-              <mat-autocomplete #zip="matAutocomplete" (optionSelected)='selectZipCode($event,zipDesc)'>
-                <mat-option *ngFor="let option of zipcodes" [value]="option.zip_code">
-                  {{option.zip_code}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-        </ion-item>
+          <ion-input formControlName="region" type="text"></ion-input>
+      </ion-item>
       <ion-item>
         <ion-label>
           <p>Province:</p>
@@ -69,8 +62,8 @@
         <mat-form-field class="example-full-width">
             <input #cityDesc='' type="text" aria-label="Number" matInput formControlName="municipality" [matAutocomplete]="municipality">
             <mat-autocomplete #municipality="matAutocomplete" (optionSelected)='selectCity($event,cityDesc)'>
-              <mat-option *ngFor="let option of cities" [value]="option.city">
-                {{option.city}}
+              <mat-option *ngFor="let option of cities" [value]="option">
+                {{option}}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
@@ -89,10 +82,17 @@
           </mat-form-field>
       </ion-item>
       <ion-item>
-          <ion-label>
-            <p>Region:</p>
-          </ion-label>
-          <ion-input formControlName="region" type="text"></ion-input>
+        <ion-label>
+          <p>Zip Code:</p>
+        </ion-label>
+        <mat-form-field class="example-full-width">
+            <input #zipDesc='' type="text"   matInput formControlName="zip_code" [matAutocomplete]="zip">
+            <mat-autocomplete #zip="matAutocomplete" (optionSelected)='selectZipCode($event,zipDesc)'>
+              <mat-option *ngFor="let option of zipcodes" [value]="option.zip_code">
+                {{option.zip_code}} - {{option.city}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
       </ion-item>
         <ion-item>
             <ion-label>
@@ -173,19 +173,34 @@
             <ion-label>
               <p>Mobile Num 1</p>
             </ion-label>
-            <ion-input formControlName="mobile_num_1" type="text"></ion-input>
-        </ion-item>
+            <ion-input formControlName="mobile_num_1" type="text"></ion-input>           
+          </ion-item>
+          <ion-item *ngIf="!!formPanel.get('mobile_num_1').errors && !!formPanel.get('mobile_num_1').errors.pattern && (formPanel.get('mobile_num_1').dirty || formPanel.get('mobile_num_1').touched)">
+            <ion-label color="danger" >
+              Invalid Mobile Number
+            </ion-label> 
+          </ion-item>
         <ion-item>
             <ion-label>
               <p>Mobile Num 2</p>
             </ion-label>
             <ion-input formControlName="mobile_num_2" type="text"></ion-input>
         </ion-item>
+        <ion-item *ngIf="!!formPanel.get('mobile_num_2').errors && !!formPanel.get('mobile_num_2').errors.pattern && (formPanel.get('mobile_num_2').dirty || formPanel.get('mobile_num_2').touched)">
+          <ion-label color="danger" >
+            Invalid Mobile Number
+          </ion-label> 
+        </ion-item>
         <ion-item>
             <ion-label>
               <p>Email Add</p>
             </ion-label>
             <ion-input formControlName="email_add" type="text"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="!!formPanel.get('email_add').errors && !!formPanel.get('email_add').errors.pattern && (formPanel.get('email_add').dirty || formPanel.get('email_add').touched)">
+          <ion-label color="danger" >
+            Invalid Email Address
+          </ion-label> 
         </ion-item>
         <ion-item>
             <ion-label>

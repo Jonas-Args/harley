@@ -3,6 +3,7 @@ import { Platform, NavController } from '@ionic/angular';
 import { StorageService } from '../../services/util/storage.service';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -21,6 +22,7 @@ export class ListPage implements OnInit {
     public storage: StorageService,
     private fb: FormBuilder,
     private barcodeScanner: BarcodeScanner,
+    private router: Router
   ) {
     this.formPanel = fb.group({
       panel_code: ['', [Validators.required]]
@@ -38,7 +40,11 @@ export class ListPage implements OnInit {
   }
 
   addIncentiveRequest(){
-    this.navCtrl.navigateForward('/irf');
+    if(this.formPanel.value['panel_code'] != ''){
+      this.router.navigate(['/irf'], { queryParams: { panel_code: this.formPanel.value['panel_code']} });
+    }else{
+      this.navCtrl.navigateForward('/irf');
+    }
   }
 
   removeTagPanel(key){

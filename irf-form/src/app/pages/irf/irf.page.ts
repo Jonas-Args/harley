@@ -91,34 +91,29 @@ export class irfPage implements OnInit {
         other_address: ['', [Validators.required]],
         home_tel_num1: ['', [Validators.required]],
         home_tel_num2: ['', [Validators.required]],
-        mobile_num_1: ['', [Validators.required]],
-        mobile_num_2: ['', [Validators.required]],
-        email_add: ['', [Validators.required]],
+        mobile_num_1: ['', [Validators.required,Validators.pattern('^(09|\\+639)\\d{9}$')]],
+        mobile_num_2: ['', [Validators.required,Validators.pattern('^(09|\\+639)\\d{9}$')]],
+        email_add: ['', [Validators.required,Validators.pattern('\\S+@\\S+\\.\\S+')]],
         proof_of_billing: ['', [Validators.required]],
         valid_id: ['', [Validators.required]],
         image_path: ['', [Validators.required]]
       });
       // add field here
+      this.formPanel.valueChanges.subscribe(value=>{
+        console.log(this.formPanel.get('email_add').errors)
+      })
       this.formPanel.get('zip_code').valueChanges
       .pipe(debounceTime(800),distinctUntilChanged(),distinctUntilChanged())
        // only emit if value is different from previous value
       .subscribe(value=>{
         this.zipcodes = JSON.parse(JSON.stringify(this.csvItems.filter(res=>res["zip_code"].includes(value))))
-        console.log(this.zipcodes)
-        if(this.zipcodes.length == 1){
-          let zip = this.zipcodes[0]
-          this.formPanel.get('municipality').setValue(zip["city"], {emitEvent: false})
-          this.formPanel.get('province').setValue(zip["major_area"], {emitEvent: false})
-          this.barangays = this.barangayItems.filter(res=>res["city"].toLowerCase()==zip["city"].toLowerCase())
-          
-          console.log(this.barangays)
-        }
+
       })
 
       this.formPanel.get('province').valueChanges
       .pipe(debounceTime(800),distinctUntilChanged())
       .subscribe(value=>{
-        this.provinces = Array.from(new Set(this.csvItems.filter(res=>res["major_area"].toLowerCase().includes(value.toLowerCase())).map(s=>s.major_area)))
+        this.provinces = Array.from(new Set(this.barangayItems.filter(res=>res["province"].toLowerCase().includes(value.toLowerCase())).map(s=>s.province)))
         console.log(this.provinces)
       })
 
@@ -126,11 +121,11 @@ export class irfPage implements OnInit {
       .pipe(debounceTime(800),distinctUntilChanged())
       .subscribe(value=>{
         if(!!this.provinceDesc && this.provinceDesc != ''){
-          this.cities = this.csvItems.filter(res=>res["city"].toLowerCase().includes(value.toLowerCase()) && this.provinceDesc.toLowerCase()==res["major_area"].toLowerCase())
+          this.cities = Array.from(new Set(this.barangayItems.filter(res=>res["city"].toLowerCase().includes(value.toLowerCase()) && this.provinceDesc.toLowerCase()==res["province"].toLowerCase()).map(s=>s.city)))
         }else{
-          this.cities = this.csvItems.filter(res=>res["city"].toLowerCase().includes(value.toLowerCase()))
+          this.cities = Array.from(new Set(this.barangayItems.filter(res=>res["city"].toLowerCase().includes(value.toLowerCase())).map(s=>s.city)))
         }
-        console.log(this.cities)
+        console.log("cities",this.cities)
       })
 
       this.formPanel.get('barangay_name').valueChanges
@@ -171,6 +166,10 @@ export class irfPage implements OnInit {
             this.formPanel.patchValue(data,{emitEvent: false})
           },
             error => console.error(error))
+        }
+
+        if(!!params.panel_code){
+          this.formPanel.get("panel_code").setValue(params.panel_code)
         }
         console.log(params); // {order: "popular"
       });
@@ -386,6 +385,7 @@ formatParsedBarangay(arr, hasTitles)
    let name,
        city,
        region,
+       province,
        obj = [];
 
    for(var j = 0; j < arr.length; j++)
@@ -398,14 +398,16 @@ formatParsedBarangay(arr, hasTitles)
          {
             name    = items[0];
             city         = items[1];
-            region         = items[2];
+            province         = items[2];
+            region         = items[3];
          }
          else
          {
             obj.push({
                name   : items[0],
                city       : items[1],
-               region       : items[2],
+               province       : items[2],
+               region       : items[3],
             });
          }
       }
@@ -444,7 +446,14 @@ saveRequest(value){
   selectProvince(value, element){
     element.value = value.option.value
     this.provinceDesc = element.value
-    this.cities = this.csvItems.filter(res=>res["major_area"].toLowerCase()==this.provinceDesc.toLowerCase())
+
+    this.selectedProvince = this.barangayItems.filter(res=>res["province"].toLowerCase()==this.provinceDesc.toLowerCase())[0]
+    
+    this.cities = Array.from(new Set(this.barangayItems.filter(res=>res["province"].toLowerCase()==this.provinceDesc.toLowerCase()).map(s=>s.city)))
+    console.log("cities",this.cities)
+    if(this.formPanel.get("region").value == "" && !!this.selectedProvince["region"]){
+      this.formPanel.get("region").setValue(this.selectedProvince["region"],{emitEvent: false})
+    }
     console.log(this.cities)
   }
 
@@ -452,17 +461,16 @@ saveRequest(value){
     element.value = value.option.value
     this.cityDesc = element.value
 
-    let exact = this.csvItems.filter(res=>res["city"].toLowerCase() == this.cityDesc.toLowerCase())
+    let city = this.barangayItems.filter(res=>res["city"].toLowerCase() == this.cityDesc.toLowerCase())[0]
         
-    if(exact.length == 1){
-      let city = exact[0]
+    if(!!city["city"]){
       this.barangays = this.barangayItems.filter(res=>res["city"].toLowerCase()==city["city"].toLowerCase())
-      this.formPanel.get("region").setValue(this.barangays[0]["region"],{emitEvent: false})
-      if(this.formPanel.get("zip_code").value == ""){
-        this.formPanel.get("zip_code").setValue(city["zip_code"],{emitEvent: false})
-      }
       if(this.formPanel.get("province").value == ""){
-        this.formPanel.get("province").setValue(city["major_area"],{emitEvent: false})
+        this.formPanel.get("province").setValue(city["province"],{emitEvent: false})
+      }
+
+      if(this.formPanel.get("region").value == ""){
+        this.formPanel.get("region").setValue(city["region"],{emitEvent: false})
       }
     }
   }
@@ -486,7 +494,7 @@ saveRequest(value){
               this.currentImagePath = this.getTrustImg(imagePath)
               var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
               var correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
-              this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
+              this.copyFileToLocalDir(currentName, this.createFileName());
              }, (err) => {
                debugger
               // Handle error
@@ -501,8 +509,9 @@ saveRequest(value){
     return path;
     }
 
-  copyFileToLocalDir(namePath, currentName, newFileName) {
-    this.file.copyFile(namePath, currentName, this.file.dataDirectory, newFileName).then(success => {
+  copyFileToLocalDir(currentName, newFileName) {
+    let path= this.file.externalRootDirectory + "irf_entry"
+    this.file.copyFile(path, currentName, this.file.dataDirectory, newFileName).then(success => {
       this.currentImage = success.nativeURL
     }, error => {
         debugger
