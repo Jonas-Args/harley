@@ -9,6 +9,14 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { bindingUpdated } from '@angular/core/src/render3/instructions';
 import { Platform } from '@ionic/angular';
 
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+
+
+import { Http } from '@angular/http';
+import * as papa from 'papaparse';
+
 declare var AdvancedGeolocation:any;
 
 @Component({
@@ -25,7 +33,12 @@ export class irfPage implements OnInit {
   showBranchName=false;
   irdId;
   requests;
-  
+
+  csvData: any[] = [];
+  headerRow: any[] = [];
+
+  fileTransfer: FileTransferObject = this.transfer.create();
+
   constructor(
     private barcodeScanner: BarcodeScanner,
     private sms: SMS,
@@ -35,15 +48,97 @@ export class irfPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private nativeStorage: NativeStorage,
-    private platform: Platform
+    private platform: Platform,
+    private http: Http,
+    private transfer: FileTransfer, 
+    private file: File,
+    private fileChooser: FileChooser
     ) {
       this.initForm()
+      this.readCsvData();
      }
 
     ngOnInit() {
       this.get_last_saved()
     }
 
+    private readCsvData() {
+      this.http.get('assets/dummyData.csv')
+        .subscribe(
+        data => this.extractData(data),
+        err => this.handleError(err)
+        );
+    }
+
+    private extractData(res) {
+      let csvData = res['_body'] || '';
+      let parsedData = papa.parse(csvData).data;
+   
+      this.headerRow = parsedData[0];
+   
+      parsedData.splice(0, 1);
+      this.csvData = parsedData;
+    }
+   
+    downloadCSV() {
+      let csv = papa.unparse({
+        fields: this.headerRow,
+        data: this.csvData
+      });
+   
+      var fileName: any = "team.csv"
+      var blob = new Blob([csv]);
+      this.file.writeFile(this.file.externalRootDirectory+"Download", fileName, blob)
+        .then(
+        _ => {
+          console.log('Success ;-)')
+        }
+        )
+        .catch(
+        err => {
+  
+             this.file.writeExistingFile(this.file.externalRootDirectory+"Download", fileName, csv)
+            .then(
+            _ => {
+              console.log('Success ;-)')
+            }
+            )
+            .catch(
+            err => {
+              console.log('Failure')
+            }
+            )
+        })
+        this.download()
+      // // Dummy implementation for Desktop download purpose
+      // var blob = new Blob([csv]);
+      // var a = window.document.createElement("a");
+      // a.href = window.URL.createObjectURL(blob);
+      // a.download = "newdata.csv";
+      // document.body.appendChild(a);
+      // a.click();
+      // document.body.removeChild(a);
+
+   
+    }
+    uploadCSV(){
+      this.fileChooser.open()
+      .then(uri => console.log(uri))
+      .catch(e => console.log(e));
+        }
+
+    download() {
+      const url = this.file.externalRootDirectory+"Download"+'team.csv';
+      this.fileTransfer.download(url, url).then((entry) => {
+        console.log('download complete: ' + entry.toURL());
+      }, (error) => {
+        // handle error
+      });
+    }
+
+     handleError(err) {
+        console.log('something went wrong: ', err);
+    }
     save_last_saved(){
       this.nativeStorage.setItem("last_saved", this.formPanel.value)
       .then(
