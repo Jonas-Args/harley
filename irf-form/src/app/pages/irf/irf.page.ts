@@ -12,7 +12,7 @@ import { Platform } from '@ionic/angular';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/File/ngx';
-
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 declare var AdvancedGeolocation:any;
 
 @Component({
@@ -70,6 +70,8 @@ export class irfPage implements OnInit {
     private platform: Platform
     ) {
       this.formPanel = fb.group({
+        loc_accuracy: ['', [Validators.required]],
+        gps_location: ['', [Validators.required]],
         panel_code: ['', [Validators.required]],
         panel_name: ['', [Validators.required]],
         gate_num: ['', [Validators.required]],
@@ -97,7 +99,11 @@ export class irfPage implements OnInit {
         image_path: ['', [Validators.required]]
       });
       // add field here
-      this.formPanel.get('zip_code').valueChanges.subscribe(value=>{
+      this.formPanel.get('zip_code').valueChanges
+      .pipe(debounceTime(400))
+      .pipe(distinctUntilChanged())
+       // only emit if value is different from previous value
+      .subscribe(value=>{
         this.zipcodes = JSON.parse(JSON.stringify(this.csvItems.filter(res=>res["zip_code"].includes(value))))
         console.log(this.zipcodes)
         if(this.zipcodes.length == 1){
@@ -110,12 +116,18 @@ export class irfPage implements OnInit {
         }
       })
 
-      this.formPanel.get('province').valueChanges.subscribe(value=>{
+      this.formPanel.get('province').valueChanges
+      .pipe(debounceTime(400))
+      .pipe(distinctUntilChanged())
+      .subscribe(value=>{
         this.provinces = Array.from(new Set(this.csvItems.filter(res=>res["major_area"].toLowerCase().includes(value.toLowerCase())).map(s=>s.major_area)))
         console.log(this.provinces)
       })
 
-      this.formPanel.get('municipality').valueChanges.subscribe(value=>{
+      this.formPanel.get('municipality').valueChanges
+      .pipe(debounceTime(400))
+      .pipe(distinctUntilChanged())
+      .subscribe(value=>{
         if(!!this.provinceDesc && this.provinceDesc != ''){
           this.cities = this.csvItems.filter(res=>res["city"].toLowerCase().includes(value.toLowerCase()) && this.provinceDesc.toLowerCase()==res["major_area"].toLowerCase())
         }else{
@@ -124,7 +136,10 @@ export class irfPage implements OnInit {
         console.log(this.cities)
       })
 
-      this.formPanel.get('barangay_name').valueChanges.subscribe(value=>{
+      this.formPanel.get('barangay_name').valueChanges
+      .pipe(debounceTime(400))
+      .pipe(distinctUntilChanged())
+      .subscribe(value=>{
         if(!!this.cityDesc && this.cityDesc != ''){
           this.barangays = this.barangayItems.filter(res=>res["name"].toLowerCase().includes(value.toLowerCase()) && this.cityDesc.toLowerCase()==res["city"].toLowerCase())
         }else{
@@ -135,6 +150,7 @@ export class irfPage implements OnInit {
      }
 
     ngOnInit() {
+      this.start()
       this.route.queryParams
       .subscribe(params => {
         console.log("params",params)
@@ -167,35 +183,50 @@ export class irfPage implements OnInit {
   }
 
   sendSMS(){
-    console.log("sending"+this.formatMessage())
     this.showToast("sending"+this.formatMessage())
+    console.log("sending",this.formatMessage())
    this.sms.send('09177131456', this.formatMessage()).then(
     () => {
+      this.saveRequest(this.formPanel.value)
       console.log("message sent")
-      let hey = this.tagPanelObj
-      if(!!this.tagPanelObj && !!this.tagPanelObj.Id){
-        let newObj = Object.assign({sent:true},this.formPanel.value)
-        // this.tagPanelObj = Object.assign(this.tagPanelObj,newObj)
-        this.save("irf",newObj)
-      }else{
-        this.save("irf",Object.assign({sent:true},this.formPanel.value))
-      }
     } ,
     error => console.error('Error removing item', error)
     );
-   
   }
 
   formatMessage(){
     let formValue = this.formPanel.value
-    let message = `${formValue.panel_code||""};`+
-                   `${formValue.panel_name||""};` +
-                   `${formValue.panel_gps_location||""};` +
-                   `${formValue.panel_status||""};` + 
-                   `${formValue.panel_remarks||""};` +
-                   `${formValue.panel_receipted||""};` +
-                   `${formValue.panel_week_code||""}`
+    let message = "IAF;"+
+                   `${formValue.loc_accuracy||""};` +
+                   `${formValue.gps_location||""};` +
+                   `${formValue.panel_code||""};` +
+                   `${formValue.panel_name||""};` + 
+                   `${formValue.gate_num||""};` +
+                   `${formValue.house_num||""};` +
+                   `${formValue.condo_name||""};` +
+                   `${formValue.subdivision_name||""};` +
+                   `${formValue.street_name||""};` +
+                   `${formValue.barangay_name||""};` +
+                   `${formValue.zip_code||""};` + 
+                   `${formValue.municipality||""};` +
+                   `${formValue.province||""};` +
+                   `${formValue.region||""};` +
+                   `${formValue.landmark||""};` +
+                   `${formValue.best_sched_day||""};` +
+                   `${formValue.best_sched_time||""};` + 
+                   `${formValue.pref_delivery||""};` +
+                   `${formValue.other_address||""};` +
+                   `${formValue.home_tel_num1||""};` +
+                   `${formValue.home_tel_num2||""};` +
+                   `${formValue.mobile_num_1||""};` +
+                   `${formValue.mobile_num_2||""};` +
+                   `${formValue.email_add||""};` +
+                   `${formValue.proof_of_billing||""};` +
+                   `${formValue.valid_id||""};` +
+                   `${formValue.image_path||""};`
+
     // add field here 
+    console.log("message",message)
     return message 
   }
 
@@ -229,8 +260,6 @@ export class irfPage implements OnInit {
     this.http.get('/assets/data/zip.csv')
     .subscribe((data)=>
     {
-        var csv         = this.parseCSVFile(data);
-        this.csvItems  = csv;
     },(error)=>{
         let arrayResult         = this.parseCSVFile(error.error.text);
         this.csvItems  = this.formatParsedObject(arrayResult, true);
@@ -240,27 +269,10 @@ export class irfPage implements OnInit {
     this.http.get('/assets/data/barangay.csv')
     .subscribe((data)=>
     {
-      debugger
-        // var csv         = this.parseCSVFile(data);
-        // this.csvItems  = csv;
     },(error)=>{
         let arrayResult         = this.parseCSVFile(error.error.text);
         this.barangayItems  = this.formatParsedBarangay(arrayResult, true);
         this.regions = Array.from(new Set(this.csvItems.map(s=>s.region)))
-        // this.storage.getItem("zip_saved").then(
-        //   data=>{ 
-        //     if(!data["zip_saved"]){
-        //       this.csvItems.forEach(element => {
-        //         this.save("zip"+element["zip_code"], element)
-        //       });
-        //       this.save("zip_saved", {"zip_saved":true})
-        //     }else{
-        //     }
-        // },
-        //   error => {
-        //     console.error(error)
-        //   }
-        // )
     });
 
   }
@@ -409,6 +421,7 @@ saveRequest(value){
       value = Object.assign(this.requestObj,value)
     }
     this.storage.setItem("request",value)
+    this.router.navigate([`/`])
 }
 
   selectDescription(value, element){
@@ -447,7 +460,7 @@ saveRequest(value){
   }
 
   selectZipCode(value, element){
-    element.value = value.option.value.zip_code
+    element.value = value.option.value
     this.zipDesc = element.value
   }
 
@@ -493,6 +506,81 @@ saveRequest(value){
         n = d.getTime(),
         newFileName = n + ".jpg";
     return newFileName;
+  }
+
+  start(){
+  
+    AdvancedGeolocation.start((success)=>{
+
+        try{
+          let jsonObject: any = JSON.parse(success);
+
+          if(!!jsonObject.latitude){
+            this.location = jsonObject
+            
+            this.formPanel.get('gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
+            this.formPanel.get('loc_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))} meters`)
+          }else{
+            this.showToast("lat long not available")
+          }
+          
+     
+          
+          console.log("Provider now " +JSON.stringify(jsonObject));
+          // this.showToast(JSON.stringify(jsonObject))
+          switch(jsonObject.provider){
+            case "gps":
+              //TODO
+              break;
+
+            case "network":
+              //TODO
+              break;
+
+            case "satellite":
+              //TODO
+              break;
+
+            case "cell_info":
+              //TODO
+              break;
+
+            case "cell_location":
+              //TODO
+              break;
+
+            case "signal_strength":
+              //TODO
+              break;
+          }
+        }
+        catch(exc){
+          //this.showToast("value"+exc)
+          console.log("Invalid JSON: " + exc);
+        }
+      },
+      (error)=>{
+        this.showToast(JSON.stringify(error))
+        console.log("ERROR! " + JSON.stringify(error));
+      },
+      ////////////////////////////////////////////
+      //
+      // REQUIRED:
+      // These are required Configuration options!
+      // See API Reference for additional details.
+      //
+      ////////////////////////////////////////////
+      {
+        "minTime":500,         // Min time interval between updates (ms)
+        "minDistance":1,       // Min distance between updates (meters)
+        "noWarn":true,         // Native location provider warnings
+        "providers":"gps",     // Return GPS, NETWORK and CELL locations
+        "useCache":true,       // Return GPS and NETWORK cached locations
+        "satelliteData":true, // Return of GPS satellite info
+        "buffer":true,        // Buffer location data
+        "bufferSize":3,         // Max elements in buffer
+        "signalStrength":false // Return cell signal strength data
+      });
   }
 
   

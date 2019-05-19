@@ -9,12 +9,18 @@
 
 <ion-content padding>
     <form [formGroup]="formPanel" (ngSubmit)='saveRequest(formPanel.value)'>
-        <ion-grid>
+      <ion-item>
+          <ion-label>
+            <p>Loc Accu:</p>
+          </ion-label>
+          <ion-input disabled="true" formControlName="loc_accuracy" type="text"></ion-input>
+        </ion-item> 
+      <ion-grid>
             <ion-row>
               <ion-col size="12">
                 <ion-item>
                     <ion-label>
-                      <p>Panel Code:</p>
+                      <p>GPM ID:</p>
                     </ion-label>
                     <ion-input formControlName="panel_code" type="text"></ion-input>
                   </ion-item>
@@ -37,7 +43,7 @@
           <mat-form-field class="example-full-width">
               <input #zipDesc='' type="text"   matInput formControlName="zip_code" [matAutocomplete]="zip">
               <mat-autocomplete #zip="matAutocomplete" (optionSelected)='selectZipCode($event,zipDesc)'>
-                <mat-option *ngFor="let option of zipcodes" [value]="option">
+                <mat-option *ngFor="let option of zipcodes" [value]="option.zip_code">
                   {{option.zip_code}}
                 </mat-option>
               </mat-autocomplete>
@@ -200,14 +206,17 @@
         <ion-item *ngIf="currentImagePath">
           <img [src]="currentImagePath">
         </ion-item>
-          <ion-grid>
+        <ion-grid>
             <ion-row>
-                <ion-col size="6">
-                    <ion-button expand="full" fill="solid" [routerLink]="['/']" >Cancel</ion-button>
+                <ion-col size="4">
+                    <ion-button expand="full" fill="solid" type="submit" >Save</ion-button>
                 </ion-col>
-                <ion-col size="6">
-                    <ion-button expand="full" fill="solid" type="submit">ENTER REQUEST</ion-button>
-                </ion-col>
+              <ion-col size="4">
+                  <ion-button expand="full" fill="solid" (click)="sendSMS()" >SEND</ion-button>
+              </ion-col>
+              <ion-col size="4">
+                <ion-button expand="full" fill="solid" [routerLink]="['/']" >Cancel</ion-button>
+            </ion-col>
             </ion-row>
           </ion-grid>
         </form>

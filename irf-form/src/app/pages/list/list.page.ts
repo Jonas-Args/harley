@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Platform, NavController } from '@ionic/angular';
 import { StorageService } from '../../services/util/storage.service';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 @Component({
   selector: 'app-list',
@@ -13,11 +14,13 @@ export class ListPage implements OnInit {
   formPanel: FormGroup;
   list:any;
   results:any;
+  isBarcodeScanned = false;
 
   constructor(
     public navCtrl: NavController,
     public storage: StorageService,
     private fb: FormBuilder,
+    private barcodeScanner: BarcodeScanner,
   ) {
     this.formPanel = fb.group({
       panel_code: ['', [Validators.required]]
@@ -61,6 +64,18 @@ export class ListPage implements OnInit {
   search(){
   }
 
+  scan(){
+    this.isBarcodeScanned = false
+    this.barcodeScanner.scan().then(barcodeData => {
+      console.log('Barcode data', barcodeData);
+      this.isBarcodeScanned = true
+      this.formPanel.get('panel_code').setValue(barcodeData.text)
+      
+     }).catch(err => {
+         console.log('Error', err);
+     });
+
+  }
   // private setTagPanels(){
   //   this.sql.tagPanelsSubject.subscribe(res=>{
   //     this.tagPanels = res

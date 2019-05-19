@@ -17,13 +17,16 @@
                 <ion-input formControlName="panel_code" type="text"></ion-input>
               </ion-item>
         </ion-col>
+        <ion-col size="12" >
+            <ion-button expand="full" fill="solid" (click)="scan()">SCAN</ion-button>
+        </ion-col>
         </ion-row>
       </ion-grid>
       <ion-grid>
           <ion-row>
               <ion-col>
                   <ion-button expand="full" fill="solid" (click)="addIncentiveRequest()">
-                    Add Incentive Request
+                    Add Panelist
                   </ion-button>
               </ion-col>
           </ion-row>
@@ -32,7 +35,7 @@
   <ion-list>
     <ng-container  *ngFor="let row of results; let i = index">
         <ion-item [routerLink]="['/irf']" [queryParams]="{ Id: row.Id}">
-        <ion-col >{{i}}</ion-col>
+        <ion-col >{{i+1}}</ion-col>
         <ion-col>{{row.panel_code}}</ion-col>
         <ion-col>{{row.panel_name}}</ion-col>
         <!-- add field here -->
