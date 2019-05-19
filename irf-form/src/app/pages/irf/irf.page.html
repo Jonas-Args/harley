@@ -1,0 +1,216 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Incentive Request Form</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <form [formGroup]="formPanel" (ngSubmit)='saveRequest(formPanel.value)'>
+        <ion-grid>
+            <ion-row>
+              <ion-col size="12">
+                <ion-item>
+                    <ion-label>
+                      <p>Panel Code:</p>
+                    </ion-label>
+                    <ion-input formControlName="panel_code" type="text"></ion-input>
+                  </ion-item>
+            </ion-col>
+            <ion-col size="12" >
+              <ion-button expand="full" fill="solid" (click)="scan()">SCAN</ion-button>
+          </ion-col>
+            </ion-row>
+          </ion-grid>
+        <ion-item>
+            <ion-label>
+              <p>Panel Name:</p>
+            </ion-label>
+            <ion-input formControlName="panel_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Zip Code:</p>
+          </ion-label>
+          <mat-form-field class="example-full-width">
+              <input #zipDesc='' type="text"   matInput formControlName="zip_code" [matAutocomplete]="zip">
+              <mat-autocomplete #zip="matAutocomplete" (optionSelected)='selectZipCode($event,zipDesc)'>
+                <mat-option *ngFor="let option of zipcodes" [value]="option">
+                  {{option.zip_code}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+        </ion-item>
+      <ion-item>
+        <ion-label>
+          <p>Province:</p>
+        </ion-label>
+        <mat-form-field class="example-full-width">
+            <input #provinceDesc='' type="text" aria-label="Number" matInput formControlName="province" [matAutocomplete]="province">
+            <mat-autocomplete #province="matAutocomplete" (optionSelected)='selectProvince($event,provinceDesc)'>
+              <mat-option *ngFor="let option of provinces" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <p>Municipality:</p>
+        </ion-label>
+        <mat-form-field class="example-full-width">
+            <input #cityDesc='' type="text" aria-label="Number" matInput formControlName="municipality" [matAutocomplete]="municipality">
+            <mat-autocomplete #municipality="matAutocomplete" (optionSelected)='selectCity($event,cityDesc)'>
+              <mat-option *ngFor="let option of cities" [value]="option.city">
+                {{option.city}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <p>Barangay:</p>
+        </ion-label>
+        <mat-form-field class="example-full-width">
+            <input #itemDesc='' type="text" aria-label="Number" matInput formControlName="barangay_name" [matAutocomplete]="barangay">
+            <mat-autocomplete #barangay="matAutocomplete" (optionSelected)='selectDescription($event,itemDesc)'>
+              <mat-option *ngFor="let option of barangays" [value]="option.name">
+                {{option.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+      </ion-item>
+      <ion-item>
+          <ion-label>
+            <p>Region:</p>
+          </ion-label>
+          <ion-input formControlName="region" type="text"></ion-input>
+      </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Gate Num:</p>
+            </ion-label>
+            <ion-input formControlName="gate_num" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>House Num:</p>
+            </ion-label>
+            <ion-input formControlName="house_num" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>TH  Condo Name:</p>
+            </ion-label>
+            <ion-input formControlName="condo_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Subdivision Name:</p>
+            </ion-label>
+            <ion-input formControlName="subdivision_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Street Name:</p>
+            </ion-label>
+            <ion-input formControlName="street_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Landmark:</p>
+            </ion-label>
+            <ion-input formControlName="landmark" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Best Sched Day:</p>
+            </ion-label>
+            <ion-input formControlName="best_sched_day" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Best Sched Time:</p>
+            </ion-label>
+            <ion-input formControlName="best_sched_time" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Pref Delivery:</p>
+            </ion-label>
+            <ion-input formControlName="pref_delivery" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Other Address:</p>
+            </ion-label>
+            <ion-input formControlName="other_address" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Home Tel Num1</p>
+            </ion-label>
+            <ion-input formControlName="home_tel_num1" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Home Tel Num2</p>
+            </ion-label>
+            <ion-input formControlName="home_tel_num2" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Mobile Num 1</p>
+            </ion-label>
+            <ion-input formControlName="mobile_num_1" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Mobile Num 2</p>
+            </ion-label>
+            <ion-input formControlName="mobile_num_2" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Email Add</p>
+            </ion-label>
+            <ion-input formControlName="email_add" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Proof of Billing</p>
+            </ion-label>
+            <ion-input formControlName="proof_of_billing" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Valid Id</p>
+            </ion-label>
+            <ion-input formControlName="valid_id" type="text"></ion-input>
+        </ion-item>
+        <ion-grid>
+            <ion-row>
+                <ion-col size="12">
+                    <ion-button expand="full" fill="solid" (click)="takePicture()" ><ion-icon name="camera"></ion-icon>Add Picture</ion-button>
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+        <ion-item *ngIf="currentImagePath">
+          <img [src]="currentImagePath">
+        </ion-item>
+          <ion-grid>
+            <ion-row>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" [routerLink]="['/']" >Cancel</ion-button>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-button expand="full" fill="solid" type="submit">ENTER REQUEST</ion-button>
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+
+  
+</ion-content>

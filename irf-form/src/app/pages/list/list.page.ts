@@ -1,0 +1,70 @@
+import { Component, OnInit } from '@angular/core';
+import { Platform, NavController } from '@ionic/angular';
+import { StorageService } from '../../services/util/storage.service';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+
+@Component({
+  selector: 'app-list',
+  templateUrl: './list.page.html',
+  styleUrls: ['./list.page.scss'],
+})
+export class ListPage implements OnInit {
+
+  formPanel: FormGroup;
+  list:any;
+  results:any;
+
+  constructor(
+    public navCtrl: NavController,
+    public storage: StorageService,
+    private fb: FormBuilder,
+  ) {
+    this.formPanel = fb.group({
+      panel_code: ['', [Validators.required]]
+    });
+   }
+
+  ngOnInit() {
+    this.formPanel.get('panel_code').valueChanges.subscribe(value=>{
+      this.results = this.list.filter(res=>res["panel_code"].includes(value))
+    })
+  }
+
+  ionViewDidEnter () {
+   this.getAllItems()
+  }
+
+  addIncentiveRequest(){
+    this.navCtrl.navigateForward('/irf');
+  }
+
+  removeTagPanel(key){
+    this.storage.removeItem(key).then(
+      data => { 
+        this.getAllItems()
+      },
+      error => console.error(error)
+    )
+  }
+
+  getAllItems(){
+    this.storage.getAllItem().then(
+      data => { 
+        let objects = <any[]>data;
+        this.results = this.list = objects.filter(res=>!!res["Id"] && res["Id"].includes('request'))
+        console.log("list",this.list)
+      },
+      error => console.error(error)
+    )
+  }
+
+  search(){
+  }
+
+  // private setTagPanels(){
+  //   this.sql.tagPanelsSubject.subscribe(res=>{
+  //     this.tagPanels = res
+  //     console.log("tagPanels", this.tagPanels)
+  //   })
+  // }
+}
