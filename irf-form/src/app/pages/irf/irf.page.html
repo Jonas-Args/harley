@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content padding>
-    <form [formGroup]="formPanel" (ngSubmit)='saveRequest(formPanel.value)'>
+    <form [formGroup]="formPanel" (ngSubmit)='saveRequest(formPanel.getRawValue())'>
       <ion-item>
           <ion-label>
             <p>Loc Accu:</p>
@@ -146,7 +146,10 @@
             <ion-label>
               <p>Pref Delivery:</p>
             </ion-label>
-            <ion-input formControlName="pref_delivery" type="text"></ion-input>
+            <ion-select placeholder="Select One" formControlName="pref_delivery">
+              <ion-select-option value="Home">Home</ion-select-option>
+              <ion-select-option value="Others">Others</ion-select-option>
+            </ion-select>
         </ion-item>
         <ion-item>
             <ion-label>

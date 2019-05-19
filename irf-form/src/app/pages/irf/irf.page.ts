@@ -26,7 +26,7 @@ export class irfPage implements OnInit {
   isBarcodeScanned = false;
   location;
   tagPanelObj;
-  showBranchName=false;
+  showOtherAddress=false;
   csvItems : any;
   barangayItems : any;
   selectedZip;
@@ -100,8 +100,7 @@ export class irfPage implements OnInit {
       });
       // add field here
       this.formPanel.get('zip_code').valueChanges
-      .pipe(debounceTime(400))
-      .pipe(distinctUntilChanged())
+      .pipe(debounceTime(800),distinctUntilChanged(),distinctUntilChanged())
        // only emit if value is different from previous value
       .subscribe(value=>{
         this.zipcodes = JSON.parse(JSON.stringify(this.csvItems.filter(res=>res["zip_code"].includes(value))))
@@ -117,16 +116,14 @@ export class irfPage implements OnInit {
       })
 
       this.formPanel.get('province').valueChanges
-      .pipe(debounceTime(400))
-      .pipe(distinctUntilChanged())
+      .pipe(debounceTime(800),distinctUntilChanged())
       .subscribe(value=>{
         this.provinces = Array.from(new Set(this.csvItems.filter(res=>res["major_area"].toLowerCase().includes(value.toLowerCase())).map(s=>s.major_area)))
         console.log(this.provinces)
       })
 
       this.formPanel.get('municipality').valueChanges
-      .pipe(debounceTime(400))
-      .pipe(distinctUntilChanged())
+      .pipe(debounceTime(800),distinctUntilChanged())
       .subscribe(value=>{
         if(!!this.provinceDesc && this.provinceDesc != ''){
           this.cities = this.csvItems.filter(res=>res["city"].toLowerCase().includes(value.toLowerCase()) && this.provinceDesc.toLowerCase()==res["major_area"].toLowerCase())
@@ -137,8 +134,7 @@ export class irfPage implements OnInit {
       })
 
       this.formPanel.get('barangay_name').valueChanges
-      .pipe(debounceTime(400))
-      .pipe(distinctUntilChanged())
+      .pipe(debounceTime(800),distinctUntilChanged())
       .subscribe(value=>{
         if(!!this.cityDesc && this.cityDesc != ''){
           this.barangays = this.barangayItems.filter(res=>res["name"].toLowerCase().includes(value.toLowerCase()) && this.cityDesc.toLowerCase()==res["city"].toLowerCase())
@@ -146,6 +142,19 @@ export class irfPage implements OnInit {
           this.barangays = this.barangayItems.filter(res=>res["name"].toLowerCase().includes(value.toLowerCase()))
         }
         console.log(this.cities)
+      })
+
+      this.formPanel.controls['other_address'].disable();
+      
+      this.formPanel.get('pref_delivery').valueChanges.subscribe(value=>{
+        if(value=="Others"){
+          console.log("enabled")
+          this.formPanel.controls['other_address'].enable();
+        }else{
+          console.log("disabled")
+          this.formPanel.controls['other_address'].disable();
+          
+        }
       })
      }
 
@@ -222,8 +231,7 @@ export class irfPage implements OnInit {
                    `${formValue.mobile_num_2||""};` +
                    `${formValue.email_add||""};` +
                    `${formValue.proof_of_billing||""};` +
-                   `${formValue.valid_id||""};` +
-                   `${formValue.image_path||""};`
+                   `${formValue.valid_id||""};`
 
     // add field here 
     console.log("message",message)
@@ -574,7 +582,7 @@ saveRequest(value){
         "minTime":500,         // Min time interval between updates (ms)
         "minDistance":1,       // Min distance between updates (meters)
         "noWarn":true,         // Native location provider warnings
-        "providers":"gps",     // Return GPS, NETWORK and CELL locations
+        "providers":"all",     // Return GPS, NETWORK and CELL locations
         "useCache":true,       // Return GPS and NETWORK cached locations
         "satelliteData":true, // Return of GPS satellite info
         "buffer":true,        // Buffer location data
