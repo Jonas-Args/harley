@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      IRF
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="formPanel" (ngSubmit)='search()'>
+        <ion-grid>
+            <ion-row>
+              <ion-col col-12>
+                <ion-item>
+                    <ion-label>
+                      <p>Panel Code:</p>
+                    </ion-label>
+                    <ion-input formControlName="panel_code" type="text"></ion-input>
+                  </ion-item>
+            </ion-col>
+            <ion-col col-12 >
+                <button ion-button full (click)="scan()">SCAN</button>
+            </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-grid>
+              <ion-row>
+                  <ion-col>
+                      <button ion-button full (click)="addIncentiveRequest()">
+                        Add Panelist
+                      </button>
+                  </ion-col>
+              </ion-row>
+            </ion-grid>
+     </form>
+     <ion-list>
+        <ng-container  *ngFor="let row of results; let i = index">
+            <ion-item  (click)="moveToIrf(row)">
+            <ion-col >{{i+1}}</ion-col>
+            <ion-col>{{row.panel_code}}</ion-col>
+            <ion-col>{{row.panel_name}}</ion-col>
+            <!-- add field here -->
+            </ion-item>
+            <ion-col (click)="removeTagPanel(row.Id); $event.stopPropagation()">remove</ion-col>
+        </ng-container>
+        
+      </ion-list>
+</ion-content>
