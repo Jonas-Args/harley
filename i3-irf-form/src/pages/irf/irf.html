@@ -3,7 +3,7 @@
     <button button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>IRF</ion-title>
+    <ion-title>IRF <ion-col *ngIf="this.requestObj['stored']==true"><ion-icon name="cloud-done"></ion-icon></ion-col><p *ngIf="uploading">Uploading ....</p></ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -29,9 +29,6 @@
                         <ion-input formControlName="panel_code" type="text"></ion-input>
                       </ion-item>
                 </ion-col>
-                <ion-col size="12" >
-                  <button ion-button full (click)="scan()">SCAN</button>
-              </ion-col>
                 </ion-row>
               </ion-grid>
             <ion-item>
@@ -221,24 +218,40 @@
             </ion-item> -->
             <ion-grid>
                 <ion-row>
-                    <ion-label>
-                        <p>Proof of Billing</p>
-                      </ion-label>
                     <ion-col size="12">
-                        <button ion-button full [disabled]="disableTakePicture" (click)="takePicture('POB')" ><ion-icon name="camera"></ion-icon>Add Picture</button>
-                    </ion-col>
+                        <p>Proof of Billing</p>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col col-5>
+                          <button ion-button full (click)="takePicture('POB')" >Add Picture</button>
+                      </ion-col>
+                      <ion-col col-5>
+                          <button *ngIf="this.requestObj['stored']==true && !!proofOfBillingImagePathNative && connectedToNet" ion-button full (click)="upload('POB',proofOfBillingImagePathNative)" >Upload</button>
+                      </ion-col>
+                      <ion-col col-2>
+                          <ion-icon style="zoom:2.0;" *ngIf="requestObj['POBstored']==true" name="cloud-done"></ion-icon>
+                      </ion-col>
                 </ion-row>
               </ion-grid>
               <ion-item *ngIf="proofOfBillingImagePath">
-                  <img [src]="proofOfBillingImagePath">
+                  <img #img1='' [src]="proofOfBillingImagePath">
                 </ion-item>
               <ion-grid>
                   <ion-row>
-                      <ion-label>
-                          <p>Valid Id</p>
-                        </ion-label>
                       <ion-col size="12">
-                          <button ion-button full [disabled]="disableTakePicture" (click)="takePicture('ID')" ><ion-icon name="camera"></ion-icon>Add Picture</button>
+                          <p>Valid Id </p>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                      <ion-col col-5>
+                          <button ion-button full  (click)="takePicture('ID')" >Add Picture</button>
+                      </ion-col>
+                      <ion-col col-5>
+                          <button *ngIf="this.requestObj['stored']==true && !!validIdImagePathNative && connectedToNet" ion-button full (click)="upload('ID',validIdImagePathNative)" >Upload</button>
+                      </ion-col>
+                        <ion-col col-2>
+                          <ion-icon style="zoom:2.0;" *ngIf="requestObj['IDstored']==true" name="cloud-done"></ion-icon>
                       </ion-col>
                   </ion-row>
                 </ion-grid>
@@ -247,12 +260,20 @@
                   </ion-item>
                 <ion-grid>
                     <ion-row>
-                        <ion-label>
-                            <p>Questionnaire</p>
-                          </ion-label>
-                        <ion-col size="12">
-                            <button ion-button full [disabled]="disableTakePicture" (click)="takePicture('QNR')" ><ion-icon name="camera"></ion-icon>Add Picture</button>
-                        </ion-col>
+                        <ion-col col-12>
+                            <p>Questionnaire </p>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col col-5>
+                              <button ion-button full (click)="takePicture('QNR')" >Add Picture</button>
+                          </ion-col>
+                          <ion-col col-5>
+                              <button *ngIf="this.requestObj['stored']==true && !!currentImagePathNative && connectedToNet" ion-button full (click)="upload('QNR',currentImagePathNative)" >Upload</button>
+                          </ion-col>
+                          <ion-col col-2>
+                              <ion-icon style="zoom:2.0;" *ngIf="requestObj['QNRstored']==true" name="cloud-done"></ion-icon>
+                          </ion-col>
                     </ion-row>
                   </ion-grid>
             <ion-item *ngIf="currentImagePath">
@@ -265,6 +286,9 @@
                     </ion-col>
                   <ion-col size="4">
                       <button ion-button full (click)="sendSMS()" >SEND</button>
+                  </ion-col>
+                  <ion-col *ngIf="!!this.requestObj.Id && connectedToNet" size="4">
+                      <button ion-button full (click)="sync()" >SYNC</button>
                   </ion-col>
                   <ion-col size="4">
                     <button ion-button full navPop >Cancel</button>

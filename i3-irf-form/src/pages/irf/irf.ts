@@ -12,6 +12,9 @@ import { File } from '@ionic-native/file';
 import { Toast } from '@ionic-native/toast';
 import { HttpClient } from '@angular/common/http';
 import { FilePath } from '@ionic-native/file-path';
+import { HttpService } from '../../app/services/util/http.service';
+import { Base64 } from '@ionic-native/base64';
+import { Network } from '@ionic-native/network';
 
 declare var AdvancedGeolocation:any;
 declare let window: any; 
@@ -24,6 +27,8 @@ export class State {
 })
 export class irfPage implements OnInit  {
 
+  // url = "http://10.0.2.2:3000"
+  url = "http://api.uniserve.ph"
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
@@ -55,18 +60,25 @@ export class irfPage implements OnInit  {
 
   irfId;
 
+  uploading = false
+
   private win: any = window;
   
   currentImage: any;
   currentImagePath: any;
+  currentImagePathNative: any;
   proofOfBillingImagePath: any;
+  proofOfBillingImagePathNative: any;
   validIdImagePath: any;
+  validIdImagePathNative: any;
 
-  requestObj:any;
+  requestObj:any = {}
 
   STORAGE_KEY = 'my_images';
 
-  disableTakePicture = true;
+  disableTakePicture = false;
+
+  connectedToNet = false;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -81,7 +93,10 @@ export class irfPage implements OnInit  {
     private platform: Platform,
     public http   :HttpClient,
     private navParams: NavParams,
-    private filePath: FilePath
+    private filePath: FilePath,
+    private httpService: HttpService,
+    private base64: Base64,
+    private network: Network
     ) {
       this.formPanel = fb.group({
         loc_accuracy: ['', [Validators.required]],
@@ -116,15 +131,8 @@ export class irfPage implements OnInit  {
         points_req: ['', [Validators.required]],
         remarks: ['', [Validators.required]]
       });
-      this.formPanel.get('panel_code').valueChanges
-      .subscribe(value=>{
-        if(!!value && value.length > 2){
-          debugger
-          this.disableTakePicture = false
-        }else{
-          this.disableTakePicture = true
-        }
-      })
+
+      this.formPanel.controls['other_address'].disable();
       // add field here
       this.formPanel.get('zip_code').valueChanges
       .debounceTime(800)
@@ -171,8 +179,6 @@ export class irfPage implements OnInit  {
         console.log(this.cities)
       })
 
-      this.formPanel.controls['other_address'].disable();
-
       this.formPanel.get('pref_delivery').valueChanges.subscribe(value=>{
           if(value=="Others"){
             console.log("enabled")
@@ -180,11 +186,29 @@ export class irfPage implements OnInit  {
           }else{
             console.log("disabled")
             this.formPanel.controls['other_address'].disable();
-            
           }
         })
      }
 
+
+     watchNetwork(){
+      this.network.onDisconnect().subscribe(() => {
+        this.showToast("Disconnected from network")
+        console.log('network disconnected!');
+        this.connectedToNet = false
+      });
+
+      this.network.onConnect().subscribe(() => {
+        console.log('network connected!');
+        // We just got a connection but we need to wait briefly
+         // before we determine the connection type. Might need to wait.
+        // prior to doing any api requests as well.
+        setTimeout(() => {
+          this.showToast("Connected to network")
+          this.connectedToNet = true
+        }, 1000);
+      });
+     }
 
      ngOnInit() {
       let irfId  = this.navParams.get('Id') || "";
@@ -196,8 +220,17 @@ export class irfPage implements OnInit  {
             this.currentImagePath = this.getTrustImg(this.requestObj["image_path"])
             this.proofOfBillingImagePath = this.getTrustImg(this.requestObj["proof_of_billing"])
             this.validIdImagePath = this.getTrustImg(this.requestObj["valid_id"])
+            this.currentImagePathNative = this.requestObj["image_path_native"]
+            this.proofOfBillingImagePathNative = this.requestObj["proof_of_billing_native"]
+            this.validIdImagePathNative= this.requestObj["valid_id_native"]
             console.log("data is", data)
           this.formPanel.patchValue(data,{emitEvent: false})
+
+          if(this.formPanel.value["pref_delivery"] == "Others"){
+            this.formPanel.controls['other_address'].enable();
+          }else{
+            this.formPanel.controls['other_address'].disable();
+          }
         },
           error => console.error(error))
       }else{
@@ -208,92 +241,7 @@ export class irfPage implements OnInit  {
         this.formPanel.get("panel_code").setValue(panel_code)
       }
       
-    }
-
-     public getPicture(type) {  
-      let base64ImageData;  
-      const options: CameraOptions = {  
-          //here is the picture quality in range 0-100 default value 50. Optional field  
-          quality: 100,  
-          /**here is the format of an output file. 
-           *destination type default is FILE_URI. 
-           * DATA_URL: 0 (number) - base64-encoded string,  
-           * FILE_URI: 1 (number)- Return image file URI, 
-           * NATIVE_URI: 2 (number)- Return image native URI        
-           */  
-          destinationType: this.camera.DestinationType.DATA_URL,  
-          /**here is the returned image file format 
-           *default format is JPEG 
-           * JPEG:0 (number), 
-           * PNG:1 (number), 
-           */  
-          encodingType: this.camera.EncodingType.JPEG,  
-          /** Only works when Picture Source Type is PHOTOLIBRARY or  SAVEDPHOTOALBUM.  
-           *PICTURE: 0 allow selection of still pictures only. (DEFAULT) 
-           *VIDEO: 1 allow selection of video only.        
-           */  
-          mediaType: this.camera.MediaType.PICTURE,  
-          /**here set the source of the picture 
-           *Default is CAMERA.  
-           *PHOTOLIBRARY : 0,  
-           *CAMERA : 1,  
-           *SAVEDPHOTOALBUM : 2 
-           */  
-          sourceType: this.camera.PictureSourceType.CAMERA  
-      }  
-      this.camera.getPicture(options).then((imageData) => {  
-              //here converting a normal image data to base64 image data.  
-              base64ImageData = 'data:image/jpeg;base64,' + imageData;  
-              /**here passing three arguments to method 
-              *Base64 Data 
-
-              *Folder Name 
-
-              *File Name 
-              */  
-              this.writeFile(base64ImageData, "My Picture", type);  
-          }, (error) => {  
-              console.log(error);       
-              });  
-      }  
-      //here is the method is used to write a file in storage  
-      public writeFile(base64Data: any, folderName: string, fileName: any) {  
-          let contentType = this.getContentType(base64Data);  
-          let DataBlob = this.base64toBlob(base64Data, contentType);  
-          // here iam mentioned this line this.file.externalRootDirectory is a native pre-defined file path storage. You can change a file path whatever pre-defined method.  
-          let filePath = this.file.externalRootDirectory + folderName;  
-          this.file.writeFile(filePath, fileName, DataBlob, contentType).then((success) => {  
-              console.log("File Writed Successfully", success);  
-          }).catch((err) => {  
-              console.log("Error Occured While Writing File", err);  
-          })  
-      }  
-      //here is the method is used to get content type of an bas64 data  
-      public getContentType(base64Data: any) {  
-          let block = base64Data.split(";");  
-          let contentType = block[0].split(":")[1];  
-          return contentType;  
-      }  
-      //here is the method is used to convert base64 data to blob data  
-      public base64toBlob(b64Data, contentType) {  
-          contentType = contentType || '';  
-          let sliceSize = 512;  
-          let byteCharacters = atob(b64Data.replace(/^[^,]+,/, ''));  
-          let byteArrays = [];  
-          for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {  
-              let slice = byteCharacters.slice(offset, offset + sliceSize);  
-              let byteNumbers = new Array(slice.length);  
-              for (let i = 0; i < slice.length; i++) {  
-                  byteNumbers[i] = slice.charCodeAt(i);  
-              }  
-              var byteArray = new Uint8Array(byteNumbers);  
-              byteArrays.push(byteArray);  
-          }  
-          let blob = new Blob(byteArrays, {  
-              type: contentType  
-          });  
-          return blob;  
-      }  
+    }     
 
       sendSMS(){
         
@@ -312,8 +260,6 @@ export class irfPage implements OnInit  {
       formatMessage(){
         let formValue = this.formPanel.value
         let message = "IAF;"+
-                       `${formValue.loc_accuracy||""};` +
-                       `${formValue.gps_location||""};` +
                        `${formValue.panel_code||""};` +
                        `${formValue.panel_name||""};` + 
                        `${formValue.gate_num||""};` +
@@ -337,13 +283,11 @@ export class irfPage implements OnInit  {
                        `${formValue.mobile_num_2||""};` +
                        `${formValue.email_add||""};` +
                        `${formValue.item_code||""};` +
-                       `${formValue.email_add||""};` +
                        `${formValue.item_desc||""};` +
                        `${formValue.points_req||""};` +
                        `${formValue.remarks||""};` +
-                       `${formValue.proof_of_billing||""};` +
-                       `${formValue.valid_id||""};` +
-                       `${formValue.image_path||""};`
+                       `${formValue.loc_accuracy||""};` +
+                       `${formValue.gps_location||""};`
     
         // add field here 
         return message 
@@ -370,6 +314,14 @@ export class irfPage implements OnInit  {
     
       ionViewDidEnter()
       {
+        this.platform.ready().then(() => {
+          if(this.network.type != "none"){
+            this.connectedToNet = true
+          }else{
+            this.connectedToNet = false
+          }
+          this.watchNetwork()
+          })
         this.loadCSV();
       }
     
@@ -539,15 +491,25 @@ export class irfPage implements OnInit  {
     }
     
     saveRequest(value){
-      value["image_path"] = this.currentImage
-      value["proof_of_billing"] = this.proofOfBillingImagePath
-      value["valid_id"] = this.validIdImagePath
-        if(!!this.requestObj && !!this.requestObj.Id){
-          value = Object.assign(this.requestObj,value)
-        }
-        this.storage.setItem("request",value)
+        this.saveImage(value)
         this.navCtrl.pop()
         // this.router.navigate([`/`])
+    }
+
+    saveImage(value){
+      value["image_path"] = this.currentImagePath
+      value["proof_of_billing"] = this.proofOfBillingImagePath
+      value["valid_id"] = this.validIdImagePath
+
+      value["image_path_native"] = this.currentImagePathNative
+      value["proof_of_billing_native"] = this.proofOfBillingImagePathNative
+      value["valid_id_native"] = this.validIdImagePathNative
+      
+      if(!!this.requestObj && !!this.requestObj.Id){
+        value = Object.assign(this.requestObj,value)
+      }
+      this.storage.setItem("request",value)
+
     }
     
       selectBarangay(value){
@@ -632,14 +594,20 @@ export class irfPage implements OnInit  {
         switch(type){
           case 'POB':
               this.proofOfBillingImagePath = this.getTrustImg(newFile.nativeURL)
+              this.proofOfBillingImagePathNative = newFile.nativeURL
             break;
           case 'ID':
               this.validIdImagePath = this.getTrustImg(newFile.nativeURL)
+              this.validIdImagePathNative = newFile.nativeURL
             break;
           default:
               this.currentImagePath = this.getTrustImg(newFile.nativeURL)
+              this.currentImagePathNative = newFile.nativeURL
         }
-        
+        if(!!this.requestObj.Id){
+          this.saveImage(this.formPanel.value)
+        }
+
           console.log(newFile);
       })
       .catch(err => {
@@ -648,45 +616,6 @@ export class irfPage implements OnInit  {
       })
     }
         
-        // this.camera.getPicture(options).then((imageData) => {
-        //  // imageData is either a base64 encoded string or a file URI
-        //  // If it's base64 (DATA_URL):
-        //  let base64Image = 'data:image/jpeg;base64,' + imageData;
-        // }, (err) => {
-        //  // Handle error
-        // });
-        // const options: CameraOptions = {
-        //   quality: 100,
-        //   sourceType: sourceType,
-        //   mediaType: this.camera.MediaType.PICTURE,
-        //   saveToPhotoAlbum: true
-        // }
-        //   this.platform.ready().then(() => {
-        //       if(this.platform.is('cordova')){
-        //         let camera = this.camera
-        //         camera.getPicture(options).then((imagePath) => {
-        //           this.currentImage = imagePath
-        //           switch(type){
-        //             case 'proof_of_billing':
-        //                 this.proofOfBillingImagePath = this.getTrustImg(imagePath)
-        //               break;
-        //             case 'valid_id':
-        //                 this.validIdImagePath = this.getTrustImg(imagePath)
-        //               break;
-        //             default:
-        //                 this.currentImagePath = this.getTrustImg(imagePath)
-        //           }
-                 
-        //           var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
-        //           var correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
-        //           this.copyFileToLocalDir(correctPath, currentName, type);
-        //          }, (err) => {
-        //            debugger
-        //           // Handle error
-        //          });
-        //       }
-        //   })
-      // }
     
       getTrustImg(imageSrc){
         let path = this.win.Ionic.WebView.convertFileSrc(imageSrc);
@@ -803,5 +732,73 @@ export class irfPage implements OnInit  {
           });
       }
  
+      sync(){
+        this.uploading = true
+        this.httpService.post(this.url+"/irf_forms",this.formPanel.value,false).timeout(5000).subscribe(data => {
+          debugger
+            if(data["success"]==true){
+              let value = this.formPanel.value
+              value["stored"] = true
+              value["id"] = data["id"]
+              if(!!this.requestObj && !!this.requestObj.Id){
+                value = Object.assign(this.requestObj,value)
+              }
+              this.requestObj["stored"] = true
+              this.requestObj["id"] = value["id"]
+              this.storage.setItem("request",value)
+              this.uploading = false
+              this.showToast("Data Uploaded")
+            }
+          }, err => {
+            debugger
+            this.uploading = false
+            this.showToast("Something went wrong")
+            console.log(err);
+          });
+      }
+
+      upload(type,filePath){
+        let fileName = filePath.split('/').pop();
+        let path = filePath.substring(0, filePath.lastIndexOf("/") + 1);
+
+        this.file.readAsDataURL(path, fileName)
+        .then(base64File => {
+          let value = {}
+          switch(type){
+            case 'POB':
+                value["pob_image"] = base64File
+              break;
+            case 'ID':
+                value["validId_image"] = base64File
+              break;
+            default:
+                value["qnr_image"] = base64File
+          }
+          this.uploadPhoto(value, type)
+            console.log("here is encoded image ", base64File)
+        })
+        .catch(() => {
+            console.log('Error reading file');
+        })
+      }
+      
+      uploadPhoto(value,type){
+        this.uploading = true
+        this.httpService.patch(this.url+"/irf_forms/"+this.requestObj['id']+"/upload",value,false).timeout(5000).subscribe(data => {
+          value[type+"stored"] = true
+          this.requestObj[type+"stored"] = true
+          if(!!this.requestObj && !!this.requestObj.Id){
+            value = Object.assign(this.requestObj,value)
+          }
+          this.storage.setItem("request",value)
+          this.uploading = false
+          this.showToast("Image Uploaded")
+        }, err => {
+          debugger
+          this.uploading = false
+          this.showToast("Something went wrong")
+          console.log(err);
+        });
+      }
 }
 

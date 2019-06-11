@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { irfPage } from '../irf/irf';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { StorageService } from '../../app/services/util/storage.service';
+import { IrfFormService } from '../../app/services/api/irf-form.service';
+import { HttpService } from '../../app/services/util/http.service';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 
-export class HomePage {
+export class HomePage implements OnInit {
 
   formPanel: FormGroup;
   list:any;
@@ -21,12 +23,19 @@ export class HomePage {
     public navCtrl: NavController,
     private fb: FormBuilder,
     public storage: StorageService,
-    private barcodeScanner: BarcodeScanner) {
+    private barcodeScanner: BarcodeScanner,
+    private httpService: HttpService) {
       this.formPanel = fb.group({
         panel_code: ['', [Validators.required]]
       });
   }
 
+  ngOnInit() {
+    this.formPanel.get('panel_code').valueChanges.subscribe(value=>{
+      this.results = this.list.filter(res=>res["panel_code"].includes(value))
+    })
+  }
+  
   ionViewDidEnter () {
     this.getAllItems()
    }
@@ -55,7 +64,7 @@ export class HomePage {
        data => { 
          let objects = <any[]>data;
          this.results = this.list = objects.filter(res=>!!res["Id"] && res["Id"].includes('request'))
-         console.log("list",this.list)
+         console.log("list",this.list[0])
        },
        error => console.error(error)
      )
@@ -64,6 +73,7 @@ export class HomePage {
   search(){
   }
   
+
   scan(){
     this.isBarcodeScanned = false
     this.barcodeScanner.scan().then(barcodeData => {

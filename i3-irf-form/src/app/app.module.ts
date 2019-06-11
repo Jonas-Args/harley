@@ -23,11 +23,18 @@ import { StorageService } from './services/util/storage.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { FilePath } from '@ionic-native/file-path';
+import { HttpService } from './services/util/http.service';
+import { IrfFormService } from './services/api/irf-form.service';
+import { Base64 } from '@ionic-native/base64';
+import { Network } from '@ionic-native/network';
+
 
 const APP_PROVIDERS = [
   CommonService,
   IncentiveService,
-  StorageService
+  StorageService,
+  HttpService,
+  IrfFormService
 ]
 
 @NgModule({
@@ -68,6 +75,8 @@ const APP_PROVIDERS = [
     Toast,
     FileOpener,
     FilePath,
+    Base64,
+    Network,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ...APP_PROVIDERS
   ]

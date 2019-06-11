@@ -1,27 +1,28 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpService } from "../util/http.service";
+
 
 export abstract class BaseService {
 
   protected apiEndpoint: string;
 
   constructor(
-    public http: HttpClient,
+    public http: HttpService,
     public url: string
   ) {
     this.apiEndpoint = url;
   }
 
-  // create(payload: Object, skipLoading?: boolean): any {
-  //   return this.http.post(this.apiEndpoint, { resource: payload }, false);
-  // }
+  create(payload: Object, skipLoading?: boolean): any {
+    return this.http.post(this.apiEndpoint, { resource: payload });
+  }
 
-  // update(id: number, payload: Object): any {
-  //   return this.http.patch(`${this.apiEndpoint}/${id}`, { resource: payload });
-  // }
+  update(id: number, payload: Object): any {
+    return this.http.patch(`${this.apiEndpoint}/${id}`, { resource: payload });
+  }
 
-  // get(id: number): any {
-  //   return this.http.get(`${this.apiEndpoint}/${id}`);
-  // }
+  get(id: number): any {
+    return this.http.get(`${this.apiEndpoint}/${id}`);
+  }
 
   // query(query: Object, skipLoading?: boolean): any {
   //   var params = this.buildParams(query);

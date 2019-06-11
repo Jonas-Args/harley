@@ -1,17 +1,16 @@
 import { Injectable, Inject } from '@angular/core';
 import { BaseService } from './base.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpService } from '../util/http.service';
 
-// const ENDPOINT = `${environment.API_URL}/php/api/incentiveList`;
 const ENDPOINT  = "endpoint"
 
 @Injectable()
-export class IncentiveService extends BaseService {
+export class IncentiveService {
 
   constructor(
-    public http: HttpClient
+    public http: HttpService
   ) {
-    super(http, ENDPOINT);
+  
   }
 
   getIncentives():any {
