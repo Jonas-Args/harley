@@ -760,9 +760,8 @@ export class irfPage implements OnInit  {
       upload(type,filePath){
         let fileName = filePath.split('/').pop();
         let path = filePath.substring(0, filePath.lastIndexOf("/") + 1);
-
-        this.file.readAsDataURL(path, fileName)
-        .then(base64File => {
+        
+        this.base64.encodeFile(filePath).then((base64File: string) => {
           let value = {}
           switch(type){
             case 'POB':
@@ -776,10 +775,11 @@ export class irfPage implements OnInit  {
           }
           this.uploadPhoto(value, type)
             console.log("here is encoded image ", base64File)
-        })
-        .catch(() => {
-            console.log('Error reading file');
-        })
+
+        }, (err) => {
+          console.log(err);
+        });
+
       }
       
       uploadPhoto(value,type){
