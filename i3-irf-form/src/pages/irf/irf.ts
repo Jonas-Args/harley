@@ -27,8 +27,8 @@ export class State {
 })
 export class irfPage implements OnInit  {
 
-  url = "http://10.0.2.2:3000"
-  // url = "http://api.uniserve.ph"
+  // url = "http://10.0.2.2:3000"
+  url = "http://api.uniserve.ph"
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
@@ -61,6 +61,7 @@ export class irfPage implements OnInit  {
   irfId;
 
   uploading = false
+  saving = false
 
   private win: any = window;
   
@@ -212,6 +213,7 @@ export class irfPage implements OnInit  {
       });
      }
 
+     
      ngOnInit() {
       let irfId  = this.navParams.get('Id') || "";
       let panel_code = this.navParams.get('panel_code') || "";
@@ -235,7 +237,6 @@ export class irfPage implements OnInit  {
           }
         },
           error => console.error(error))
-        this.start()
       }
 
       if(!!panel_code){
@@ -492,6 +493,7 @@ export class irfPage implements OnInit  {
     }
     
     saveRequest(value){
+        this.saving = true
         this.saveImage(value)
         this.navCtrl.pop()
         // this.router.navigate([`/`])
@@ -506,11 +508,17 @@ export class irfPage implements OnInit  {
       value["proof_of_billing_native"] = this.proofOfBillingImagePathNative
       value["valid_id_native"] = this.validIdImagePathNative
       
+      this.saveOnly(value)
+    }
+
+    saveOnly(value){
+      this.saving = true
       if(!!this.requestObj && !!this.requestObj.Id){
         value = Object.assign(this.requestObj,value)
       }
       this.storage.setItem("request",value)
-
+      
+      this.saving = false
     }
     
       selectBarangay(value){
@@ -662,21 +670,21 @@ export class irfPage implements OnInit  {
       }
     
       start(){
-      
         AdvancedGeolocation.start((success)=>{
     
             try{
               let jsonObject: any = JSON.parse(success);
-    
-              if(!!jsonObject.latitude && this.isCaptureLoc){
-                this.location = jsonObject
-                
-                this.formPanel.get('gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
-                this.formPanel.get('loc_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))}`)
-              }else{
-                // this.showToast("lat long not available")
+              if(this.isCaptureLoc){
+                if(!!jsonObject.latitude){
+                  this.location = jsonObject
+                  
+                  this.formPanel.get('gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
+                  this.formPanel.get('loc_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))}`)
+                }else{
+                  // this.showToast("lat long not available")
+                }
               }
-              
+ 
               // this.showToast(JSON.stringify(jsonObject))
               switch(jsonObject.provider){
                 case "gps":
@@ -759,6 +767,7 @@ export class irfPage implements OnInit  {
       }
 
       upload(type,filePath){
+
         let fileName = filePath.split('/').pop();
         let path = filePath.substring(0, filePath.lastIndexOf("/") + 1);
         
@@ -804,6 +813,11 @@ export class irfPage implements OnInit  {
 
       captureLoc(value){
         this.isCaptureLoc = value
+        if(!value){
+          AdvancedGeolocation.stop()
+        }else{
+          this.start()
+        }
       }
 }
 

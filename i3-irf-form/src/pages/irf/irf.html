@@ -3,7 +3,7 @@
     <button button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>IRF <ion-col *ngIf="this.requestObj['stored']==true"><ion-icon name="cloud-done"></ion-icon></ion-col><p *ngIf="uploading">Uploading ....</p></ion-title>
+    <ion-title>IRF <ion-col *ngIf="this.requestObj['stored']==true"><ion-icon name="cloud-done"></ion-icon></ion-col><p *ngIf="saving">Saving ....</p><p *ngIf="uploading">Uploading ....</p></ion-title>
   </ion-navbar>
 </ion-header>
 
