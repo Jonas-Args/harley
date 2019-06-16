@@ -27,8 +27,8 @@ export class State {
 })
 export class irfPage implements OnInit  {
 
-  // url = "http://10.0.2.2:3000"
-  url = "http://api.uniserve.ph"
+  url = "http://10.0.2.2:3000"
+  // url = "http://api.uniserve.ph"
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
@@ -79,6 +79,8 @@ export class irfPage implements OnInit  {
   disableTakePicture = false;
 
   connectedToNet = false;
+
+  isCaptureLoc = false;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -233,7 +235,6 @@ export class irfPage implements OnInit  {
           }
         },
           error => console.error(error))
-      }else{
         this.start()
       }
 
@@ -547,7 +548,7 @@ export class irfPage implements OnInit  {
     
       takePicture(type, sourceType: PictureSourceType = this.camera.PictureSourceType.CAMERA) {
         const options: CameraOptions = {
-          quality: 100,
+          quality: 50,
           destinationType: this.camera.DestinationType.FILE_URI,
           encodingType: this.camera.EncodingType.JPEG,
           mediaType: this.camera.MediaType.PICTURE
@@ -589,7 +590,7 @@ export class irfPage implements OnInit  {
 
     moveToFile(imagePath,imageName,type){
       let panel_code = this.formPanel.get("panel_code").value
-      this.file.moveFile(imagePath, imageName, this.file.externalRootDirectory + "irfentry/", panel_code+"_"+type)
+      this.file.moveFile(imagePath, imageName, this.file.externalRootDirectory + "irfentry/", panel_code+"_"+type+".jpeg")
       .then(newFile => {
         switch(type){
           case 'POB':
@@ -667,11 +668,11 @@ export class irfPage implements OnInit  {
             try{
               let jsonObject: any = JSON.parse(success);
     
-              if(!!jsonObject.latitude){
+              if(!!jsonObject.latitude && this.isCaptureLoc){
                 this.location = jsonObject
                 
                 this.formPanel.get('gps_location').setValue(`${this.location.latitude}, ${this.location.longitude}`)
-                this.formPanel.get('loc_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))} meters`)
+                this.formPanel.get('loc_accuracy').setValue(`${parseFloat(this.location.accuracy.toFixed(2))}`)
               }else{
                 // this.showToast("lat long not available")
               }
@@ -752,7 +753,7 @@ export class irfPage implements OnInit  {
           }, err => {
             debugger
             this.uploading = false
-            this.showToast("Something went wrong")
+            this.showToast("Something went wrong"+err.message)
             console.log(err);
           });
       }
@@ -796,9 +797,13 @@ export class irfPage implements OnInit  {
         }, err => {
           debugger
           this.uploading = false
-          this.showToast("Something went wrong")
+          this.showToast("Something went wrong"+err.message)
           console.log(err);
         });
+      }
+
+      captureLoc(value){
+        this.isCaptureLoc = value
       }
 }
 

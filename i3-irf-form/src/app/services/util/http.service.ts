@@ -13,7 +13,7 @@ export class HttpService {
     let headerParams = {}
     // headerParams['Content-Type'] =  environment['default_http_content_type'];
     if(!skipAuth) {
-      headerParams['X-AUTH-TOKEN'] =  "895f54e4335491725cfea0b0372a1c98";
+      headerParams['X-AUTH-TOKEN'] =  "a16502185f34b6c535cb4c1312c51d60";
   
       // let currentUser = this.storage.getObject('currentUser')
       // if (!currentUser) {
