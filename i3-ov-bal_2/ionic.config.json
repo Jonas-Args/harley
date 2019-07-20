@@ -1,0 +1,7 @@
+{
+  "name": "i3-irf-form",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

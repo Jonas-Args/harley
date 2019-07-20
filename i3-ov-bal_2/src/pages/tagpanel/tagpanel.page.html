@@ -1,0 +1,159 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>OB VAL Details<ion-col *ngIf="irfObj['stored']==true && !saving && !uploading"><ion-icon name="cloud-done"></ion-icon></ion-col><p *ngIf="saving">Saving ....</p><p *ngIf="uploading">Uploading ....</p></ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <form [formGroup]="formPanel">
+        <ion-item *ngIf="false">
+            <ion-label>
+              <p>Id:</p>
+            </ion-label>
+            <ion-input formControlName="Id" type="text"></ion-input>
+          </ion-item>  
+          <ion-grid>
+            <ion-row>
+              <ion-col col-7>
+                <ion-item>
+                  <ion-label>
+                      <p>Loc Accu:</p>
+                  </ion-label>
+                  <ion-input disabled="true" formControlName="loc_accuracy" type="text"></ion-input>
+                </ion-item>
+                </ion-col>
+              <ion-col col-5>
+                  <button *ngIf="!isCaptureLoc" ion-button full (click)="captureLoc(true)" >Capture</button>
+                  <button *ngIf="isCaptureLoc" ion-button full (click)="captureLoc(false)" >Stop</button>
+              </ion-col>
+            </ion-row>
+    
+            </ion-grid>
+          <ion-item>
+            <ion-label>
+              <p>GPM ID:</p>
+            </ion-label>
+            <ion-input formControlName="panel_code"  disabled=true type="text"></ion-input>
+          </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Panelist Name:</p>
+            </ion-label>
+            <ion-input formControlName="panel_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Correct SEC:</p>
+          </ion-label>
+          <ion-select formControlName="Corr_SEC" ok-text="Okay" cancel-text="Dismiss">
+            <ion-option value="" selectable=false selected="true"> Select: </ion-option>
+            <ion-option value="AB"> AB </ion-option>
+            <ion-option value="C1"> C1 </ion-option>
+            <ion-option value="C2"> C2 </ion-option>
+            <ion-option value="D"> D </ion-option>
+            <ion-option value="E"> E </ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Skipping:</p>
+          </ion-label>
+          <ion-select formControlName="HH_Skip" ok-text="Okay" cancel-text="Dismiss">
+            <ion-option value="" selectable=false selected="true"> Select: </ion-option>
+            <ion-option value="Correct"> Correct </ion-option>
+            <ion-option value="Incorrect"> Incorrect </ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>FW Result:</p>
+          </ion-label>
+          <ion-select formControlName="fw_result" ok-text="Okay" cancel-text="Dismiss">
+            <ion-option value="" selectable=false selected="true"> Select Result </ion-option>
+            <ion-option *ngFor="let result of ['Valid','Invalid']" [value]="type">{{ result }}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>FW Type:</p>
+          </ion-label>
+          <ion-select formControlName="fw_type" ok-text="Okay" cancel-text="Dismiss">
+            <ion-option value="" selectable=false selected="true"> Select Type </ion-option>
+            <ion-option *ngFor="let type of ['OB','Val', 'BC']" [value]="type">{{ type }}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>
+              <p>Panelist's Comment:</p>
+            </ion-label>
+            <ion-input formControlName="panelist_comment" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Feedback on Panelist:</p>
+          </ion-label>
+          <ion-input formControlName="gl_remarks_panel" type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <p>Feedback on FI:</p>
+        </ion-label>
+        <ion-input formControlName="gl_remarks_fi" type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <p>Recommendation:</p>
+        </ion-label>
+        <ion-input formControlName="Rec_Action" type="text"></ion-input>
+      </ion-item>
+      <ion-grid>
+        <ion-row>
+            <ion-col size="12">
+                <p>House Image </p>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+            <ion-col col-5>
+                <button ion-button full  (click)="takePicture('House_Image')" >Add Picture</button>
+            </ion-col>
+            <ion-col col-5>
+                <button *ngIf="irfObj['stored']==true && !!houseImagePathNative && connectedToNet" ion-button full (click)="upload('House_Image',houseImagePathNative)" >Upload</button>
+            </ion-col>
+              <ion-col col-2>
+                <ion-icon *ngIf="irfObj['House_Imagestored']==true" style="zoom:2.0;"  name="cloud-done"></ion-icon>
+            </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-item *ngIf="houseImageImagePath && !takingPicture">
+          <img [src]="houseImageImagePath">
+        </ion-item>
+         <!-- add field here -->
+        <ion-item *ngIf="false">
+            <ion-label>
+              <p>GPS LOCATION:</p>
+            </ion-label>
+            <ion-input formControlName="gps_location" type="text"></ion-input>
+          </ion-item>
+          <ion-grid>
+              <ion-row>
+                  <ion-col col=4>
+                      <button ion-button full type="submit" (click)='save(formPanel.value)'>SAVE</button>
+                  </ion-col>
+                <ion-col col=4>
+                    <button ion-button full (click)="sendSMS()">SEND</button>
+                </ion-col>
+                <ion-col *ngIf="!!irfObj?.Id && connectedToNet" col=4>
+                    <button ion-button full (click)="sync()" >SYNC</button>
+                </ion-col>
+                <ion-col col=4>
+                  <button ion-button full navPop >Cancel</button>
+              </ion-col>
+              </ion-row>
+            </ion-grid>
+        </form>
+
+  
+</ion-content>
