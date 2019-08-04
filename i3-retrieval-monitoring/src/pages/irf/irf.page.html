@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Retrieval Form</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <form [formGroup]="formPanel" (ngSubmit)='search(formPanel.value)'>
+        <ion-item>
+            <ion-label>
+              <p>Project Type:</p>
+            </ion-label>
+            <ion-select formControlName="proj_type" ok-text="Okay" cancel-text="Dismiss">
+              <ion-option value="" selectable=false selected="true"> Select Type</ion-option>
+              <ion-option *ngFor="let type of ['EOP','HHP','ES']" [value]="type">{{ type }}</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Region:</p>
+          </ion-label>
+          <ion-input formControlName="region" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Year:</p>
+          </ion-label>
+          <ion-input formControlName="year" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Period:</p>
+          </ion-label>
+          <ion-select formControlName="period" ok-text="Okay" cancel-text="Dismiss">
+            <ion-option value="" selectable=false selected="true"> Select Period</ion-option>
+            <ion-option *ngFor="let period of ['01','02','03','04','05','06','07','08','09','10','11','12','13']" [value]="period">{{ period }}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Week:</p>
+          </ion-label>
+          <ion-select formControlName="week" ok-text="Okay" cancel-text="Dismiss">
+            <ion-option value="" selectable=false selected="true"> Select Week</ion-option>
+            <ion-option *ngFor="let week of ['1','2','1 & 2','3','4','3 & 4']" [value]="week">{{ week }}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>GL Name:</p>
+          </ion-label>
+          <ion-input formControlName="gl_name" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>FI Name:</p>
+          </ion-label>
+          <ion-input formControlName="fi_name" type="text"></ion-input>
+        </ion-item>
+        <ion-grid>
+            <ion-row>
+              <ion-col size="8">
+                  <ion-item>
+                      <ion-label>
+                        <p>Panel Code:</p>
+                      </ion-label>
+                      <ion-input formControlName="panel_code" type="text"></ion-input>
+                    </ion-item>
+              </ion-col>
+              <ion-col size="4" >
+                  <button ion-button full (click)="scan()">SCAN</button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        <ion-grid>
+          <ion-row>
+              <ion-col size="6">
+                  <button ion-button full (click)="clear()" >CLEAR</button>
+              </ion-col>
+              <ion-col size="6">
+                  <button ion-button full type="submit">SEARCH</button>
+              </ion-col>
+          </ion-row>
+        </ion-grid>
+    </form>
+    <ion-list>
+      <ng-container  *ngFor="let request of requests; let i = index">
+        <!-- <ion-item (click)="editRequest(request.Id)"> -->
+        <ion-item>
+          <ion-col >{{i}}</ion-col>
+          <ion-col>{{request.item_desc}}</ion-col>
+          <ion-col>{{request.quantity}}</ion-col>
+          <ion-col>{{request.item_code}}</ion-col>
+          <ion-col>{{request.pointsrequired}}</ion-col>
+          <!-- add field here -->
+          </ion-item>
+          <ion-col (click)="removeRequest(request.Id); $event.stopPropagation()">remove</ion-col>
+      </ng-container>
+      
+    </ion-list>
+
+  
+</ion-content>
