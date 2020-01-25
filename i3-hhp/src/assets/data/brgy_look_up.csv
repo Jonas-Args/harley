@@ -1,0 +1,714 @@
+BRGY_CODE,BRGY,MUNICIPALITY,PROVINCE,REGION,URBANITY
+59000,Laylay,Boac,Marinduque,SL,Rural
+59100,Lapu-Lapu  ,Santa Cruz,Marinduque,SL,Rural
+96100,Banahaw Pob,Santa Cruz,Marinduque,SL,Rural
+96300,Buyabod,Santa Cruz,Marinduque,SL,Rural
+59200,Banuyo,Gasan,Marinduque,SL,Rural
+59300,Libtangin,Gasan,Marinduque,SL,Rural
+55600,Guinobatan,Calapan,Mindoro,SL,Rural
+55700,Lazareto,Calapan,Mindoro,SL,Rural
+94300,Masipit,Calapan,Mindoro,SL,Rural
+94400,Canubing I,Calapan,Mindoro,SL,Rural
+55800,Guinhawa,Pinamalayan,Mindoro,SL,Rural
+55900,Lumangbayan,Pinamalayan,Mindoro,SL,Rural
+95100,Nabuslot,Pinamalayan,Mindoro,SL,Rural
+50601,San Francisco,San Pablo,Laguna,SL,Urban
+91101,San Lucas,San Pablo,Laguna,SL,Urban
+91102,San Diego,San Pablo,Laguna,SL,Urban
+55200,Malaya,Nagcarlan,Laguna,SL,Rural
+55300,Silangan Kabubuhayan,Nagcarlan,Laguna,SL,Rural
+90401,Tagapo,Santa Rosa,Laguna,SL,Urban
+90402,Pook,Santa Rosa,Laguna,SL,Urban
+90501,San Francisco,Biñan,Laguna,SL,Urban
+90502,Santo Tomas,Biñan,Laguna,SL,Urban
+50502,Parian,Calamba,Laguna,SL,Urban
+50503,Pansol,Calamba,Laguna,SL,Urban
+90201,Sirang Lupa,Calamba,Laguna,SL,Urban
+51001,Cuyab,San Pedro,Laguna,SL,Urban
+51002,Langgam,San Pedro,Laguna,SL,Urban
+90601,San Isidro,Cabuyao,Laguna,SL,Urban
+90602,Marinig,Cabuyao,Laguna,SL,Urban
+50401,Santa Clara Exp To Wawa,Batangas City,Batangas,SL,Urban
+50403,Calicanto,Batangas City,Batangas,SL,Urban
+50801,Balintawak,Lipa,Batangas,SL,Urban
+50802,Tambo,Lipa,Batangas,SL,Urban
+91001,Sabang,Lipa,Batangas,SL,Urban
+51801,Darasa,Tanauan,Batangas,SL,Urban
+51802,Poblacion Barangay 4,Tanauan,Batangas,SL,Urban
+51803,Poblacion Barangay 3,Tanauan,Batangas,SL,Urban
+57800,Bautista,Labo,Cam Norte,SL,Rural
+94800,Lugui,Labo,Cam Norte,SL,Rural
+94900,Pangpang,Labo,Cam Norte,SL,Rural
+95000,Daguit,Labo,Cam Norte,SL,Rural
+51501,Abella,Naga,Camsur,SL,Urban
+51502,Peñafrancia,Naga,Camsur,SL,Urban
+51503,Bagumbayan Sur,Naga,Camsur,SL,Urban
+58000,Bagoladio (Exp To Panoypoyan),Bula,Camsur,SL,Rural
+58100,Balaogan,Bula,Camsur,SL,Rural
+95600,San Jose,Bula,Camsur,SL,Rural
+58400,Del Rosario,Pili,Camsur,SL,Rural
+96200,Bagong Sirang,Pili,Camsur,SL,Rural
+58200,Lourdes Young,Nabua,Camsur,SL,Rural
+95200,Inapatan (Del Rosario Inapatan),Nabua,Camsur,SL,Rural
+95300,Topas Proper,Nabua,Camsur,SL,Rural
+52301,Zone Ii Pob. (Bgy. 2- West Ilawod),Bulan,Sorsogon,SL,Urban
+52302,Zone Vii Pob. (Bgy. 7- Iraya),Bulan,Sorsogon,SL,Urban
+58800,Balud Del Norte (Pob.),Gubat,Sorsogon,SL,Rural
+58900,Tiris,Gubat,Sorsogon,SL,Rural
+52201,Nursery,Masbate,Masbate,SL,Urban
+52202,Ibingay,Masbate,Masbate,SL,Urban
+58600,Paraiso (Potot),Milagros,Masbate,SL,Rural
+58700,Bangad,Milagros,Masbate,SL,Rural
+50901,Cotta,Lucena,Quezon,SL,Urban
+50902,Isabang,Lucena,Quezon,SL,Urban
+56700,Ibabang Polo,Pagbilao,Quezon,SL,Rural
+96000,Ibabang Palsabangon,Pagbilao,Quezon,SL,Rural
+95800,Liwayway,Mauban,Quezon,SL,Rural
+95900,Sadsaran (Pob.),Mauban,Quezon,SL,Rural
+52101,Talolong (Pob.),Lopez,Quezon,SL,Urban
+52102,Hondagua,Lopez,Quezon,SL,Urban
+57200,Dapdap (Exp. Sabang I,Calauag,Quezon,SL,Rural
+57300,San Roque Ilaya,Calauag,Quezon,SL,Rural
+95700,Sabang Ii,Calauag,Quezon,SL,Rural
+95400,Villa Nava (Exp. To Villa Padua),Gumaca,Quezon,SL,Rural
+95500,Progreso,Gumaca,Quezon,SL,Rural
+56400,Bantad (Exp To Guitnang Barrio),Gumaca,Quezon,SL,Rural
+50101,San Jose,Antipolo,Rizal,SL,Urban
+50102,Cupang,Antipolo,Rizal,SL,Urban
+50104,Mayamot,Antipolo,Rizal,SL,Urban
+50105,Santa Cruz,Antipolo,Rizal,SL,Urban
+51401,Calumpang,Binangonan,Rizal,SL,Urban
+51402,Kalawaan,Binangonan,Rizal,SL,Urban
+50103,San Isidro,Antipolo,Rizal,SL,Urban
+50701,Santo Domingo,Cainta,Rizal,SL,Urban
+50702,San Andres (Pob.),Cainta,Rizal,SL,Urban
+51601,Burgos,Rodriguez,Rizal,SL,Urban
+51602,San Jose,Rodriguez,Rizal,SL,Urban
+90301,Dolores (Pob.),Taytay,Rizal,SL,Urban
+90302,Santa Ana,Taytay,Rizal,SL,Urban
+90801,Santo Niño,San Mateo,Rizal,SL,Urban
+90802,Maly,San Mateo,Rizal,SL,Urban
+51301,Bgy. 32 - San Roque (Bgy. 66),Legazpi ,Albay,SL,Urban
+51302,Bgy. 49 - Bigaa (Bgy. 44),Legazpi ,Albay,SL,Urban
+51303,Bgy. 38 - Gogon (Bgy. 54),Legazpi ,Albay,SL,Urban
+57400,Mauraro,Guinobatan,Albay,SL,Rural
+57500,San Rafael,Guinobatan,Albay,SL,Rural
+57600,Fidel Surtida,Santo Domingo,Albay,SL,Rural
+57700,San Isidro,Santo Domingo,Albay,SL,Rural
+50201,San Nicolas,Bacoor,Cavite,SL,Urban
+50202,Aniban I,Bacoor,Cavite,SL,Urban
+50203,Mambog Iv,Bacoor,Cavite,SL,Urban
+51101,Tanzang Luma,Imus,Cavite,SL,Urban
+51102,Medicion Ii-B,Imus,Cavite,SL,Urban
+55000,Banaba Cerca,Indang,Cavite,SL,Rural
+55100,Guyam Malaki,Indang,Cavite,SL,Rural
+90901,Buhay Na Tubig,Imus,Cavite,SL,Urban
+50301,Sampaloc Ii,Dasmariñas,Cavite,SL,Urban
+50302,Burol,Dasmariñas,Cavite,SL,Urban
+50303,San Agustin,Dasmariñas,Cavite,SL,Urban
+90101,Langkaan Ii,Dasmariñas,Cavite,SL,Urban
+90701,Santiago,General Trias,Cavite,SL,Urban
+90702,San Francisco,General Trias,Cavite,SL,Urban
+94000,Tubuan Ii (Exp To Luksuhin),Silang,Cavite,SL,Rural
+94100,Paligawan,Silang,Cavite,SL,Rural
+54800,Ipil Ii,Silang,Cavite,SL,Rural
+94200,Narra Iii,Silang,Cavite,SL,Rural
+51701,Sapa I,Rosario,Cavite,SL,Urban
+51702,Ligtong I,Rosario,Cavite,SL,Urban
+51703,Wawa Ii,Rosario,Cavite,SL,Urban
+54100,Pinagsibaan,Rosario,Batangas,SL,Rural
+94500,Maalas-As,Rosario,Batangas,SL,Rural
+94600,Bulihan,Rosario,Batangas,SL,Rural
+94700,Nasi,Rosario,Batangas,SL,Rural
+25200,Bobon,Malasiqui,Pangasinan,NL,Rural
+64500,Payar,Malasiqui,Pangasinan,NL,Rural
+25300,Don Pedro,Malasiqui,Pangasinan,NL,Rural
+64600,Barang,Malasiqui,Pangasinan,NL,Rural
+64700,Lareg-Lareg,Malasiqui,Pangasinan,NL,Rural
+20701,Bulihan,Malolos,Bulacan,NL,Urban
+20703,Mojon,Malolos,Bulacan,NL,Urban
+20801,Tungkong Mangga,San Jose Del Monte,Bulacan,NL,Urban
+20802,Minuyan,San Jose Del Monte,Bulacan,NL,Urban
+60101,Muzon,San Jose Del Monte,Bulacan,NL,Urban
+26800,Labinab,Cauayan,Isabela,NL,Rural
+26900,San Antonio,Cauayan,Isabela,NL,Rural
+27000,Aurora,Alicia,Isabela,NL,Rural
+27100,Apanay,Alicia,Isabela,NL,Rural
+64800,Rizal,City Of Cauayan,Isabela,NL,Rural
+64900,Maligaya,City Of Cauayan,Isabela,NL,Rural
+21901,San Agustin,Hagonoy,Bulacan,NL,Urban
+21902,Mercado,Hagonoy,Bulacan,NL,Urban
+21903,San Miguel,Hagonoy,Bulacan,NL,Urban
+22101,Borol 1St,Balagtas,Bulacan,NL,Urban
+22102,Panginay,Balagtas,Bulacan,NL,Urban
+22103,Borol 2Nd,Balagtas,Bulacan,NL,Urban
+60301,Caysio,Santa Maria,Bulacan,NL,Urban
+60302,Pulong Buhangin,Santa Maria,Bulacan,NL,Urban
+20101,Irisan,Baguio City,Benguet,NL,Urban
+24100,Wangal,La Trinidad,Benguet,NL,Rural
+65800,Puguis,La Trinidad,Benguet,NL,Rural
+20103,Fairview,Baguio City,Benguet,NL,Urban
+66300,Alno,La Trinidad,Benguet,NL,Rural
+21201,Catbangen,San Fernando City,La Union,NL,Urban
+21202,Lingsat,San Fernando City,La Union,NL,Urban
+21203,Poro,San Fernando City,La Union,NL,Urban
+24800,Dulao,Aringay,La Union,NL,Rural
+66200,Alapang,La Trinidad,Benguet,NL,Rural
+24900,San Eugenio,Aringay,La Union,NL,Rural
+27500,Palihan,Hermosa,Bataan,NL,Rural
+61302,Cupang Proper,Balanga,Bataan,NL,Urban
+65700,Tuyo,Balanga,Bataan,NL,Rural
+27400,Almacen,Hermosa,Bataan,NL,Rural
+61301,Cataning,Balanga,Bataan,NL,Urban
+61303,San Jose,Balanga,Bataan,NL,Urban
+21701,Ugac Norte,Tuguegarao,Cagayan,NL,Urban
+21702,Ugac Sur,Tuguegarao,Cagayan,NL,Urban
+21703,Cataggaman Nuevo,Tuguegarao,Cagayan,NL,Urban
+66100,Cataggaman Viejo,Tuguegarao,Cagayan,NL,Rural
+66000,Pengue,Tuguegarao,Cagayan,NL,Rural
+65900,Linao East,Tuguegarao,Cagayan,NL,Rural
+26000,Baculud,Amulung,Cagayan,NL,Rural
+26100,Calamagui,Amulung,Cagayan,NL,Rural
+25800,Alibago,Enrile,Cagayan,NL,Rural
+25900,Magalalag East,Enrile,Cagayan,NL,Rural
+24400,San Pablo,Sto. Domingo,Ilocos Sur,NL,Rural
+24500,Padu Chic,Sto. Domingo,Ilocos Sur,NL,Rural
+61101,Pantay Daya,City Of Vigan (Capital),Ilocos Sur,NL,Urban
+61102,Baranggay Viii,City Of Vigan (Capital),Ilocos Sur,NL,Urban
+21503,Tamag,City Of Vigan (Capital),Ilocos Sur,NL,Urban
+65300,Pantubig,San Rafael,Bulacan,NL,Rural
+60501,Prenza Ii,Marilao,Bulacan,NL,Urban
+65400,Maronguillo,San Rafael,Bulacan,NL,Rural
+22001,Tabang,Plaridel,Bulacan,NL,Urban
+22002,Parulan,Plaridel,Bulacan,NL,Urban
+22003,Sipat,Plaridel,Bulacan,NL,Urban
+60502,Lambakin,Marilao,Bulacan,NL,Urban
+20401,Aduas Sur,Cabanatuan City,Nueva Ecija,NL,Urban
+20402,Bantug Norte,Cabanatuan City,Nueva Ecija,NL,Urban
+60601,Dionisio S. Garcia,Cabanatuan City,Nueva Ecija,NL,Urban
+27800,San Felipe Matanda,Aliaga,Nueva Ecija,NL,Rural
+27900,San Juan,Aliaga,Nueva Ecija,NL,Rural
+28300,Cruz,Bongabon,Nueva Ecija,NL,Rural
+65500,San Roque (Pob.),Bongabon,Nueva Ecija,NL,Rural
+20501,East Bajacbajac,Olongapo City,Zambales,NL,Urban
+20502,Barretto,Olongapo City,Zambales,NL,Urban
+22303,Libaba (Zone 1 Pob.),Iba,Zambales,NL,Urban
+28800,Aglao(Rabanes),San Marcelino,Zambales,NL,Rural
+28900,Linasin,San Marcelino,Zambales,NL,Rural
+22301,Palanguinan-Tambac,Iba,Zambales,NL,Urban
+60801,Amungan,Iba,Zambales,NL,Urban
+21101,Sto. Nino 1St,San Jose City,Nueva Ecija,NL,Urban
+21102,Calaocan,San Jose City,Nueva Ecija,NL,Urban
+21103,Malasin,San Jose City,Nueva Ecija,NL,Urban
+28000,Bertese,Quezon,Nueva Ecija,NL,Rural
+28100,Ilog Baliuag,Quezon,Nueva Ecija,NL,Rural
+20201,Malabanias,Angeles City,Pampanga,NL,Urban
+20202,Pulungbulu,Angeles City,Pampanga,NL,Urban
+20203,Lourdes Sur East,Angeles City,Pampanga,NL,Urban
+20602,Del Pilar,San Fernando,Pampanga,NL,Urban
+60201,San Nicolas,San Fernando,Pampanga,NL,Urban
+20601,Dolores,San Fernando,Pampanga,NL,Urban
+60401,Dau,Mabalacat,Pampanga,NL,Urban
+60701,Sta. Cruz,Lubao,Pampanga,NL,Urban
+60402,Dapdap,Mabalacat,Pampanga,NL,Urban
+22201,San Roque Dau,Lubao,Pampanga,NL,Urban
+22203,Santa Monica,Lubao,Pampanga,NL,Urban
+22402,Poblacion Sur,Paniqui,Tarlac,NL,Urban
+20301,Matatalaib,Tarlac,Tarlac,NL,Urban
+20302,San Nicolas,Tarlac,Tarlac,NL,Urban
+22401,Poblacion Norte,Paniqui,Tarlac,NL,Urban
+22403,Estacion,Paniqui,Tarlac,NL,Urban
+21001,Victory Norte,Santiago,Isabela,NL,Urban
+21002,Mabini,Santiago,Isabela,NL,Urban
+21003,Calao East,Santiago,Isabela,NL,Urban
+26400,Brgy. 1,San Mateo,Isabela,NL,Rural
+26500,Villa Cruz,San Mateo,Isabela,NL,Rural
+65200,Daramuangan Norte,San Mateo,Isabela,NL,Rural
+27300,San Miguel,Ramon,Isabela,NL,Rural
+65600,Planas,Ramon,Isabela,NL,Rural
+26700,Magassi,Cabagan,Isabela,NL,Rural
+26600,Cansan,Cabagan,Isabela,NL,Rural
+20901,Poblacion,Urdaneta,Pangasinan,NL,Urban
+20902,San Vicente,Urdaneta,Pangasinan,NL,Urban
+20903,Pinmaludpod,Urdaneta,Pangasinan,NL,Urban
+25400,Bugayong,Binalonan,Pangasinan,NL,Rural
+25500,Sta. Catalina,Binalonan,Pangasinan,NL,Rural
+25600,Batakil,Pozzorubio,Pangasinan,NL,Rural
+25700,Rosario,Pozzorubio,Pangasinan,NL,Rural
+65100,Imbalbalatong,Pozzorubio,Pangasinan,NL,Rural
+25000,Bega,San Carlos City,Pangasinan,NL,Rural
+25100,Coliling,San Carlos City,Pangasinan,NL,Rural
+64000,Ano,San Carlos City,Pangasinan,NL,Rural
+64100,Cobol,San Carlos City,Pangasinan,NL,Rural
+64200,Paitan-Panoypoy,San Carlos City,Pangasinan,NL,Rural
+64400,Caoayan-Kiling,San Carlos City,Pangasinan,NL,Rural
+64300,Mamarlao,San Carlos City,Pangasinan,NL,Rural
+24200,Nagbacalan,Paoay,Ilocos Norte,NL,Rural
+24300,Sungadan,Paoay,Ilocos Norte,NL,Rural
+60902,55-A Barit Pandan,Laoag City (Capital),Ilocos Norte,NL,Urban
+21302,5 San Pedro (Pob.),Laoag City (Capital),Ilocos Norte,NL,Urban
+60901,1 San Lorenzo,Laoag City (Capital),Ilocos Norte,NL,Urban
+10205,Barangay 109, Tondo I / Ii,Metro Manila,NCR,Urban
+10217,Barangay 525, Sampaloc,Metro Manila,NCR,Urban
+10303,Poblacion, City Of Mandaluyong,Metro Manila,NCR,Urban
+11002,San Roque, City Of Navotas,Metro Manila,NCR,Urban
+11202,Pulang Lupa Uno, City Of Las Piñas,Metro Manila,NCR,Urban
+11808,Napindan, Taguig City,Metro Manila,NCR,Urban
+10501,Manggahan, City Of Pasig,Metro Manila,NCR,Urban
+10203,Barangay 70, Tondo I / Ii,Metro Manila,NCR,Urban
+10502,Rosario, City Of Pasig,Metro Manila,NCR,Urban
+10504,Santolan, City Of Pasig,Metro Manila,NCR,Urban
+10605,Tatalon, Quezon City,Metro Manila,NCR,Urban
+10620,San Antonio, Quezon City,Metro Manila,NCR,Urban
+10807,Barangay 8, Caloocan City,Metro Manila,NCR,Urban
+10818,Barangay 147, Caloocan City,Metro Manila,NCR,Urban
+11104,Malinta, City Of Valenzuela,Metro Manila,NCR,Urban
+11301,Pembo, City Of Makati,Metro Manila,NCR,Urban
+11309,Kasilawan, City Of Makati,Metro Manila,NCR,Urban
+11802,Western Bicutan, Taguig City,Metro Manila,NCR,Urban
+11803,Lower Bicutan, Taguig City,Metro Manila,NCR,Urban
+10214,Barangay 420, Sampaloc,Metro Manila,NCR,Urban
+10223,Barangay 823, Paco,Metro Manila,NCR,Urban
+10401,Concepcion Uno, City Of Marikina,Metro Manila,NCR,Urban
+10404,Marikina Heights (Concepcion), City Of Marikina,Metro Manila,NCR,Urban
+10508,Ugong, City Of Pasig,Metro Manila,NCR,Urban
+10608,Bagong Pag-asa, Quezon City,Metro Manila,NCR,Urban
+10817,Barangay 144, Caloocan City,Metro Manila,NCR,Urban
+10802,Barangay 178, Caloocan City,Metro Manila,NCR,Urban
+10808,Barangay 179, Caloocan City,Metro Manila,NCR,Urban
+11109,Palasan, City Of Valenzuela,Metro Manila,NCR,Urban
+11404,Sucat, City Of Muntinlupa,Metro Manila,NCR,Urban
+11306,Poblacion, City Of Makati,Metro Manila,NCR,Urban
+10905,Baritan, City Of Malabon,Metro Manila,NCR,Urban
+11501,B. F. Homes, City Of Parañaque,Metro Manila,NCR,Urban
+10224,Barangay 751, Santa Ana,Metro Manila,NCR,Urban
+10816,Barangay 80, Caloocan City,Metro Manila,NCR,Urban
+11003,Daanghari, City Of Navotas,Metro Manila,NCR,Urban
+10481,Nangka, City Of Marikina,Metro Manila,NCR,Urban
+10614,Pinyahan, Quezon City,Metro Manila,NCR,Urban
+10623,Fairview, Quezon City,Metro Manila,NCR,Urban
+10804,Barangay 175, Caloocan City,Metro Manila,NCR,Urban
+10812,Barangay 167, Caloocan City,Metro Manila,NCR,Urban
+10693,North Fairview, Quezon City,Metro Manila,NCR,Urban
+11001,North Bay Blvd., South,Metro Manila,NCR,Urban
+10632,Unang Sigaw, Quezon City,Metro Manila,NCR,Urban
+11305,East Rembo, City Of Makati,Metro Manila,NCR,Urban
+11107,Paso De Blas, City Of Valenzuela,Metro Manila,NCR,Urban
+10682,White Plains, Quezon City,Metro Manila,NCR,Urban
+11506,Baclaran, City Of Parañaque,Metro Manila,NCR,Urban
+10611,Baesa, Quezon City,Metro Manila,NCR,Urban
+10622,Balingasa, Quezon City,Metro Manila,NCR,Urban
+10621,Kaligayahan, Quezon City,Metro Manila,NCR,Urban
+11303,Cembo, City Of Makati,Metro Manila,NCR,Urban
+11105,Dalandanan, City Of Valenzuela,Metro Manila,NCR,Urban
+10305,New Zañiga, City Of Mandaluyong,Metro Manila,NCR,Urban
+10806,Barangay 35, Caloocan City,Metro Manila,NCR,Urban
+10302,Plainview, City Of Mandaluyong,Metro Manila,NCR,Urban
+10509,Dela Paz, City Of Pasig,Metro Manila,NCR,Urban
+11205,Almanza Dos, City Of Las Piñas,Metro Manila,NCR,Urban
+11801,Central Signal Village (Signal Village), Taguig City,Metro Manila,NCR,Urban
+10503,Pinagbuhatan, City Of Pasig,Metro Manila,NCR,Urban
+11206,Talon Tres, City Of Las Piñas,Metro Manila,NCR,Urban
+10507,Bambang, City Of Pasig,Metro Manila,NCR,Urban
+11503,San Dionisio, City Of Parañaque,Metro Manila,NCR,Urban
+10208,Barangay 206, Tondo I / Ii,Metro Manila,NCR,Urban
+10301,Addition Hills, City Of Mandaluyong,Metro Manila,NCR,Urban
+11505,Moonwalk, City Of Parañaque,Metro Manila,NCR,Urban
+10215,Barangay 457, Sampaloc,Metro Manila,NCR,Urban
+11508,Merville, City Of Parañaque,Metro Manila,NCR,Urban
+10211,Barangay 270, San Nicolas,Metro Manila,NCR,Urban
+10801,Barangay 176, Caloocan City,Metro Manila,NCR,Urban
+10814,Barangay 20, Caloocan City,Metro Manila,NCR,Urban
+10610,Tandang Sora, Quezon City,Metro Manila,NCR,Urban
+10629,Santa Teresita, Quezon City,Metro Manila,NCR,Urban
+10906,Bayan-bayanan, City Of Malabon,Metro Manila,NCR,Urban
+10510,Kapasigan, City Of Pasig,Metro Manila,NCR,Urban
+11203,Pamplona Tres, City Of Las Piñas,Metro Manila,NCR,Urban
+10506,Maybunga, City Of Pasig,Metro Manila,NCR,Urban
+11806,Ususan, Taguig City,Metro Manila,NCR,Urban
+11603,Barangay 137, Pasay City,Metro Manila,NCR,Urban
+10903,Tugatog, City Of Malabon,Metro Manila,NCR,Urban
+10619,Talipapa, Quezon City,Metro Manila,NCR,Urban
+10225,Barangay 780, Santa Ana,Metro Manila,NCR,Urban
+11108,Parada, City Of Valenzuela,Metro Manila,NCR,Urban
+10803,Barangay 177, Caloocan City,Metro Manila,NCR,Urban
+10405,Barangka, City Of Marikina,Metro Manila,NCR,Urban
+10680,Pasong Putik Proper (Pasong Putik), Quezon City,Metro Manila,NCR,Urban
+10626,Bagong Lipunan Ng Crame, Quezon City,Metro Manila,NCR,Urban
+10809,Barangay 160, Caloocan City,Metro Manila,NCR,Urban
+10201,Barangay 17, Tondo I / Ii,Metro Manila,NCR,Urban
+10811,Barangay 166, Caloocan City,Metro Manila,NCR,Urban
+11204,Almanza Uno, City Of Las Piñas,Metro Manila,NCR,Urban
+10628,Mariana, Quezon City,Metro Manila,NCR,Urban
+11401,Putatan, City Of Muntinlupa,Metro Manila,NCR,Urban
+10402,Parang, City Of Marikina,Metro Manila,NCR,Urban
+11807,Maharlika Village, Taguig City,Metro Manila,NCR,Urban
+11804,Upper Bicutan, Taguig City,Metro Manila,NCR,Urban
+10819,Barangay 146, Caloocan City,Metro Manila,NCR,Urban
+10627,Masambong, Quezon City,Metro Manila,NCR,Urban
+11606,Barangay 69, Pasay City,Metro Manila,NCR,Urban
+10617,Bagong Silangan, Quezon City,Metro Manila,NCR,Urban
+11507,Santo Niño, City Of Parañaque,Metro Manila,NCR,Urban
+10602,Payatas, Quezon City,Metro Manila,NCR,Urban
+10630,Sacred Heart, Quezon City,Metro Manila,NCR,Urban
+10631,Santol, Quezon City,Metro Manila,NCR,Urban
+11402,Cupang, City Of Muntinlupa,Metro Manila,NCR,Urban
+10227,Barangay 644, San Miguel,Metro Manila,NCR,Urban
+10607,Bahay Toro, Quezon City,Metro Manila,NCR,Urban
+11805,Tanyag (Bagong Tanyag), Taguig City,Metro Manila,NCR,Urban
+10219,Barangay 598, Sampaloc,Metro Manila,NCR,Urban
+11809,Ligid-Tipas, Taguig City,Metro Manila,NCR,Urban
+10206,Barangay 146, Tondo I / Ii,Metro Manila,NCR,Urban
+11312,Rizal, City Of Makati,Metro Manila,NCR,Urban
+10633,Maharlika, Quezon City,Metro Manila,NCR,Urban
+11103,Karuhatan, City Of Valenzuela,Metro Manila,NCR,Urban
+11302,Bangkal, City Of Makati,Metro Manila,NCR,Urban
+10304,Hagdang Bato Itaas, City Of Mandaluyong,Metro Manila,NCR,Urban
+10820,Barangay 109, Caloocan City,Metro Manila,NCR,Urban
+10880,Barangay 75, Caloocan City,Metro Manila,NCR,Urban
+10606,Matandang Balara, Quezon City,Metro Manila,NCR,Urban
+10701,Batis, City Of San Juan,Metro Manila,NCR,Urban
+10406,San Roque, City Of Marikina,Metro Manila,NCR,Urban
+10635,Masagana, Quezon City,Metro Manila,NCR,Urban
+10624,Kamuning, Quezon City,Metro Manila,NCR,Urban
+11604,Barangay 164, Pasay City,Metro Manila,NCR,Urban
+10637,Doña Josefa, Quezon City,Metro Manila,NCR,Urban
+10209,Barangay 226, Tondo I / Ii,Metro Manila,NCR,Urban
+10202,Barangay 41, Tondo I / Ii,Metro Manila,NCR,Urban
+11407,Poblacion, City Of Muntinlupa,Metro Manila,NCR,Urban
+11101,Hen. T. De Leon, City Of Valenzuela,Metro Manila,NCR,Urban
+10612,Pasong Putik Proper (Pasong Putik), Quezon City,Metro Manila,NCR,Urban
+11106,Maysan, City Of Valenzuela,Metro Manila,NCR,Urban
+10891,Barangay 180, Caloocan City,Metro Manila,NCR,Urban
+10810,Barangay 164, Caloocan City,Metro Manila,NCR,Urban
+10222,Barangay 741, Malate,Metro Manila,NCR,Urban
+10226,Barangay 897, Santa Ana,Metro Manila,NCR,Urban
+11602,Barangay 179, Pasay City,Metro Manila,NCR,Urban
+10613,Culiat, Quezon City,Metro Manila,NCR,Urban
+10407,Tañong, City Of Marikina,Metro Manila,NCR,Urban
+11601,Barangay 76, Pasay City,Metro Manila,NCR,Urban
+11201,B. F. International Village, City Of Las Piñas,Metro Manila,NCR,Urban
+11004,Navotas East, City Of Navotas,Metro Manila,NCR,Urban
+10480,Nangka, City Of Marikina,Metro Manila,NCR,Urban
+11102,Marulas, City Of Valenzuela,Metro Manila,NCR,Urban
+11701,Santo Rosario-Kanluran, Pateros,Metro Manila,NCR,Urban
+10636,Quirino 2-B, Quezon City,Metro Manila,NCR,Urban
+10603,Batasan Hills, Quezon City,Metro Manila,NCR,Urban
+10609,Pasong Tamo, Quezon City,Metro Manila,NCR,Urban
+10634,Bagumbayan, Quezon City,Metro Manila,NCR,Urban
+10204,Barangay 102, Tondo I / Ii,Metro Manila,NCR,Urban
+10813,Barangay 161, Caloocan City,Metro Manila,NCR,Urban
+10505,Santa Lucia, City Of Pasig,Metro Manila,NCR,Urban
+10625,Doña Imelda, Quezon City,Metro Manila,NCR,Urban
+10218,Barangay 571, Sampaloc,Metro Manila,NCR,Urban
+11403,Alabang, City Of Muntinlupa,Metro Manila,NCR,Urban
+10212,Barangay 322, Santa Cruz,Metro Manila,NCR,Urban
+10210,Barangay 387, Quiapo,Metro Manila,NCR,Urban
+11392,Cembo, City Of Makati,Metro Manila,NCR,Urban
+10604,Holy Spirit, Quezon City,Metro Manila,NCR,Urban
+10615,Nagkaisang Nayon, Quezon City,Metro Manila,NCR,Urban
+11605,Barangay 98, Pasay City,Metro Manila,NCR,Urban
+11406,New Alabang Village, City Of Muntinlupa,Metro Manila,NCR,Urban
+10213,Barangay 361, Santa Cruz,Metro Manila,NCR,Urban
+11208,Ilaya, City Of Las Piñas,Metro Manila,NCR,Urban
+10805,Barangay 12, Caloocan City,Metro Manila,NCR,Urban
+10220,Barangay 630, Sampaloc,Metro Manila,NCR,Urban
+11405,Bayanan, City Of Muntinlupa,Metro Manila,NCR,Urban
+11308,La Paz, City Of Makati,Metro Manila,NCR,Urban
+11207,Pamplona Uno, City Of Las Piñas,Metro Manila,NCR,Urban
+10902,Longos, City Of Malabon,Metro Manila,NCR,Urban
+10904,Tañong (Pob.), City Of Malabon,Metro Manila,NCR,Urban
+11304,Pio Del Pilar, City Of Makati,Metro Manila,NCR,Urban
+10221,Barangay 670, Ermita,Metro Manila,NCR,Urban
+10403,Malanday, City Of Marikina,Metro Manila,NCR,Urban
+10601,Commonwealth, Quezon City,Metro Manila,NCR,Urban
+11307,San Antonio, City Of Makati,Metro Manila,NCR,Urban
+10702,Tibagan, City Of San Juan,Metro Manila,NCR,Urban
+10901,Potrero, City Of Malabon,Metro Manila,NCR,Urban
+11502,San Isidro, City Of Parañaque,Metro Manila,NCR,Urban
+10616,Bagbag, Quezon City,Metro Manila,NCR,Urban
+10290,Barangay 17, Tondo I / Ii,Metro Manila,NCR,Urban
+10590,Kapitolyo, City Of Pasig,Metro Manila,NCR,Urban
+10692,Pasong Tamo, Quezon City,Metro Manila,NCR,Urban
+10490,Masagana, Quezon City,Metro Manila,NCR,Urban
+10890,Barangay 28, Caloocan City,Metro Manila,NCR,Urban
+11090,Tanza, City Of Navotas,Metro Manila,NCR,Urban
+11391,Rizal, City Of Makati,Metro Manila,NCR,Urban
+11890,Western Bicutan, Taguig City,Metro Manila,NCR,Urban
+11892,Tanyag (Bagong Tanyag), Taguig City,Metro Manila,NCR,Urban
+10892,Barangay 173, Caloocan City,Metro Manila,NCR,Urban
+11390,Pinagsama, Taguig City,Metro Manila,NCR,Urban
+10228,Barangay 843, Pandacan,Metro Manila,NCR,Urban
+10207,Barangay 180, Tondo I / Ii,Metro Manila,NCR,Urban
+11504,San Antonio, City Of Parañaque,Metro Manila,NCR,Urban
+10618,Apolonio Samson, Quezon City,Metro Manila,NCR,Urban
+10216,Barangay 498, Sampaloc,Metro Manila,NCR,Urban
+30104,Gun-ob, Lapu-Lapu City (Opon),Cebu,VIS,Urban
+30107,Pardo (Pob.), Cebu City (Capital),Cebu,VIS,Urban
+30109,Mactan, Lapu-Lapu City (Opon),Cebu,VIS,Urban
+30110,Yati, Liloan,Cebu,VIS,Urban
+30114,Tinago, Cebu City (Capital),Cebu,VIS,Urban
+30115,Lawaan III, City Of Talisay,Cebu,VIS,Urban
+30105,Sambag II (Pob.), Cebu City (Capital),Cebu,VIS,Urban
+30112,Tabok, Mandaue City,Cebu,VIS,Urban
+30117,Pari-an, Cebu City (Capital),Cebu,VIS,Urban
+30101,Guadalupe, Cebu City (Capital),Cebu,VIS,Urban
+30103,Mabolo, Cebu City (Capital),Cebu,VIS,Urban
+30106,Tejero (Villa Gonzalo), Cebu City (Capital),Cebu,VIS,Urban
+30116,Guizo, Mandaue City,Cebu,VIS,Urban
+30119,Jugan, Consolacion,Cebu,VIS,Urban
+30108,Luz, Cebu City (Capital),Cebu,VIS,Urban
+30113,Carreta, Cebu City (Capital),Cebu,VIS,Urban
+30102,Lahug (Pob.), Cebu City (Capital),Cebu,VIS,Urban
+30111,Marigondon, Lapu-Lapu City (Opon),Cebu,VIS,Urban
+30206,Barangay 4 (Pob.), Bacolod City (Capital),Negros Occidental,VIS,Urban
+30203,Bata, Bacolod City (Capital),Negros Occidental,VIS,Urban
+30204,Estefania, Bacolod City (Capital),Negros Occidental,VIS,Urban
+30202,Mansilingan, Bacolod City (Capital),Negros Occidental,VIS,Urban
+30207,Barangay 13 (Pob.), Bacolod City (Capital),Negros Occidental,VIS,Urban
+30201,Villamonte, Bacolod City (Capital),Negros Occidental,VIS,Urban
+30304,Santa Cruz, Iloilo City (Capital),Iloilo,VIS,Urban
+30302,Benedicto (Jaro), Iloilo City (Capital),Iloilo,VIS,Urban
+30306,Sampaguita, Iloilo City (Capital),Iloilo,VIS,Urban
+30301,San Juan, Iloilo City (Capital),Iloilo,VIS,Urban
+30402,Barangay 83 (San Jose), Tacloban City (Capital),Leyte,VIS,Urban
+30602,Carayman, Calbayog City,Samar (Western Samar),VIS,Urban
+30601,San Policarpio, Calbayog City,Samar (Western Samar),VIS,Urban
+30702,Poblacion, Bago City,Negros Occidental,VIS,Urban
+30701,Ma-ao Barrio, Bago City,Negros Occidental,VIS,Urban
+30802,Don Andres Soriano (Lutopan), Toledo City,Cebu,VIS,Urban
+30901,Tiza, Roxas City (Capital),Capiz,VIS,Urban
+30902,Tanque, Roxas City (Capital),Capiz,VIS,Urban
+31001,Quezon, San Carlos City,Negros Occidental,VIS,Urban
+31002,Barangay I (Pob.), San Carlos City,Negros Occidental,VIS,Urban
+31102,Banilad, Dumaguete City (Capital),Negros Oriental,VIS,Urban
+31101,Calindagan, Dumaguete City (Capital),Negros Oriental,VIS,Urban
+31201,San Pedro, San Jose (Capital),Antique,VIS,Urban
+31301,Poblacion South, Oton,Iloilo,VIS,Urban
+31402,Estancia, Kalibo (Capital),Aklan,VIS,Urban
+31401,Poblacion, Kalibo (Capital),Aklan,VIS,Urban
+31501,Cogon, Tagbilaran City (Capital),Bohol,VIS,Urban
+31502,Poblacion III, Tagbilaran City (Capital),Bohol,VIS,Urban
+31601,Mabigo (Pob.), Canlaon City,Negros Oriental,VIS,Urban
+31703,Poblacion 3 (Barangay 3), City Of Catbalogan (Capital),Samar (Western Samar),VIS,Urban
+31701,Canlapwas (Pob.), City Of Catbalogan (Capital),Samar (Western Samar),VIS,Urban
+31802,Canramos (Pob.), Tanauan,Leyte,VIS,Urban
+31803,Santo Niño Pob. (Haclagan), Tanauan,Leyte,VIS,Urban
+33801,Basak Pardo, Cebu City (Capital),Cebu,VIS,Urban
+34000,Badiangan, Banga,Aklan,VIS,Rural
+34100,Polocate, Banga,Aklan,VIS,Rural
+34400,Candual, Panay,Capiz,VIS,Rural
+34500,Cogon, Panay,Capiz,VIS,Rural
+34600,Agdahon, Cuartero,Capiz,VIS,Rural
+34700,Poblacion Ilaya, Cuartero,Capiz,VIS,Rural
+34800,Gines Viejo, City Of Passi,Iloilo,VIS,Rural
+34900,Gemumua-agahon, City Of Passi,Iloilo,VIS,Rural
+35000,Jayubo, Lambunao,Iloilo,VIS,Rural
+35100,Walang, Lambunao,Iloilo,VIS,Rural
+35200,Tigum, Pavia,Iloilo,VIS,Rural
+35400,Molocaboc, Sagay City,Negros Occidental,VIS,Rural
+35800,Barangay III (Pob.), Pontevedra,Negros Occidental,VIS,Rural
+36000,Guadalupe(Bohol), Carmen,Bohol,VIS,Rural
+36100,Montevideo, Carmen,Bohol,VIS,Rural
+36300,San Isidro, Calape,Bohol,VIS,Rural
+36400,Calma, Garcia Hernandez,Bohol,VIS,Rural
+36500,Datag, Garcia Hernandez,Bohol,VIS,Rural
+36800,Alambijud, Argao,Cebu,VIS,Rural
+36900,Cansuje, Argao,Cebu,VIS,Rural
+37000,Hagnaya, Carmen,Cebu,VIS,Rural
+37200,Bae, Sibonga,Cebu,VIS,Rural
+37300,Banlot, Sibonga,Cebu,VIS,Rural
+37400,Lamogong, Manjuyod,Negros Oriental,VIS,Rural
+37500,Maaslum, Manjuyod,Negros Oriental,VIS,Rural
+37700,Malangsa, Vallehermoso,Negros Oriental,VIS,Rural
+37800,Malaunay, Valencia (Luzurriaga),Negros Oriental,VIS,Rural
+37900,Pulangbato, Valencia (Luzurriaga),Negros Oriental,VIS,Rural
+38200,Santo Rosario, City Of Baybay,Leyte,VIS,Rural
+38300,Gakat, City Of Baybay,Leyte,VIS,Rural
+38400,Pagsang-an, Abuyog,Leyte,VIS,Rural
+38500,Santo Niño (Pob.), Abuyog,Leyte,VIS,Rural
+38600,Baras, Palo,Leyte,VIS,Rural
+38700,Santa Cruz (Pob.), Palo,Leyte,VIS,Rural
+70101,Canduman, Mandaue City,Cebu,VIS,Urban
+70103,Labogon, Mandaue City,Cebu,VIS,Urban
+70201,Looc, Lapu-Lapu City (Opon),Cebu,VIS,Urban
+70202,Buaya, Lapu-Lapu City (Opon),Cebu,VIS,Urban
+70301,San Isidro, City Of Talisay,Cebu,VIS,Urban
+70401,Lag-Asan, Bago City,Negros Occidental,VIS,Urban
+70501,Catarman, Liloan,Cebu,VIS,Urban
+70601,Luray II, Toledo City,Cebu,VIS,Urban
+70701,Casili, Consolacion,Cebu,VIS,Urban
+70801,Barangay 109-A, Tacloban City (Capital),Leyte,VIS,Urban
+70902,Tambulilid, Ormoc City,Leyte,VIS,Urban
+70901,San Pablo (Simangan), Ormoc City,Leyte,VIS,Urban
+71001,Inoburan, City Of Naga,Cebu,VIS,Urban
+71002,Cantao-an, City Of Naga,Cebu,VIS,Urban
+71101,Cogon, Compostela,Cebu,VIS,Urban
+71102,Poblacion, Compostela,Cebu,VIS,Urban
+71201,Masulog, Canlaon City,Negros Oriental,VIS,Urban
+71301,Funda-Dalipe, San Jose (Capital),Antique,VIS,Urban
+71401,Duljo (Pob.), Cebu City (Capital),Cebu,VIS,Urban
+71501,Granada, Bacolod City (Capital),Negros Occidental,VIS,Urban
+71601,Lawa-an, Roxas City (Capital),Capiz,VIS,Urban
+71701,Trapiche, Oton,Iloilo,VIS,Urban
+71801,Cabong, City Of Borongan (Capital),Eastern Samar,VIS,Urban
+74000,Makinhas, City Of Baybay,Leyte,VIS,Rural
+74100,Ga-as, City Of Baybay,Leyte,VIS,Rural
+74200,Kilim, City Of Baybay,Leyte,VIS,Rural
+74300,San Agustin, City Of Baybay,Leyte,VIS,Rural
+74400,Mulapula, City Of Passi,Iloilo,VIS,Rural
+74500,Man-it, City Of Passi,Iloilo,VIS,Rural
+74600,Tampucao, Lambunao,Iloilo,VIS,Rural
+74700,Agsirab, Lambunao,Iloilo,VIS,Rural
+74800,Binlod, Argao,Cebu,VIS,Rural
+74900,Tulic, Argao,Cebu,VIS,Rural
+75000,Cagbolo, Abuyog,Leyte,VIS,Rural
+75200,Malubon, Sagay City,Negros Occidental,VIS,Rural
+75300,Fabrica, Sagay City,Negros Occidental,VIS,Rural
+75400,Naga-naga, Palo,Leyte,VIS,Rural
+75500,Prenza, Balamban,Cebu,VIS,Rural
+75600,Abucayan, Balamban,Cebu,VIS,Rural
+75700,San Juan, Pontevedra,Negros Occidental,VIS,Rural
+75800,Anilao, Pavia,Iloilo,VIS,Rural
+75900,Ipil, Carmen,Cebu,VIS,Rural
+76000,Molobolo, Vallehermoso,Negros Oriental,VIS,Rural
+31903,Songco, City Of Borongan (Capital),Eastern Samar,VIS,Urban
+70102,Tipolo, Mandaue City,Cebu,VIS,Urban
+70302,Tabunoc, City Of Talisay,Cebu,VIS,Urban
+36200,Bonbon, Calape,Bohol,VIS,Rural
+40101,Buhangin (Pob.), Davao City,Davao Del Sur,MIN,Urban
+40113,Barangay 8-A (Pob.), Davao City,Davao Del Sur,MIN,Urban
+40107,Matina Aplaya, Davao City,Davao Del Sur,MIN,Urban
+40102,Bucana, Davao City,Davao Del Sur,MIN,Urban
+40111,San Antonio, Davao City,Davao Del Sur,MIN,Urban
+40117,Barangay 29-C (Pob.), Davao City,Davao Del Sur,MIN,Urban
+40106,Barangay 19-B (Pob.), Davao City,Davao Del Sur,MIN,Urban
+40105,Sasa, Davao City,Davao Del Sur,MIN,Urban
+40104,Pampanga, Davao City,Davao Del Sur,MIN,Urban
+40116,Barangay 24-C (Pob.), Davao City,Davao Del Sur,MIN,Urban
+40205,Curuan, Zamboanga City,Zamboanga Peninsula,MIN,Urban
+40206,Sinunoc, Zamboanga City,Zamboanga Peninsula,MIN,Urban
+40204,Recodo, Zamboanga City,Zamboanga Del Sur,MIN,Urban
+40207,Divisoria, Zamboanga City,Zamboanga Del Sur,MIN,Urban
+40202,Camino Nuevo, Zamboanga City,Zamboanga Del Sur,MIN,Urban
+40201,Santa Catalina, Zamboanga City,Zamboanga Del Sur,MIN,Urban
+40203,San Roque, Zamboanga City,Zamboanga Del Sur,MIN,Urban
+40301,Lapasan, Cagayan De Oro City (Capital),Misamis Oriental,MIN,Urban
+40302,Camaman-an, Cagayan De Oro City (Capital),Misamis Oriental,MIN,Urban
+40305,Bonbon, Cagayan De Oro City (Capital),Misamis Oriental,MIN,Urban
+40303,Gusa, Cagayan De Oro City (Capital),Misamis Oriental,MIN,Urban
+40304,Macasandig, Cagayan De Oro City (Capital),Misamis Oriental,MIN,Urban
+40405,Tambler, General Santos City (Dadiangas),South Cotabato,MIN,Urban
+40401,Lagao (1st and 3rd), General Santos City (Dadiangas),South Cotabato,MIN,Urban
+40402,Labangal, General Santos City (Dadiangas),South Cotabato,MIN,Urban
+40403,Dadiangas East (Pob.), General Santos City (Dadiangas),South Cotabato,MIN,Urban
+40404,Bula, General Santos City (Dadiangas),South Cotabato,MIN,Urban
+40504,Tominobo Proper, Iligan City,Lanao Del Norte,MIN,Urban
+40502,Palao, Iligan City,Lanao Del Norte,MIN,Urban
+40501,Tubod, Iligan City,Lanao Del Norte,MIN,Urban
+40503,Suarez, Iligan City,Lanao Del Norte,MIN,Urban
+40603,Bayanihan Pob. (Bgy. 27), Butuan City (Capital),Agusan Del Norte,MIN,Urban
+40601,Ampayon, Butuan City (Capital),Agusan Del Norte,MIN,Urban
+40702,Magugpo Poblacion, City Of Tagum (Capital),Davao Del Norte,MIN,Urban
+40701,Magugpo East, City Of Tagum (Capital),Davao Del Norte,MIN,Urban
+40802,Rosary Heights, Cotabato City,Maguindanao,MIN,Urban
+40801,Poblacion, Cotabato City,Maguindanao,MIN,Urban
+40901,San Pedro (Pob.), Pagadian City (Capital),Zamboanga Del Sur,MIN,Urban
+40902,Santiago (Pob.), Pagadian City (Capital),Zamboanga Del Sur,MIN,Urban
+40903,Kawit, Pagadian City (Capital),Zamboanga Del Sur,MIN,Urban
+41002,San Juan, Surigao City (Capital),Surigao Del Norte,MIN,Urban
+41001,Washington (Pob.), Surigao City (Capital),Surigao Del Norte,MIN,Urban
+41101,Miputak (Pob.), Dipolog City (Capital),Zamboanga Del Norte,MIN,Urban
+41102,Galas, Dipolog City (Capital),Zamboanga Del Norte,MIN,Urban
+41402,Mobod, Oroquieta City (Capital),Misamis Occidental,MIN,Urban
+41403,Poblacion I, Oroquieta City (Capital),Misamis Occidental,MIN,Urban
+41602,San Miguel (Odaca), City Of Digos (Capital),Davao Del Sur,MIN,Urban
+41601,Zone 3 (Pob.), City Of Digos (Capital),Davao Del Sur,MIN,Urban
+41801,Poblacion (Alabel), Alabel (Capital),Sarangani Province,MIN,Urban
+41802,Maribulan, Alabel (Capital),Sarangani Province,MIN,Urban
+41901,Poblacion, City Of Kidapawan (Capital),Cotabato (North Cotabato),MIN,Urban
+41902,Lanao, City Of Kidapawan (Capital),Cotabato (North Cotabato),MIN,Urban
+42002,San Pablo, City Of Tacurong,South Cotabato,MIN,Urban
+42003,Poblacion, City Of Tacurong,South Cotabato,MIN,Urban
+42001,New Isabela, City Of Tacurong,South Cotabato,MIN,Urban
+42103,Poblacion, City Of Bislig,Surigao Del Sur,MIN,Urban
+42102,Tabon, City Of Bislig,Surigao Del Sur,MIN,Urban
+42101,Mangagoy, City Of Bislig,Surigao Del Sur,MIN,Urban
+43803,Vicente Hizon Sr., Davao City,Davao Del Sur,MIN,Urban
+43801,Barangay 38-D (Pob.), Davao City,Davao Del Sur,MIN,Urban
+43802,Dumoy, Davao City,Davao Del Sur,MIN,Urban
+43804,Barangay 36-D (Pob.), Davao City,Davao Del Sur,MIN,Urban
+44000,Dabiak, Katipunan,Zamboanga Del Norte,MIN,Rural
+44100,Daanglungsod, Katipunan,Zamboanga Del Norte,MIN,Rural
+44400,Concepcion (Balungis), Kabasalan,Zamboanga Sibugay,MIN,Rural
+44500,Timuay Danda (Mangahas), Kabasalan,Zamboanga Sibugay,MIN,Rural
+44600,Demetrio Fernan, Bonifacio,Negros Occidental,MIN,Rural
+44700,Liloan, Bonifacio,Negros Occidental,MIN,Rural
+44800,Calongonan, City Of El Salvador,Misamis Oriental,MIN,Rural
+45200,Cabug, Medina,Misamis Oriental,MIN,Rural
+45300,Pahindong, Medina,Misamis Oriental,MIN,Rural
+45400,Anibongan, Carmen,Davao Del Norte,MIN,Rural
+46300,New Baclayon, Malalag,Davao Del Sur,MIN,Rural
+46400,Poblacion, Caraga,Compostela Valley,MIN,Rural
+46500,Sobrecarey, Caraga,Compostela Valley,MIN,Rural
+46800,Polo, Polomolok,South Cotabato,MIN,Rural
+46900,Koronadal Proper, Polomolok,South Cotabato,MIN,Rural
+47000,Lower Katingawan, Midsayap,Cotabato (North Cotabato),MIN,Rural
+47200,Minamaing, Matalam,Cotabato (North Cotabato),MIN,Rural
+47300,Kibia, Matalam,Cotabato (North Cotabato),MIN,Rural
+47400,Caromatan, Kolambugan,Lanao Del Norte,MIN,Rural
+47500,Libertad, Kolambugan,Lanao Del Norte,MIN,Rural
+47900,Borongotan, Upi,Maguindanao,MIN,Rural
+48100,Nituan, Parang,Maguindanao,MIN,Rural
+48200,Abilan, Buenavista,Agusan Del Norte,MIN,Rural
+48300,Sacol, Buenavista,Agusan Del Norte,MIN,Rural
+48400,Mabini, City Of Cabadbaran,Agusan Del Norte,MIN,Rural
+48800,Cabacungan, Barobo,Surigao Del Sur,MIN,Rural
+48900,Javier, Barobo,Surigao Del Sur,MIN,Rural
+80101,San Vicente, Butuan City (Capital),Agusan Del Norte,MIN,Urban
+80201,Aplaya, City Of Digos (Capital),Davao Del Sur,MIN,Urban
+80301,Sicayab, Dipolog City (Capital),Zamboanga Del Norte,MIN,Urban
+80401,Taft (Pob.), Surigao City (Capital),Surigao Del Norte,MIN,Urban
+80501,Sudapin, City Of Kidapawan (Capital),Cotabato (North Cotabato),MIN,Urban
+80601,Pag-asa, Alabel (Capital),Sarangani Province,MIN,Urban
+80801,Marcos, Magallanes,Agusan Del Norte,MIN,Urban
+80802,Santo Rosario, Magallanes,Agusan Del Norte,MIN,Urban
+80902,Tibal-og (Pob.), Santo Tomas,Davao Del Norte,MIN,Urban
+80901,Casig-Ang, Santo Tomas,Davao Del Norte,MIN,Urban
+81001,Tuban, Santa Cruz,Davao Del Sur,MIN,Urban
+81002,Astorga, Santa Cruz,Davao Del Sur,MIN,Urban
+81102,Banadero (Pob.), Ozamis City,Misamis Occidental,MIN,Urban
+81101,Catadman-Manabay, Ozamis City,Misamis Occidental,MIN,Urban
+81201,Zone II (Pob.), City Of Koronadal (Capital),South Cotabato,MIN,Urban
+81202,General Paulino Santos (Bo. 1), City Of Koronadal (Capital),South Cotabato,MIN,Urban
+81301,Bagua II, Cotabato City,Maguindanao,MIN,Urban
+81401,Magugpo West, City Of Tagum (Capital),Davao Del Norte,MIN,Urban
+84000,Atan-Awe, Davao City,Davao Del Sur,MIN,Rural
+84100,Kilate, Davao City,Davao Del Sur,MIN,Rural
+84200,Tagluno, Davao City,Davao Del Sur,MIN,Rural
+84300,Mulig, Davao City,Davao Del Sur,MIN,Rural
+84400,Angalan, Davao City,Davao Del Sur,MIN,Rural
+84500,Baracatan, Davao City,Davao Del Sur,MIN,Rural
+84600,Biao Escuela, Davao City,Davao Del Sur,MIN,Rural
+84700,Waan, Davao City,Davao Del Sur,MIN,Rural
+84800,Gumalang, Davao City,Davao Del Sur,MIN,Rural
+84900,Sirib, Davao City,Davao Del Sur,MIN,Rural
+85000,Eden, Davao City,Davao Del Sur,MIN,Rural
+85100,San Pedro, Midsayap,Cotabato (North Cotabato),MIN,Rural
+85200,Ilbocean, Midsayap,Cotabato (North Cotabato),MIN,Rural
+85300,San Isidro, Midsayap,Cotabato (North Cotabato),MIN,Rural
+85400,Bagumba, Midsayap,Cotabato (North Cotabato),MIN,Rural
+85500,Central Bulanan, Midsayap,Cotabato (North Cotabato),MIN,Rural
+85600,New Bugasong, Matalam,Cotabato (North Cotabato),MIN,Rural
+85700,New Pandan, Matalam,Cotabato (North Cotabato),MIN,Rural
+85900,Comagascas, City Of Cabadbaran,Agusan Del Norte,MIN,Rural
+86300,Asuncion (Cuatro-Cuatro), Carmen,Davao Del Norte,MIN,Rural
+86400,Tiayon, Ipil (Capital),Zamboanga Sibugay,MIN,Rural
+86500,Magdaup, Ipil (Capital),Zamboanga Sibugay,MIN,Rural
+86600,Bulacan, Malalag,Davao Del Sur,MIN,Rural
+86700,Sambulawan, City Of El Salvador,Misamis Oriental,MIN,Rural
+86800,Patag, Malapatan,Sarangani Province,MIN,Rural
+86900,Sapu Padidu, Malapatan,Sarangani Province,MIN,Rural
+87000,Nangi, Upi,Maguindanao,MIN,Rural
+40109,Centro (San Juan), Davao City,Davao Del Sur,MIN,Urban
+48000,Macasandag, Parang,Maguindanao,MIN,Rural
