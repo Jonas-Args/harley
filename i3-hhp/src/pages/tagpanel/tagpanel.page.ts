@@ -67,10 +67,8 @@ export class tagpanelPage implements OnInit {
       panel_code: ["", [Validators.required]],
       panel_name: ["", [Validators.required]],
       sec: ["", [Validators.required]],
-      kids: ["", [Validators.required]],
+      gender: ["", [Validators.required]],
       panelist_age: ["", [Validators.required]],
-      work_status: ["", [Validators.required]],
-      hh_size: ["", [Validators.required]],
       redemption_mode: ["", [Validators.required]],
       contact_number: [
         "",
@@ -160,10 +158,8 @@ export class tagpanelPage implements OnInit {
       `${v.panel_code || ""};` +
       `${v.panel_name || ""};` +
       `${v.sec || ""};` +
-      `${v.kids || ""};` +
+      `${v.gender || ""};` +
       `${v.panelist_age || ""};` +
-      `${v.work_status || ""};` +
-      `${v.hh_size || ""};` +
       `${v.redemption_mode || ""};` +
       `${v.contact_number || ""};` +
       `${v.brgy_code || ""};` +
@@ -459,6 +455,8 @@ export class tagpanelPage implements OnInit {
 
   sync() {
     console.log("sending", this.formPanel.value);
+    this.date_visit = new Date().toLocaleString();
+    this.formPanel.value["date_visit"] = this.date_visit;
     this.uploading = true;
     this.httpService
       .post(this.url + "/hh_recruitments", this.formPanel.value, false)
