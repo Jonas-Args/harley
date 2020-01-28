@@ -69,6 +69,9 @@ export class tagpanelPage implements OnInit {
       sec: ["", [Validators.required]],
       gender: ["", [Validators.required]],
       panelist_age: ["", [Validators.required]],
+      work_status: ["", [Validators.required]],
+      hh_size: ["", [Validators.required]],
+      kids: ["", [Validators.required]],
       redemption_mode: ["", [Validators.required]],
       contact_number: [
         "",
@@ -458,6 +461,20 @@ export class tagpanelPage implements OnInit {
     this.date_visit = new Date().toLocaleString();
     this.formPanel.value["date_visit"] = this.date_visit;
     this.uploading = true;
+
+    if (
+      this.formPanel.value.panel_type == "HHP" ||
+      this.formPanel.value.panel_type == "EXP"
+    ) {
+      this.formPanel.value.gender = null;
+    }
+
+    if (this.formPanel.value.panel_type == "EOP") {
+      this.formPanel.value.kids = null;
+      this.formPanel.value.work_status = null;
+      this.formPanel.value.hh_size = null;
+    }
+
     this.httpService
       .post(this.url + "/hh_recruitments", this.formPanel.value, false)
       .timeout(10000)

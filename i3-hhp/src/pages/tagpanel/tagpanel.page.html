@@ -87,7 +87,23 @@
         <ion-option value="E"> E </ion-option>
       </ion-select>
     </ion-item>
-    <ion-item>
+    <ion-item
+      *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+    >
+      <ion-label>
+        <p>Kids:</p>
+      </ion-label>
+      <ion-select formControlName="kids" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="without"> without </ion-option>
+        <ion-option value="0-12mos"> 0-12mos </ion-option>
+        <ion-option value="13-24mos"> 13-24mos </ion-option>
+        <ion-option value="25-36mos"> 25-36mos </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="formPanel.value.panel_type == 'EOP'">
       <ion-label>
         <p>Gender:</p>
       </ion-label>
@@ -101,7 +117,12 @@
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>Age group:</p>
+        <p
+          *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+        >
+          PanelistAGE:
+        </p>
+        <p *ngIf="formPanel.value.panel_type == 'EOP'">Age group:</p>
       </ion-label>
       <ion-select
         formControlName="panelist_age"
@@ -111,11 +132,49 @@
         <ion-option value="" selectable="false" selected="true">
           Select:
         </ion-option>
-        <ion-option value="13-16"> 13-16 </ion-option>
-        <ion-option value="25-34"> 17-20 </ion-option>
-        <ion-option value="35-44"> 21-30 </ion-option>
-        <ion-option value="45-54"> 31-40 </ion-option>
-        <ion-option value="55 up"> 41-59 </ion-option>
+        <ion-option value="&lt;25"> &lt;25 </ion-option>
+        <ion-option value="25-34"> 25-34 </ion-option>
+        <ion-option value="35-44"> 35-44 </ion-option>
+        <ion-option value="45-54"> 45-54 </ion-option>
+        <ion-option value="55 up"> 55 up </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item
+      *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+    >
+      <ion-label>
+        <p>WorkStatus:</p>
+      </ion-label>
+      <ion-select
+        formControlName="work_status"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="WORKING"> WORKING </ion-option>
+        <ion-option value="NOT WORKING"> NOT WORKING </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item
+      *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+    >
+      <ion-label>
+        <p>HHSize:</p>
+      </ion-label>
+      <ion-select
+        formControlName="hh_size"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="1-2"> 1-2 </ion-option>
+        <ion-option value="3-4"> 3-4 </ion-option>
+        <ion-option value="5-6"> 5-6 </ion-option>
+        <ion-option value="7 or more"> 7 or more </ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
