@@ -56,9 +56,6 @@
             SAVE
           </button>
         </ion-col>
-        <ion-col col="4">
-          <button ion-button full (click)="sendSMS()">SEND</button>
-        </ion-col>
         <ion-col *ngIf="!!irfObj?.Id && connectedToNet" col="4">
           <button ion-button full (click)="sync()">SYNC</button>
         </ion-col>

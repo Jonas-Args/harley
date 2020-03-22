@@ -20,8 +20,8 @@ declare var AdvancedGeolocation: any;
   templateUrl: "./tagpanel.page.html"
 })
 export class tagpanelPage implements OnInit {
-  url = "http://10.0.2.2:3000";
-  // url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
+  url = "http://api.uniserve.ph";
 
   formPanel: FormGroup;
   isBarcodeScanned = false;
@@ -366,7 +366,7 @@ export class tagpanelPage implements OnInit {
 
             if (this.platform.is("android")) {
               this.file
-                .checkDir(this.file.externalRootDirectory, "docupic")
+                .checkDir(this.file.externalRootDirectory, this.directory())
                 .then(response => {
                   console.log("Directory exists" + response);
                   this.moveToFile(imagePath, imageName, type);
@@ -376,7 +376,7 @@ export class tagpanelPage implements OnInit {
                   this.file
                     .createDir(
                       this.file.externalRootDirectory,
-                      "docupic",
+                      this.directory(),
                       false
                     )
                     .then(response => {
@@ -400,15 +400,26 @@ export class tagpanelPage implements OnInit {
       });
   }
 
-  moveToFile(imagePath, imageName, type) {
+  directory() {
     let panel_code = this.formPanel.get("panel_code").value;
-    let week_code = this.formPanel.get("ww_code").value;
+    let period_code = this.formPanel.get("period_code").value;
+
+    return "docupic/" + panel_code + "_" + period_code;
+  }
+
+  imageName() {
+    let panel_code = this.formPanel.get("panel_code").value;
+    let period_code = this.formPanel.get("period_code").value;
+    return panel_code + "_" + period_code + "_" + this.page_number + ".jpeg";
+  }
+
+  moveToFile(imagePath, imageName, type) {
     this.file
       .moveFile(
         imagePath,
         imageName,
-        this.file.externalRootDirectory + "docupic/",
-        this.page_number + "_" + panel_code + "_" + week_code + ".jpeg"
+        this.file.externalRootDirectory + this.directory() + "/",
+        this.imageName()
       )
       .then(newFile => {
         switch (type) {
@@ -498,6 +509,7 @@ export class tagpanelPage implements OnInit {
           }
         },
         err => {
+          this.url;
           debugger;
           this.uploading = false;
           this.showToast("Something went wrong" + err.message);
