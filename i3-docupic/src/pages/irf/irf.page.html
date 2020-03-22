@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Main Form</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formPanel">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+            <ion-label>
+              <p>Panel Code:</p>
+            </ion-label>
+            <ion-input formControlName="panel_code" type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-12>
+          <button ion-button full (click)="scan()">SCAN</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-item>
+      <ion-label>
+        <p>Panel Name:</p>
+      </ion-label>
+      <ion-input formControlName="panel_name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Year:</p>
+      </ion-label>
+      <ion-input
+        formControlName="yy_code"
+        type="text"
+        placeholder="YYYY"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Period:</p>
+      </ion-label>
+      <ion-input
+        formControlName="pp_code"
+        type="text"
+        placeholder="PP"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Week:</p>
+      </ion-label>
+      <ion-input
+        formControlName="ww_code"
+        type="text"
+        placeholder="WW"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Period Code:</p>
+      </ion-label>
+      <ion-input
+        formControlName="period_code"
+        type="text"
+        disabled="true"
+        placeholder="YYYY.PP.WW"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Remarks:</p>
+      </ion-label>
+      <ion-input formControlName="remarks" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-6>
+          <button ion-button full (click)="clear()">CLEAR</button>
+        </ion-col>
+        <ion-col col-6>
+          <button ion-button full (click)="search(formPanel.value)">
+            SEARCH
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+  <ion-list>
+    <ng-container *ngFor="let row of list; let i = index">
+      <!-- <ion-item (click)="editRequest(request.Id)"> -->
+      <ion-item (click)="moveToIrf(row)">
+        <ion-col *ngIf="row.stored == true"
+          ><ion-icon name="cloud-done"></ion-icon
+        ></ion-col>
+        <ion-col>{{i+1}}</ion-col>
+        <ion-col>{{row.panel_code}}</ion-col>
+        <ion-col>{{row.fi_name}}</ion-col>
+        <!-- add field here -->
+      </ion-item>
+      <ion-col (click)="removeRequest(row.Id); $event.stopPropagation()"
+        >remove</ion-col
+      >
+    </ng-container>
+  </ion-list>
+</ion-content>
