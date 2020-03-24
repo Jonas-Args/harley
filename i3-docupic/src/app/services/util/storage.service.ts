@@ -12,7 +12,7 @@ export class StorageService {
     if (!!object.Id) {
       Id = object.Id;
     } else {
-      Id = type + object["panel_code"];
+      Id = type + object["panel_code"] + object["period_code"];
       object = Object.assign({ Id: Id }, object);
     }
     this.itemId = Id;

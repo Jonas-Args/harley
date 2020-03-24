@@ -44,21 +44,37 @@
       <ion-label>
         <p>Period:</p>
       </ion-label>
-      <ion-input
+      <ion-select
         formControlName="pp_code"
-        type="text"
-        placeholder="PP"
-      ></ion-input>
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Period</ion-option
+        >
+        <ion-option
+          *ngFor="let type of ['01','02','03','04','05','06','07','08','09','10','11','12','13']"
+          [value]="type"
+          >{{ type }}</ion-option
+        >
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>
         <p>Week:</p>
       </ion-label>
-      <ion-input
+      <ion-select
         formControlName="ww_code"
-        type="text"
-        placeholder="WW"
-      ></ion-input>
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Week</ion-option
+        >
+        <ion-option *ngFor="let type of ['1','2','3','4']" [value]="type"
+          >{{ type }}</ion-option
+        >
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>
@@ -68,7 +84,7 @@
         formControlName="period_code"
         type="text"
         disabled="true"
-        placeholder="YYYY.PP.WW"
+        placeholder="YYYY.PP.W"
       ></ion-input>
     </ion-item>
     <ion-item>
@@ -99,7 +115,7 @@
         ></ion-col>
         <ion-col>{{i+1}}</ion-col>
         <ion-col>{{row.panel_code}}</ion-col>
-        <ion-col>{{row.fi_name}}</ion-col>
+        <ion-col>{{row.period_code}}</ion-col>
         <!-- add field here -->
       </ion-item>
       <ion-col (click)="removeRequest(row.Id); $event.stopPropagation()"

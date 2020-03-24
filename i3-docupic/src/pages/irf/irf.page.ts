@@ -119,7 +119,8 @@ export class irfPage implements OnInit {
 
   search(value) {
     let panelcode = this.formPanel.value["panel_code"];
-    let id = "docupic" + panelcode;
+    let peridcode = this.formPanel.value["period_code"];
+    let id = "docupic" + panelcode + peridcode;
     //find by panel_code week_code name
 
     this.storage.getItem(id).then(
