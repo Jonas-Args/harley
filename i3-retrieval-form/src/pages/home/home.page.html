@@ -1,0 +1,159 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title
+      >Home<ion-col *ngIf="irfObj['stored']==true && !saving && !uploading"
+        ><ion-icon name="cloud-done"></ion-icon
+      ></ion-col>
+      <p *ngIf="saving">Saving ....</p>
+      <p *ngIf="uploading">Uploading ....</p></ion-title
+    >
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <img
+    src="assets/imgs/uniserve_logo.png"
+    id="imgPlacement"
+    style="align-items: center"
+  />
+  <h2 style="text-align: center;">Retrieval Monitoring</h2>
+  <h4>Activity:</h4>
+  <button ion-button full (click)="moveRetrieval()">Diary Retrieval</button>
+  <button ion-button full (click)="moveToPurchase()">Purchase Entry</button>
+  <br />
+  <h4>Summary:</h4>
+  <h5 style="text-align: center;">Retrieval</h5>
+  <button ion-button full>Per Period</button>
+  <button ion-button full>Per Date Range</button>
+  <br />
+  <h5 style="text-align: center;">Purchases</h5>
+  <button ion-button full color="secondary">Per Period</button>
+  <button ion-button full color="secondary">Per Date Range</button>
+
+  <!-- <form [formGroup]="formPanel">
+    <ion-item *ngIf="false">
+      <ion-label>
+        <p>Id:</p>
+      </ion-label>
+      <ion-input formControlName="Id" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>PanelCode:</p>
+      </ion-label>
+      <ion-input
+        formControlName="panel_code"
+        disabled="true"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Panel Name:</p>
+      </ion-label>
+      <ion-input formControlName="panel_name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Week Code:</p>
+      </ion-label>
+      <ion-input formControlName="week_code" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>FIName:</p>
+      </ion-label>
+      <ion-input formControlName="finame" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Region:</p>
+      </ion-label>
+      <ion-input formControlName="region" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-7>
+          <ion-item>
+            <ion-label>
+              <p>ACCURACY:</p>
+            </ion-label>
+            <ion-input
+              disabled="true"
+              formControlName="loc_accuracy"
+              type="text"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="!isCaptureLoc"
+            ion-button
+            full
+            (click)="captureLoc(true)"
+          >
+            Capture
+          </button>
+          <button
+            *ngIf="isCaptureLoc"
+            ion-button
+            full
+            (click)="captureLoc(false)"
+          >
+            Stop
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-item>
+      <ion-label>
+        <p>STATUS:</p>
+      </ion-label>
+      <ion-select
+        formControlName="panel_status"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option *ngFor="let status of statuses" [value]="status.value"
+          >{{status.value | uppercase}}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="showZeroRemarks">
+      <ion-label>
+        <p>ZERO REMARKS:</p>
+      </ion-label>
+      <ion-input formControlName="panel_remarks" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="showZeroRemarks">
+      <ion-label>
+        <p>REMARKS:</p>
+      </ion-label>
+      <ion-input formControlName="panel_receipted" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col="4">
+          <button ion-button full type="submit" (click)="save(formPanel.value)">
+            SAVE
+          </button>
+        </ion-col>
+        <ion-col col="4">
+          <button ion-button full (click)="sendSMS()">SEND SMS</button>
+        </ion-col>
+        <ion-col *ngIf="!!irfObj?.Id && connectedToNet" col="4">
+          <button ion-button full (click)="sync()">SYNC</button>
+        </ion-col>
+        <ion-col col="4">
+          <button ion-button full navPop>Cancel</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form> -->
+</ion-content>

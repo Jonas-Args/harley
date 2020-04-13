@@ -4,13 +4,14 @@ import { IonicApp, IonicErrorHandler, IonicModule } from "ionic-angular";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { StatusBar } from "@ionic-native/status-bar";
 import { MyApp } from "./app.component";
-import { HomePage } from "../pages/home/home";
 
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 import { SMS } from "@ionic-native/sms";
 import { NativeStorage } from "@ionic-native/native-storage";
 import { Camera } from "@ionic-native/camera";
 import { File } from "@ionic-native/file";
+import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
+
 import {
   MatSelectModule,
   MatInputModule,
@@ -30,12 +31,14 @@ import { AutoCompleteModule } from "ionic2-auto-complete";
 import { FilePath } from "@ionic-native/file-path";
 import { HttpService } from "./services/util/http.service";
 import { IrfFormService } from "./services/api/irf-form.service";
+import { SqliteService } from "./services/api/sqlite.service";
 import { Base64 } from "@ionic-native/base64";
 import { Network } from "@ionic-native/network";
 import { ListPage } from "../pages/list/list.page";
-import { irfPage } from "../pages/irf/irf.page";
 import { tagpanelPage } from "../pages/tagpanel/tagpanel.page";
 import { CsvService } from "./services/util/csv.service";
+import { Home } from "../pages/home/home.page";
+import { Retrieval } from "../pages/retrieval/retrieval.page";
 
 const APP_PROVIDERS = [
   CommonService,
@@ -43,11 +46,12 @@ const APP_PROVIDERS = [
   StorageService,
   HttpService,
   IrfFormService,
-  CsvService
+  CsvService,
+  SqliteService
 ];
 
 @NgModule({
-  declarations: [MyApp, irfPage, HomePage, ListPage, tagpanelPage],
+  declarations: [MyApp, Retrieval, Home, ListPage, tagpanelPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
@@ -63,7 +67,7 @@ const APP_PROVIDERS = [
     AutoCompleteModule
   ],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp, irfPage, HomePage, ListPage, tagpanelPage],
+  entryComponents: [MyApp, Retrieval, Home, ListPage, tagpanelPage],
   providers: [
     StatusBar,
     SplashScreen,
@@ -72,6 +76,7 @@ const APP_PROVIDERS = [
     Camera,
     File,
     NativeStorage,
+    SQLite,
     Toast,
     FileOpener,
     FilePath,

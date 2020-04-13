@@ -36,6 +36,8 @@
         "@ionic-native/network": "^4.20.0",
         "@ionic-native/sms": "^4.20.0",
         "@ionic-native/splash-screen": "~4.20.0",
+        "@ionic-native/sqlite": "^4.20.0",
+        "@ionic-native/sqlite-porter": "^4.20.0",
         "@ionic-native/status-bar": "~4.20.0",
         "@ionic-native/toast": "^4.20.0",
         "@ionic/storage": "2.2.0",
@@ -66,6 +68,7 @@
         "phonegap-plugin-barcodescanner": "8.0.1",
         "rxjs": "5.5.11",
         "sw-toolbox": "3.6.0",
+        "uk.co.workingedge.cordova.plugin.sqliteporter": "^1.1.1",
         "zone.js": "0.8.29"
     },
     "devDependencies": {
@@ -101,7 +104,9 @@
             "cordova-plugin-filepath": {},
             "com-badrit-base64": {},
             "cordova-plugin-network-information": {},
-            "cordova-plugin-file-transfer": {}
+            "cordova-plugin-file-transfer": {},
+            "uk.co.workingedge.cordova.plugin.sqliteporter": {},
+            "cordova-sqlite-storage": {}
         },
         "platforms": [
             "android",

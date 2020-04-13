@@ -5,7 +5,6 @@ import { SMS } from "@ionic-native/sms";
 import { StorageService } from "../../app/services/util/storage.service";
 import { Toast } from "@ionic-native/toast";
 import { NativeStorage } from "@ionic-native/native-storage";
-import { irfPage } from "../irf/irf.page";
 import { NavController, NavParams, Platform } from "ionic-angular";
 import { PictureSourceType, CameraOptions, Camera } from "@ionic-native/camera";
 import { FilePath } from "@ionic-native/file-path";
