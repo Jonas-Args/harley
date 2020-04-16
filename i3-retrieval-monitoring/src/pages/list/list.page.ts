@@ -1,59 +1,55 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { StorageService } from '../../app/services/util/storage.service';
-import { irfPage } from '../irf/irf.page';
+import { Component, OnInit } from "@angular/core";
+import { NavController } from "ionic-angular";
+import { StorageService } from "../../app/services/util/storage.service";
+import { RetrieveilFormPage } from "../retrieval-form/retrieval-form.page";
+import { RetrievalItemPage } from "../retrieval-item/retrieval-item.page";
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.page.html'
+  selector: "app-list",
+  templateUrl: "./list.page.html"
 })
-export class ListPage  {
+export class ListPage {
+  list: any;
 
-  list:any;
+  constructor(public storage: StorageService, public navCtrl: NavController) {}
 
-  constructor(
-    public storage: StorageService,
-    public navCtrl: NavController,
-  ) { }
-
-
-  ionViewDidEnter () {
-   this.getAllItems()
+  ionViewDidEnter() {
+    this.getAllItems();
   }
 
-  retrieveTagPanel(){
-    this.navCtrl.push(irfPage, {});
+  retrieveTagPanel() {
+    this.navCtrl.push(RetrievalItemPage, {});
   }
 
-  removeIrf(key){
+  removeIrf(key) {
     this.storage.removeItem(key).then(
-      data => { 
-        this.getAllItems()
+      data => {
+        this.getAllItems();
       },
       error => console.error(error)
-    )
+    );
   }
 
-  getAllItems(){
+  getAllItems() {
     this.storage.getAllItem().then(
-      data => { 
+      data => {
         let objects = <any[]>data;
-        console.log("objects",objects)
-        this.list = objects.filter(res=>!!res["Id"] && res["Id"].includes('irf'))
+        console.log("objects", objects);
+        this.list = objects.filter(
+          res => !!res["Id"] && res["Id"].includes("irf")
+        );
       },
       error => console.error(error)
-    )
+    );
   }
 
-  moveToIrf(row:any){
-    if(!!row){
-      this.navCtrl.push(irfPage, {
+  moveToIrf(row: any) {
+    if (!!row) {
+      this.navCtrl.push(RetrieveilFormPage, {
         Id: row.Id
       });
-    }else{
-      this.navCtrl.push(irfPage, {});
+    } else {
+      this.navCtrl.push(RetrieveilFormPage, {});
     }
-   
   }
-
 }

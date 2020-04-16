@@ -1,0 +1,222 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Retrieval Form<ion-col *ngIf="irfObj?.stored == 'true' && !saving && !uploading">
+        <ion-icon name="cloud-done"></ion-icon>
+      </ion-col>
+      <p *ngIf="saving">Saving ....</p>
+      <p *ngIf="uploading">Uploading ....</p>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formPanel">
+    <ion-item>
+      <ion-label>
+        <p>Panel Code:</p>
+      </ion-label>
+      <ion-input disabled="true" formControlName="panel_code" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Period Code:</p>
+      </ion-label>
+      <ion-input disabled="true" formControlName="period_code" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Day:</p>
+      </ion-label>
+      <ion-select formControlName="day" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Day</ion-option>
+        <ion-option *ngFor="let day of [1,2,3,4,5,6,7]" [value]="day">{{ day }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>ProdCat:</p>
+      </ion-label>
+      <ion-input formControlName="prod_cat" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of prod_cat_options" (click)="setColumn('prod_cat',option)">{{option.Field4}}
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Manufacturer:</p>
+      </ion-label>
+      <ion-input formControlName="manufacturer" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of manufacturer_options" (click)="setColumn('manufacturer',option)">{{option.Field4}}
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Brand:</p>
+      </ion-label>
+      <ion-input formControlName="brand" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of brand_options" (click)="setColumn('brand',option)">{{option.Field4}}</ion-item>
+    <ion-item>
+      <ion-label>
+        <p>SubBrand:</p>
+      </ion-label>
+      <ion-input formControlName="sub_brand" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of sub_brand_options" (click)="setColumn('sub_brand',option)">{{option.Field4}}
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Formula:</p>
+      </ion-label>
+      <ion-input formControlName="formula" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of formula_options" (click)="setColumn('formula',option)">{{option.Field4}}</ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Flavor:</p>
+      </ion-label>
+      <ion-input formControlName="flavor" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of flavor_options" (click)="setColumn('flavor',option)">{{option.Field4}}</ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Variant:</p>
+      </ion-label>
+      <ion-input formControlName="variant" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of variant_options" (click)="setColumn('variant',option)">{{option.Field4}}</ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Weight Size:</p>
+      </ion-label>
+      <ion-input formControlName="weight_size" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of weight_size_options" (click)="setColumn('weight_size',option)">{{option.Field4}}
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Packaging:</p>
+      </ion-label>
+      <ion-input formControlName="packaging" type="text"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let option of packaging_options" (click)="setColumn('packaging',option)">{{option.Field4}}
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Packaging Color:</p>
+      </ion-label>
+      <ion-input formControlName="packaging_color" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Use Type:</p>
+      </ion-label>
+      <ion-input formControlName="use_type" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Form:</p>
+      </ion-label>
+      <ion-input formControlName="form" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Skin Type:</p>
+      </ion-label>
+      <ion-input formControlName="skin_type" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Hair Type:</p>
+      </ion-label>
+      <ion-input formControlName="hair_type" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Product Type:</p>
+      </ion-label>
+      <ion-input formControlName="product_type" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Gender:</p>
+      </ion-label>
+      <ion-select formControlName="gender" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Gender</ion-option>
+        <ion-option *ngFor="let day of ['M','F']" [value]="day">{{ day }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Age:</p>
+      </ion-label>
+      <ion-input formControlName="age" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Quantity:</p>
+      </ion-label>
+      <ion-input formControlName="quantity" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Price:</p>
+      </ion-label>
+      <ion-input formControlName="price" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Promo:</p>
+      </ion-label>
+      <ion-select formControlName="promo" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Promo</ion-option>
+        <ion-option *ngFor="let day of ['Y','N']" [value]="day">{{ day }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Purchase Time:</p>
+      </ion-label>
+      <ion-input formControlName="purchase_time" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Outlet Type:</p>
+      </ion-label>
+      <ion-select formControlName="outlet_type" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Promo</ion-option>
+        <ion-option *ngFor="let day of ['SM','SS','GS','CV','MS']" [value]="day">{{ day }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Outlet Name:</p>
+      </ion-label>
+      <ion-input formControlName="outlet_name" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col="3">
+          <button ion-button full (click)="save()">
+            SAVE
+          </button>
+        </ion-col>
+        <ion-col *ngIf="!!irfObj?.rowId && connectedToNet" col="3">
+          <button ion-button full (click)="sync()">SYNC</button>
+        </ion-col>
+        <ion-col size="3">
+          <button ion-button full (click)="sendSMS()">SEND</button>
+        </ion-col>
+        <ion-col col="3">
+          <button ion-button full navPop>Cancel</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

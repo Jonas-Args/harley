@@ -3,11 +3,19 @@
     <button button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Retrieval Form</ion-title>
+    <ion-title>Purchase Form</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+  <ion-col>
+    <button ion-button full (click)="loadLookUpTable()">
+      {{ loadingLookupTable? 'Loading...' : 'Load Look Up Table'}}
+    </button>
+    <button ion-button full (click)="getAllData()">
+      Get All Data
+    </button>
+  </ion-col>
   <form [formGroup]="formPanel">
     <ion-item>
       <ion-label>

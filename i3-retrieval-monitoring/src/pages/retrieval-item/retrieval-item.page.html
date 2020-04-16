@@ -1,0 +1,149 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title
+      >Retrieval Form<ion-col
+        *ngIf="irfObj?.stored == 'true' && !saving && !uploading"
+        ><ion-icon name="cloud-done"></ion-icon
+      ></ion-col>
+      <p *ngIf="saving">Saving ....</p>
+      <p *ngIf="uploading">Uploading ....</p></ion-title
+    >
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formPanel">
+    <ion-item *ngIf="false">
+      <ion-label>
+        <p>Id:</p>
+      </ion-label>
+      <ion-input formControlName="Id" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Panel Code:</p>
+      </ion-label>
+      <ion-input formControlName="panel_code" type="text"></ion-input>
+    </ion-item>
+    <button ion-button full (click)="scan()">SCAN</button>
+    <ion-item>
+      <ion-label>
+        <p>Panel Name:</p>
+      </ion-label>
+      <ion-input formControlName="panel_name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Period Code:</p>
+      </ion-label>
+      <ion-input formControlName="period_code" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>FIName:</p>
+      </ion-label>
+      <ion-input formControlName="fi_name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Region:</p>
+      </ion-label>
+      <ion-select formControlName="region" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Region</ion-option
+        >
+        <ion-option
+          *ngFor="let type of ['NCR','NLU','SLU','VIS','MIN']"
+          [value]="type"
+          >{{ type }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <!-- add field here -->
+    <ion-item *ngIf="false">
+      <ion-label>
+        <p>GPS LOCATION:</p>
+      </ion-label>
+      <ion-input formControlName="gps_location" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+            <ion-label>
+              <p>Loc Accu:</p>
+            </ion-label>
+            <ion-input formControlName="accuracy" type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+        <!-- <ion-col col-5>
+          <button
+            *ngIf="!isCaptureLoc"
+            ion-button
+            full
+            (click)="captureLoc(true)"
+          >
+            Capture
+          </button>
+          <button
+            *ngIf="isCaptureLoc"
+            ion-button
+            full
+            (click)="captureLoc(false)"
+          >
+            Stop
+          </button>
+        </ion-col> -->
+      </ion-row>
+    </ion-grid>
+    <ion-item>
+      <ion-label>STATUS</ion-label>
+      <ion-select
+        formControlName="panel_status"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Status</ion-option
+        >
+        <ion-option *ngFor="let status of statuses" [value]="status.value"
+          >{{status.value | uppercase}}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="showZeroRemarks">
+      <ion-label>
+        <p>ZERO REMARKS:</p>
+      </ion-label>
+      <ion-input formControlName="panel_remarks" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>REMARKS:</p>
+      </ion-label>
+      <ion-input formControlName="panel_receipted" type="text"></ion-input>
+    </ion-item>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col col="3">
+          <button ion-button full type="submit" (click)="save()">
+            SAVE
+          </button>
+        </ion-col>
+        <ion-col *ngIf="!!irfObj?.rowId && connectedToNet" col="3">
+          <button ion-button full (click)="sync()">SYNC</button>
+        </ion-col>
+        <ion-col size="3">
+          <button ion-button full (click)="sendSMS()">SEND</button>
+        </ion-col>
+        <ion-col col="3">
+          <button ion-button full navPop>Cancel</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

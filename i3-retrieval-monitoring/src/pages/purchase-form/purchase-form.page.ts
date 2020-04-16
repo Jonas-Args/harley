@@ -11,17 +11,25 @@ import { Irf } from "../../model/irf";
 import {
   BackgroundGeolocation,
   BackgroundGeolocationConfig,
-  BackgroundGeolocationResponse
+  BackgroundGeolocationResponse,
 } from "@ionic-native/background-geolocation";
 import { RetrievalItemPage } from "../retrieval-item/retrieval-item.page";
-
+import { HttpService } from "../../app/services/util/http.service";
+import { NgZone } from "@angular/core";
+import { SqlitePurchaseService } from "../../app/services/util/sqlite-purchase.service";
+import { PurchaseItem } from "../../model/purchaseItem";
+import { SqlitePurchaseEntryService } from "../../app/services/util/sqlite-purchase-entry.service";
+import { PurchaseEntry } from "../../model/purchaseEntry";
+import { PurchaseItemPage } from "../purchase-item/purchase-item.page";
 declare var AdvancedGeolocation: any;
 
 @Component({
-  selector: "app-retrieval-form",
-  templateUrl: "./retrieval-form.page.html"
+  selector: "app-purchase-form",
+  templateUrl: "./purchase-form.page.html",
 })
-export class RetrieveilFormPage implements OnInit {
+export class PurchaseFormPage implements OnInit {
+  url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
@@ -33,6 +41,7 @@ export class RetrieveilFormPage implements OnInit {
 
   csvData: any[] = [];
   headerRow: any[] = [];
+  loadingLookupTable = false;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -42,15 +51,18 @@ export class RetrieveilFormPage implements OnInit {
     private toast: Toast,
     private nativeStorage: NativeStorage,
     public navCtrl: NavController,
-    private sqliteService: SqliteService,
+    private sqliteService: SqlitePurchaseEntryService,
     private backgroundGeolocation: BackgroundGeolocation,
-    private platform: Platform
+    private platform: Platform,
+    private httpService: HttpService,
+    private zone: NgZone,
+    private sqlitePurchaseService: SqlitePurchaseService
   ) {
     this.initForm();
   }
 
   ngOnInit() {
-    // this.sqliteService.dropTable()
+    // this.sqliteService.dropTable();
     this.getAllData();
   }
 
@@ -65,7 +77,7 @@ export class RetrieveilFormPage implements OnInit {
 
   save_last_saved() {
     if (!!this.lastData) {
-      let last_data = new Irf(
+      let last_data = new PurchaseEntry(
         Object.assign(this.lastData, this.formPanel.value)
       );
       console.log("with last data", last_data);
@@ -74,11 +86,11 @@ export class RetrieveilFormPage implements OnInit {
           console.log("retrieved new data", data);
           this.get_last_saved();
         },
-        error => console.error("Error storing item", error)
+        (error) => console.error("Error storing item", error)
       );
     } else {
       console.log("adding last data", this.lastData);
-      let last_data = new Irf(this.formPanel.value);
+      let last_data = new PurchaseEntry(this.formPanel.value);
       last_data.last = 1;
 
       this.sqliteService.addData(last_data).then(
@@ -86,7 +98,7 @@ export class RetrieveilFormPage implements OnInit {
           console.log("retrieved last data", data);
           this.get_last_saved();
         },
-        error => console.error("Error storing item", error)
+        (error) => console.error("Error storing item", error)
       );
     }
   }
@@ -100,25 +112,25 @@ export class RetrieveilFormPage implements OnInit {
       panel_code: ["", [Validators.required]],
       date_retrieved: [
         new Date().toLocaleString().split(",")[0],
-        [Validators.required]
-      ]
+        [Validators.required],
+      ],
     });
 
     // add field here
-    this.formPanel.get("period").valueChanges.subscribe(value => {
+    this.formPanel.get("period").valueChanges.subscribe((value) => {
       this.setPanelCode();
     });
-    this.formPanel.get("week").valueChanges.subscribe(value => {
+    this.formPanel.get("week").valueChanges.subscribe((value) => {
       if (!!value) {
         this.setPanelCode();
       }
     });
-    this.formPanel.get("year").valueChanges.subscribe(value => {
+    this.formPanel.get("year").valueChanges.subscribe((value) => {
       if (!!value) {
         this.setPanelCode();
       }
     });
-    this.formPanel.valueChanges.subscribe(value => {
+    this.formPanel.valueChanges.subscribe((value) => {
       console.log("values", this.formPanel.value);
       this.save_last_saved();
     });
@@ -155,7 +167,7 @@ export class RetrieveilFormPage implements OnInit {
           console.log("retrieved last item", this.lastData);
         }
       },
-      error => console.error("Error storing item", error)
+      (error) => console.error("Error storing item", error)
     );
   }
 
@@ -163,12 +175,12 @@ export class RetrieveilFormPage implements OnInit {
     this.isBarcodeScanned = false;
     this.barcodeScanner
       .scan()
-      .then(barcodeData => {
+      .then((barcodeData) => {
         console.log("Barcode data", barcodeData);
         this.isBarcodeScanned = true;
         this.formPanel.get("panel_code").setValue(barcodeData.text);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Error", err);
       });
   }
@@ -285,7 +297,7 @@ export class RetrieveilFormPage implements OnInit {
   save(value) {
     this.storage.setItem("irf", value);
     this.navCtrl.push(RetrievalItemPage, {
-      irfId: this.storage.itemId
+      irfId: this.storage.itemId,
     });
   }
 
@@ -298,12 +310,12 @@ export class RetrieveilFormPage implements OnInit {
           console.log("found data on search", data);
           if (!!data.rows.item(0)) {
             console.log("found data", data.rows.item(0));
-            let new_data = new Irf(
+            let new_data = new PurchaseEntry(
               Object.assign(data.rows.item(0), this.formPanel.value)
             );
             this.sqliteService.editData(new_data).then((data: any) => {
-              this.navCtrl.push(RetrievalItemPage, {
-                irfId: new_data.rowId
+              this.navCtrl.push(PurchaseItemPage, {
+                irfId: new_data.rowId,
               });
             });
           } else {
@@ -317,7 +329,7 @@ export class RetrieveilFormPage implements OnInit {
               });
           }
         },
-        error => console.error("Error storing item", error)
+        (error) => console.error("Error storing item", error)
       );
     }
   }
@@ -328,7 +340,7 @@ export class RetrieveilFormPage implements OnInit {
 
   showToast(message) {
     message = message || "null";
-    this.toast.show(message, "5000", "top").subscribe(toast => {
+    this.toast.show(message, "5000", "top").subscribe((toast) => {
       console.log(toast);
     });
   }
@@ -338,17 +350,17 @@ export class RetrieveilFormPage implements OnInit {
       (data: any) => {
         this.getAllData();
       },
-      error => console.error("Error storing item", error)
+      (error) => console.error("Error storing item", error)
     );
   }
 
   moveToIrf(row: any) {
     if (!!row) {
-      this.navCtrl.push(RetrievalItemPage, {
-        irfId: row.rowId
+      this.navCtrl.push(PurchaseItemPage, {
+        irfId: row.rowId,
       });
     } else {
-      this.navCtrl.push(RetrievalItemPage, {});
+      this.navCtrl.push(PurchaseItemPage, {});
     }
   }
 
@@ -362,17 +374,91 @@ export class RetrieveilFormPage implements OnInit {
               let item = data.rows.item(i);
               // do something with it
               result.push(item);
-              console.log("item", item);
             }
-            console.log("all data", result);
+            console.log("all data", result.length);
             this.requests = result;
           },
-          error => console.error("Error storing item", error)
+          (error) => console.error("Error storing item", error)
         );
 
         this.get_last_saved();
       },
-      error => console.error("Error storing item", error)
+      (error) => console.error("Error storing item", error)
     );
+  }
+
+  loadLookUpTable() {
+    this.loadingLookupTable = true;
+    this.httpService
+      .get(this.url + "/purchase_items/purchase_items", false)
+      .timeout(1800000)
+      .subscribe(
+        (data) => {
+          if (data["success"] == true) {
+            this.sqlitePurchaseService.dropTable().then(() => {
+              this.sqlitePurchaseService.createTable().then(
+                (result) => {
+                  for (let i = 0; i < data["result"].length; i++) {
+                    let item = new PurchaseItem(data["result"][i]);
+                    // do something with it
+                    setTimeout(() => {
+                      this.sqlitePurchaseService.addData(item).then(
+                        (res) => {
+                          console.log(
+                            "comparing",
+                            i + 1,
+                            data["result"].length
+                          );
+                          if (i + 1 == data["result"].length) {
+                            this.zone.run(() => {
+                              this.loadingLookupTable = false;
+                            });
+                          }
+                        },
+                        (error) => {
+                          console.log("error", error);
+                          if (i + 1 == data["result"].length) {
+                            this.zone.run(() => {
+                              this.loadingLookupTable = false;
+                            });
+                          }
+                        }
+                      );
+                    }, 200);
+                  }
+                },
+                (err) => {
+                  console.log(err);
+                  this.zone.run(() => {
+                    this.loadingLookupTable = false;
+                  });
+                }
+              );
+            });
+            // this.sqliteService.editData(this.irfObj).then(
+            //   (data: any) => {
+            //     this.findData();
+            //     this.zone.run(() => {
+            //       this.saving = false;
+            //     });
+            //   },
+            //   (error) => {
+            //     console.error("Error getting lookup item", error);
+            //     // this.zone.run(() => {
+            //     //   this.saving = false;
+            //     // });
+            //   }
+            // );
+          }
+        },
+        (err) => {
+          this.url;
+          this.zone.run(() => {
+            // this.uploading = false;
+          });
+          this.showToast("Something went wrong" + err.message);
+          console.log(err);
+        }
+      );
   }
 }
