@@ -14,6 +14,11 @@ import { HttpService } from "../../app/services/util/http.service";
 import { Base64 } from "@ionic-native/base64";
 import { RetrieveilFormPage } from "../retrieval-form/retrieval-form.page";
 import { PurchaseFormPage } from "../purchase-form/purchase-form.page";
+import { RetrievalPerDatePage } from "../retrieval-summary/per-date/retrieval-per-date.page";
+import { RetrievalPerPeriodPage } from "../retrieval-summary/per-period/retrieval-per-period.page";
+import { PurchasePerDatePage } from "../purchase-summary/per-date/purchase-per-date.page";
+import { PurchasePerPeriodPage } from "../purchase-summary/per-period/purchase-per-period.page";
+import { MaintenancePage } from "../maintenance/maintenance.page";
 declare var AdvancedGeolocation: any;
 
 @Component({
@@ -265,7 +270,7 @@ export class Home implements OnInit {
           value["last"] = false;
           this.storage.setItem(this.type, value);
         });
-        setTimeout(() => {}, 500);
+        setTimeout(() => { }, 500);
         this.actualSave();
       },
       (error) => console.error(error)
@@ -351,11 +356,32 @@ export class Home implements OnInit {
       );
   }
 
+  moveRetrieval() {
+    this.navCtrl.push(RetrieveilFormPage);
+  }
+
   moveToPurchase() {
     this.navCtrl.push(PurchaseFormPage);
   }
 
-  moveRetrieval() {
-    this.navCtrl.push(RetrieveilFormPage);
+  moveRetrievalPerDate() {
+    this.navCtrl.push(RetrievalPerDatePage);
+  }
+
+  moveRetrievalPerPeriod() {
+    this.navCtrl.push(RetrievalPerPeriodPage);
+  }
+
+  movePurchasePerDate() {
+    this.navCtrl.push(PurchasePerDatePage);
+  }
+
+  movePurchasePerPeriod() {
+    this.navCtrl.push(PurchasePerPeriodPage);
+  }
+
+  moveToMaintenace() {
+    this.navCtrl.push(MaintenancePage);
   }
 }
+

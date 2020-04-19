@@ -42,6 +42,12 @@ import { PurchaseFormPage } from "../pages/purchase-form/purchase-form.page";
 import { PurchaseItemPage } from "../pages/purchase-item/purchase-item.page";
 import { SqlitePurchaseService } from "./services/util/sqlite-purchase.service";
 import { SqlitePurchaseEntryService } from "./services/util/sqlite-purchase-entry.service";
+import { PurchasePerDatePage } from "../pages/purchase-summary/per-date/purchase-per-date.page";
+import { PurchasePerPeriodPage } from "../pages/purchase-summary/per-period/purchase-per-period.page";
+import { RetrievalPerDatePage } from "../pages/retrieval-summary/per-date/retrieval-per-date.page";
+import { RetrievalPerPeriodPage } from "../pages/retrieval-summary/per-period/retrieval-per-period.page";
+import { MaintenancePage } from "../pages/maintenance/maintenance.page";
+import { SqlitePanelMainService } from "./services/util/sqlite-panel-main.service";
 
 const APP_PROVIDERS = [
   CommonService,
@@ -52,6 +58,7 @@ const APP_PROVIDERS = [
   IrfFormService,
   SqlitePurchaseService,
   SqlitePurchaseEntryService,
+  SqlitePanelMainService
 ];
 
 @NgModule({
@@ -63,6 +70,11 @@ const APP_PROVIDERS = [
     RetrievalItemPage,
     PurchaseFormPage,
     PurchaseItemPage,
+    PurchasePerDatePage,
+    PurchasePerPeriodPage,
+    RetrievalPerDatePage,
+    RetrievalPerPeriodPage,
+    MaintenancePage
   ],
   imports: [
     BrowserModule,
@@ -87,6 +99,11 @@ const APP_PROVIDERS = [
     RetrievalItemPage,
     PurchaseFormPage,
     PurchaseItemPage,
+    PurchasePerDatePage,
+    PurchasePerPeriodPage,
+    RetrievalPerDatePage,
+    RetrievalPerPeriodPage,
+    MaintenancePage
   ],
   providers: [
     StatusBar,
@@ -105,8 +122,9 @@ const APP_PROVIDERS = [
     BackgroundGeolocation,
     SqlitePurchaseService,
     SqlitePurchaseEntryService,
+    SqlitePanelMainService,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ...APP_PROVIDERS,
   ],
 })
-export class AppModule {}
+export class AppModule { }

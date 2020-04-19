@@ -21,15 +21,17 @@ import { PurchaseItem } from "../../model/purchaseItem";
 import { SqlitePurchaseEntryService } from "../../app/services/util/sqlite-purchase-entry.service";
 import { PurchaseEntry } from "../../model/purchaseEntry";
 import { PurchaseItemPage } from "../purchase-item/purchase-item.page";
+import { SqlitePanelMainService } from "../../app/services/util/sqlite-panel-main.service";
+import { PanelMain } from "../../model/panelMain";
 declare var AdvancedGeolocation: any;
 
 @Component({
-  selector: "app-purchase-form",
-  templateUrl: "./purchase-form.page.html",
+  selector: "app-maintenance",
+  templateUrl: "./maintenance.page.html",
 })
-export class PurchaseFormPage implements OnInit {
-  url = "http://api.uniserve.ph";
-  // url = "http://10.0.2.2:3000";
+export class MaintenancePage implements OnInit {
+  // url = "http://api.uniserve.ph";
+  url = "http://10.0.2.2:3000";
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
@@ -39,9 +41,16 @@ export class PurchaseFormPage implements OnInit {
   irdId;
   requests;
 
+
   csvData: any[] = [];
   headerRow: any[] = [];
   loadingLookupTable = false;
+  loadingPanelMains = false;
+
+  ficode;
+  finame;
+  date_start;
+  date_end;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -56,25 +65,63 @@ export class PurchaseFormPage implements OnInit {
     private platform: Platform,
     private httpService: HttpService,
     private zone: NgZone,
-    private sqlitePurchaseService: SqlitePurchaseService
+    private sqlitePurchaseService: SqlitePurchaseService,
+    private sqlitePanelMainService: SqlitePanelMainService,
   ) {
     this.initForm();
   }
 
   ngOnInit() {
     // this.sqliteService.dropTable();
-    this.getAllData();
+    // this.getAllData();
+    this.getObj()
   }
 
   ionViewDidEnter() {
     this.platform.ready().then(() => {
-      this.getAllData();
+      // this.getAllData();
     });
   }
   handleError(err) {
     console.log("something went wrong: ", err);
   }
 
+  cancel() {
+
+  }
+
+  getObj() {
+    this.nativeStorage.getItem('maintenace')
+      .then(
+        (obj) => {
+          if (!!obj) {
+            this.finame = obj.finame;
+            this.ficode = obj.ficode;
+          }
+          // if(url!=null){
+          //   this.router.navigate([url], params)
+          // }
+        },
+        error => console.error('Error storing item', error)
+      );
+  }
+
+  saveObj() {
+    let obj = {
+      ficode: this.ficode,
+      finame: this.finame
+    }
+    this.nativeStorage.setItem('maintenace', obj)
+      .then(
+        () => {
+          console.log('Stored item!')
+          // if(url!=null){
+          //   this.router.navigate([url], params)
+          // }
+        },
+        error => console.error('Error storing item', error)
+      );
+  }
   save_last_saved() {
     if (!!this.lastData) {
       let last_data = new PurchaseEntry(
@@ -387,7 +434,7 @@ export class PurchaseFormPage implements OnInit {
     );
   }
 
-  loadLookUpTable() {
+  loadProdMaster() {
     this.loadingLookupTable = true;
     this.httpService
       .get(this.url + "/product_masters", false)
@@ -435,20 +482,71 @@ export class PurchaseFormPage implements OnInit {
                 }
               );
             });
-            // this.sqliteService.editData(this.irfObj).then(
-            //   (data: any) => {
-            //     this.findData();
-            //     this.zone.run(() => {
-            //       this.saving = false;
-            //     });
-            //   },
-            //   (error) => {
-            //     console.error("Error getting lookup item", error);
-            //     // this.zone.run(() => {
-            //     //   this.saving = false;
-            //     // });
-            //   }
-            // );
+          }
+        },
+        (err) => {
+          this.url;
+          this.zone.run(() => {
+            // this.uploading = false;
+          });
+          this.showToast("Something went wrong" + err.message);
+          console.log(err);
+        }
+      );
+  }
+
+  loadPanelMain() {
+    let query = '/panel_mains'
+    if (!!this.finame) {
+      query = query + '?finame=' + this.finame
+    }
+    this.loadingPanelMains = true;
+    this.httpService
+      .get(this.url + query, false)
+      .timeout(1800000)
+      .subscribe(
+        (data) => {
+          if (data["success"] == true) {
+            this.sqlitePanelMainService.dropTable().then(() => {
+              this.sqlitePanelMainService.createTable().then(
+                (result) => {
+                  for (let i = 0; i < data["result"].length; i++) {
+                    let item = new PanelMain(data["result"][i]);
+                    // do something with it
+                    setTimeout(() => {
+                      this.sqlitePanelMainService.addData(item).then(
+                        (res) => {
+                          console.log(
+                            "comparing",
+                            i + 1,
+                            data["result"].length
+                          );
+                          if (i + 1 == data["result"].length) {
+                            this.zone.run(() => {
+                              this.loadingPanelMains = false;
+                            });
+                          }
+                        },
+                        (error) => {
+                          console.log("error", error);
+                          if (i + 1 == data["result"].length) {
+                            this.zone.run(() => {
+                              this.loadingPanelMains = false;
+                            });
+                          }
+                        }
+                      );
+                    }, 200);
+                  }
+                },
+                (err) => {
+                  console.log(err);
+                  this.zone.run(() => {
+                    this.loadingPanelMains = false;
+                  });
+                }
+              );
+            });
           }
         },
         (err) => {

@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Retrieval Form</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formPanel">
+    <ion-item>
+      <ion-label>Start:</ion-label>
+      <ion-datetime displayFormat="MMMM D YYYY" pickerFormat="MMMM D YYYY" formControlName="date_start"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>End:</ion-label>
+      <ion-datetime displayFormat="MMMM D YYYY" pickerFormat="MMMM D YYYY" formControlName="date_end"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        STATUS:
+      </ion-label>
+      <ion-input formControlName="status" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        BY SEC:
+      </ion-label>
+      <ion-input formControlName="by_sec" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <button ion-button full (click)="clear()">CLEAR</button>
+        </ion-col>
+        <ion-col size="6">
+          <button ion-button full (click)="search(formPanel.value)">
+            SEARCH
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
