@@ -40,6 +40,7 @@ export class PurchaseEntry {
   public panel_code;
   public last;
   public rowId;
+  public date_retrieved;
 
   constructor(fields?: {
     stored?: string;
@@ -83,6 +84,7 @@ export class PurchaseEntry {
     last?: number;
     year?: string;
     period?: string;
+    date_retrieved?: string;
   }) {
     Object.assign(this, fields);
   }

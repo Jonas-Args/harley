@@ -1,0 +1,49 @@
+export class HhpPurchase {
+  public period_code;
+  public panel_code;
+  public page_num;
+  public fi_name;
+  public date_retrieved;
+  public date_ordered;
+  public time_ordered;
+  public outlet_type;
+  public outlet_name;
+  public prod_cat;
+  public brand;
+  public variant;
+  public size;
+  public quantity;
+  public price;
+  public promo
+  public promo_user
+  public rowId;
+  public stored;
+  public docupic_Id;
+  public serverId
+
+  constructor(fields?: {
+    period_code?: string;
+    panel_code?: string;
+    page_num?: string;
+    fi_name?: string;
+    date_retrieved?: string;
+    date_ordered?: string;
+    time_ordered?: string;
+    outlet_type?: string;
+    outlet_name?: string;
+    prod_cat?: string;
+    brand?: string;
+    variant?: string;
+    size?: string;
+    quantity?: string;
+    price?: string;
+    promo?: string;
+    promo_user?: string;
+    rowId?: number;
+    stored?: string;
+    docupic_Id?: string;
+    serverId: number;
+  }) {
+    Object.assign(this, fields);
+  }
+}

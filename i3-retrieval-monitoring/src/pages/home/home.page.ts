@@ -19,6 +19,7 @@ import { RetrievalPerPeriodPage } from "../retrieval-summary/per-period/retrieva
 import { PurchasePerDatePage } from "../purchase-summary/per-date/purchase-per-date.page";
 import { PurchasePerPeriodPage } from "../purchase-summary/per-period/purchase-per-period.page";
 import { MaintenancePage } from "../maintenance/maintenance.page";
+import { DataSyncPage } from "../data-sync/data-sync.page";
 declare var AdvancedGeolocation: any;
 
 @Component({
@@ -382,6 +383,10 @@ export class Home implements OnInit {
 
   moveToMaintenace() {
     this.navCtrl.push(MaintenancePage);
+  }
+
+  moveToDataSync() {
+    this.navCtrl.push(DataSyncPage);
   }
 }
 

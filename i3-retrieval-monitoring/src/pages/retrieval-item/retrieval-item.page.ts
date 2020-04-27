@@ -19,6 +19,13 @@ import {
   BackgroundGeolocationEvents
 } from "@ionic-native/background-geolocation";
 import { HttpService } from "../../app/services/util/http.service";
+import { SqlitePanelMainService } from "../../app/services/util/sqlite-panel-main.service";
+import { SqliteDocuPicService } from "../../app/services/util/sqlite-docupic.service";
+import { PictureSourceType, CameraOptions, Camera } from "@ionic-native/camera";
+import { FilePath } from "@ionic-native/file-path";
+import { File } from "@ionic-native/file";
+import { DocuPic } from "../../model/docuPic";
+import { FTP } from "@ionic-native/ftp";
 
 @Component({
   selector: "app-retrieval",
@@ -34,13 +41,21 @@ export class RetrievalItemPage implements OnInit {
   tagPanelObj;
   showZeroRemarks = false;
   irfId;
-  irfObj: any = { stored: false };
+  irfObj: any = { stored: 'false' };
   date_send;
   isCaptureLoc = false;
   connectedToNet = false;
   saving = false;
   uploading = false;
+  mainpanelcode
+  page_number = "";
+  houseImagePathNative;
+  houseImageImagePath;
+  imageSrc;
+  takingPicture = false;
+  images = [];
 
+  private win: any = window;
   constructor(
     private barcodeScanner: BarcodeScanner,
     private sms: SMS,
@@ -55,15 +70,21 @@ export class RetrievalItemPage implements OnInit {
     private zone: NgZone,
     private backgroundGeolocation: BackgroundGeolocation,
     private network: Network,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private sqlitePanelService: SqlitePanelMainService,
+    private sqliteDocupicService: SqliteDocuPicService,
+    private camera: Camera,
+    private filePath: FilePath,
+    private file: File,
+    private platform: Platform,
+    private fTP: FTP,
   ) {
     this.formPanel = fb.group({
       rowId: ["", [Validators.required]],
       panel_code: ["", [Validators.required]],
+      project: ["", [Validators.required]],
       panel_name: ["", [Validators.required]],
       panel_status: ["", [Validators.required]],
-      gps_location: ["", [Validators.required]],
-      accuracy: ["", [Validators.required]],
       panel_remarks: [""],
       panel_receipted: [""],
       fi_name: [""],
@@ -72,10 +93,10 @@ export class RetrievalItemPage implements OnInit {
       period: ["", [Validators.required]],
       week: ["", [Validators.required]],
       period_code: ["", [Validators.required]],
-      date_retrieved: [
-        new Date().toLocaleString().split(",")[0],
-        [Validators.required]
-      ]
+      date_retrieved: ["", [Validators.required]],
+      call_length: ["", [Validators.required]],
+      sms: ["", [Validators.required]],
+      calls: ["", [Validators.required]]
     });
 
     // add field here
@@ -95,7 +116,10 @@ export class RetrievalItemPage implements OnInit {
     { value: "NA" },
     { value: "HATCHING" },
     { value: "DROPPED" },
-    { value: "MY LOCATION" }
+    { value: "MY LOCATION" },
+    { value: "CALLBACK" },
+    { value: "UNATTENDED" },
+    { value: "REFUSED" }
   ];
 
   ngOnInit() {
@@ -105,6 +129,9 @@ export class RetrievalItemPage implements OnInit {
         console.log("irfId", this.irfId);
         this.findData();
       }
+      // this.sqliteService.dropTable()
+      // this.sqliteDocupicService.dropTable()
+      this.sqliteDocupicService.createTable()
     });
   }
 
@@ -115,10 +142,35 @@ export class RetrievalItemPage implements OnInit {
           this.irfObj = data.rows.item(0);
           console.log("found item", this.irfObj);
           this.formPanel.patchValue(this.irfObj);
+          this.searchPanelCode()
+          this.getAllImages()
         });
       },
       error => console.error("Error storing item", error)
     );
+  }
+
+  searchPanelCode() {
+    let value = this.formPanel.value
+    value["date_retrieved"] = value["date_retrieved"].split("T")[0]
+    this.sqlitePanelService.search(this.formPanel.value["panel_code"]).then((res: any) => {
+      if (res.rows.length == 1) {
+        if (!!res.rows.item(0)) {
+          this.mainpanelcode = res.rows.item(0)
+          this.formPanel.get("fi_name").setValue(this.mainpanelcode.fi_name)
+          this.formPanel.get("panel_name").setValue(this.mainpanelcode.panel_fname)
+          if (this.irfObj.region == null) {
+            this.formPanel.get("region").setValue(this.mainpanelcode.region)
+          }
+          this.formPanel.get("project").setValue(this.mainpanelcode.proj_type)
+        }
+      }
+      else if (res.rows.length > 1) {
+        this.showToast("Multiple match to panelcode")
+      } else {
+        this.showToast("Panelcode did not match")
+      }
+    })
   }
 
   scan() {
@@ -135,15 +187,6 @@ export class RetrievalItemPage implements OnInit {
       });
   }
 
-  captureLoc(enable) {
-    if (enable) {
-      this.start();
-    } else {
-      // If you wish to turn OFF background-tracking, call the #stop method.
-      this.backgroundGeolocation.stop();
-      // AdvancedGeolocation.stop();
-    }
-  }
 
   ionViewDidEnter() {
     this.plt.ready().then(() => {
@@ -154,6 +197,18 @@ export class RetrievalItemPage implements OnInit {
         this.connectedToNet = false;
       }
       this.watchNetwork();
+      this.fTP
+        .connect(
+          "ftp2.uniserve.ph",
+          "diaries@ftp2.uniserve.ph",
+          "DiarieS010101"
+        )
+        .then((res: any) => {
+          console.log("Login successful", res);
+        })
+        .catch((error: any) => {
+          console.error(error);
+        });
     });
   }
 
@@ -208,118 +263,6 @@ export class RetrievalItemPage implements OnInit {
     return message;
   }
 
-  start() {
-    const config: BackgroundGeolocationConfig = {
-      desiredAccuracy: 10,
-      stationaryRadius: 20,
-      distanceFilter: 30,
-      debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-      stopOnTerminate: false // enable this to clear background location settings when the app terminates
-    };
-
-    this.backgroundGeolocation.configure(config).then(mylocation => {
-      this.backgroundGeolocation
-        .on(BackgroundGeolocationEvents.location)
-        .subscribe(
-          (location: BackgroundGeolocationResponse) => {
-            debugger;
-            // console.log(‘BackgroundGeolocationResponse’, location);
-          },
-          err => {
-            debugger;
-            console.log(err);
-          }
-        );
-      // IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
-      // and the background-task may be completed.  You must do this regardless if your HTTP request is successful or not.
-      // IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
-      this.backgroundGeolocation.finish(); // FOR IOS ONLY
-      console.log(mylocation);
-      debugger;
-    });
-
-    // start recording location
-    this.backgroundGeolocation.start();
-  }
-  // start() {
-  //   AdvancedGeolocation.start(
-  //     success => {
-  //       try {
-  //         let jsonObject: any = JSON.parse(success);
-
-  //         if (!!jsonObject.latitude) {
-  //           this.location = jsonObject;
-  //           this.formPanel
-  //             .get("panel_gps_location")
-  //             .setValue(
-  //               `${this.location.latitude}, ${this.location.longitude}`
-  //             );
-  //           this.formPanel
-  //             .get("panel_gps_location_accuracy")
-  //             .setValue(
-  //               `${parseFloat(this.location.accuracy.toFixed(2))} meters`
-  //             );
-  //         } else {
-  //           this.showToast("lat long not available");
-  //         }
-
-  //         console.log("Provider now " + JSON.stringify(jsonObject));
-  //         // this.showToast(JSON.stringify(jsonObject))
-  //         switch (jsonObject.provider) {
-  //           case "gps":
-  //             //TODO
-  //             break;
-
-  //           case "network":
-  //             //TODO
-  //             break;
-
-  //           case "satellite":
-  //             //TODO
-  //             break;
-
-  //           case "cell_info":
-  //             //TODO
-  //             break;
-
-  //           case "cell_location":
-  //             //TODO
-  //             break;
-
-  //           case "signal_strength":
-  //             //TODO
-  //             break;
-  //         }
-  //       } catch (exc) {
-  //         //this.showToast("value"+exc)
-  //         console.log("Invalid JSON: " + exc);
-  //       }
-  //     },
-  //     error => {
-  //       this.showToast(JSON.stringify(error));
-  //       console.log("ERROR! " + JSON.stringify(error));
-  //     },
-  //     ////////////////////////////////////////////
-  //     //
-  //     // REQUIRED:
-  //     // These are required Configuration options!
-  //     // See API Reference for additional details.
-  //     //
-  //     ////////////////////////////////////////////
-  //     {
-  //       minTime: 500, // Min time interval between updates (ms)
-  //       minDistance: 1, // Min distance between updates (meters)
-  //       noWarn: true, // Native location provider warnings
-  //       providers: "gps", // Return GPS, NETWORK and CELL locations
-  //       useCache: true, // Return GPS and NETWORK cached locations
-  //       satelliteData: true, // Return of GPS satellite info
-  //       buffer: true, // Buffer location data
-  //       bufferSize: 3, // Max elements in buffer
-  //       signalStrength: false // Return cell signal strength data
-  //     }
-  //   );
-  // }
-
   save(value = this.formPanel.value) {
     this.saving = true;
     this.zone.run(() => {
@@ -353,7 +296,7 @@ export class RetrievalItemPage implements OnInit {
         data => {
           if (data["success"] == true) {
             let value = this.formPanel.value;
-            value["stored"] = true;
+            value["stored"] = 'true';
 
             if (!!this.irfObj && !!this.irfObj.rowId) {
               this.irfObj = Object.assign(this.irfObj, value);
@@ -391,38 +334,6 @@ export class RetrievalItemPage implements OnInit {
       );
   }
 
-  // actualSave(){
-  //   let value = this.formPanel.value
-  //   if(this.isDataValid(value)){
-  //     value["date_send"] = this.date_send
-  //     value["last"] = true
-  //     if(!!this.irfObj && !!this.irfObj.Id){
-
-  //     }
-  //     console.log("storing a",value)
-  //     this.storage.setItem("irf",value)
-  //     this.navCtrl.push(RetrieveilFormPage, {});
-  //   }
-  // }
-
-  // resetOthePanelCodesLast(){
-  //   this.storage.getAllItem().then(
-  //     data => {
-  //       let objects = <any[]>data;
-  //       let items = objects.filter(res=>!!res["panel_code"] && res["panel_code"]== this.formPanel.value.panel_code && res["last"] == true)
-  //       items.forEach(value=>{
-  //         console.log("setting to false",value)
-  //         value["last"] = false
-  //         this.storage.setItem("irf",value)
-  //       })
-  //       setTimeout(() => {},500);
-  //       this.actualSave()
-
-  //     },
-  //     error => console.error(error)
-  //   )
-  // }
-
   isDataValid(value) {
     if (value.panel_status == "ZERO" && value.panel_remarks == "") {
       this.showToast("Zero Remarks shout not be blank");
@@ -440,5 +351,321 @@ export class RetrievalItemPage implements OnInit {
     this.toast.show(message, "5000", "top").subscribe(toast => {
       console.log(toast);
     });
+  }
+
+  openGallery(type) {
+    let cameraOptions = {
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      quality: 50,
+      targetWidth: 500,
+      targetHeight: 500,
+      encodingType: this.camera.EncodingType.JPEG,
+      correctOrientation: true
+    }
+
+    this.camera.getPicture(cameraOptions)
+      .then(imageData => {
+        this.filePath
+          .resolveNativePath(imageData)
+          .then(path => {
+            console.log(imageData, path);
+            let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
+            let imageName = path.substring(
+              path.lastIndexOf("/") + 1,
+              path.length
+            );
+
+            if (this.platform.is("android")) {
+              this.file
+                .checkDir(this.file.externalRootDirectory, this.directory())
+                .then(response => {
+                  console.log("Directory exists" + response);
+                  this.moveToFile(imagePath, imageName, type);
+                })
+                .catch(err => {
+                  console.log("Directory doesn't exist" + JSON.stringify(err));
+                  this.file
+                    .createDir(
+                      this.file.externalRootDirectory,
+                      this.directory(),
+                      false
+                    )
+                    .then(response => {
+                      console.log("Directory create" + response);
+                      this.moveToFile(imagePath, imageName, type);
+                    })
+                    .catch(err => {
+                      console.log("Directory no create" + JSON.stringify(err));
+                    });
+                });
+            }
+          })
+          .catch(err => {
+            debugger;
+            console.error(err);
+          });
+      },
+        err => console.log(err));
+  }
+
+  getTrustImg(imageSrc) {
+    let path = this.win.Ionic.WebView.convertFileSrc(imageSrc);
+    console.log(path);
+    return path;
+  }
+
+  takePicture(
+    type,
+    sourceType: PictureSourceType = this.camera.PictureSourceType.CAMERA
+  ) {
+    this.takingPicture = true;
+    const options: CameraOptions = {
+      quality: 50,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    };
+    this.camera
+      .getPicture(options)
+      .then(imageData => {
+        this.filePath
+          .resolveNativePath(imageData)
+          .then(path => {
+            console.log(imageData, path);
+            let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
+            let imageName = path.substring(
+              path.lastIndexOf("/") + 1,
+              path.length
+            );
+
+            if (this.platform.is("android")) {
+              this.file
+                .checkDir(this.file.externalRootDirectory, this.directory())
+                .then(response => {
+                  console.log("Directory exists" + response);
+                  this.moveToFile(imagePath, imageName, type);
+                })
+                .catch(err => {
+                  console.log("Directory doesn't exist" + JSON.stringify(err));
+                  this.file
+                    .createDir(
+                      this.file.externalRootDirectory,
+                      this.directory(),
+                      false
+                    )
+                    .then(response => {
+                      console.log("Directory create" + response);
+                      this.moveToFile(imagePath, imageName, type);
+                    })
+                    .catch(err => {
+                      console.log("Directory no create" + JSON.stringify(err));
+                    });
+                });
+            }
+          })
+          .catch(err => {
+            debugger;
+            console.error(err);
+          });
+      })
+      .catch(err => {
+        debugger;
+        console.error(err);
+      });
+  }
+
+  directory() {
+    let panel_code = this.formPanel.get("panel_code").value;
+    let period_code = this.formPanel.get("period_code").value;
+
+    return "docupic/" + panel_code + "_" + period_code;
+  }
+
+  moveToFile(imagePath, imageName, type) {
+    this.file
+      .moveFile(
+        imagePath,
+        imageName,
+        this.file.externalRootDirectory + this.directory() + "/",
+        this.imageName()
+      )
+      .then(newFile => {
+        switch (type) {
+          case "House_Image":
+            this.houseImageImagePath = this.getTrustImg(newFile.nativeURL);
+            this.houseImagePathNative = newFile.nativeURL;
+            this.saveImage();
+            break;
+          default:
+        }
+        console.log(newFile);
+      })
+      .catch(err => {
+        debugger;
+        console.error(err);
+      });
+  }
+
+  imageName() {
+    let panel_code = this.formPanel.get("panel_code").value;
+    let period_code = this.formPanel.get("period_code").value;
+    return panel_code + "_" + period_code + "_" + this.page_number + ".jpeg";
+  }
+
+  saveImage() {
+    let newvalue = {
+      page_num: this.page_number,
+      image_path: this.houseImagePathNative,
+      imageDisplay: this.houseImageImagePath,
+      irf_id: this.irfObj.rowId,
+      stored: 'false',
+      panel_code: this.irfObj.panel_code,
+      period_code: this.irfObj.period_code,
+      date_retrieved: new Date().toISOString().split("T")[0]
+    };
+    let docupic = new DocuPic(newvalue)
+    this.sqliteDocupicService.addData(docupic).then((res: any) => {
+      this.getAllImages()
+      this.page_number = "";
+      this.houseImagePathNative = null;
+      this.houseImageImagePath = null;
+    }, error => {
+      this.showToast("Something went wrong")
+      console.log("error")
+    })
+
+    this.page_number = "";
+    this.houseImagePathNative = null;
+    this.houseImageImagePath = null;
+    //sql save
+  }
+
+  uploadImage(index, row) {
+    if (!this.irfObj.stored) {
+      this.showToast("Make sure to sync data first")
+    } else {
+      this.uploading = true;
+      this.httpService.post(this.url + "/retrieval_monitorings/upload", this.image_upload_params(row), false)
+        .timeout(10000).subscribe(
+          data => {
+            if (data.success) {
+              this.uploadFtp(row, index)
+            }
+          }, error => {
+            this.showToast("Something went wrong");
+          })
+      debugger
+
+    }
+  }
+
+  uploadFtp(row, index) {
+    let filePath = row.image_path;
+    let remotePath =
+      "/" + this.formPanel.value.panel_code + this.formPanel.value.period_code;
+    let remotePathFile =
+      "/" +
+      this.formPanel.value.panel_code +
+      this.formPanel.value.period_code +
+      "/" +
+      this.formPanel.value.panel_code +
+      "_" +
+      this.formPanel.value.period_code +
+      "_" +
+      row["page_num"] +
+      ".jpeg";
+    this.fTP.mkdir(remotePath).then(
+      res => {
+        this.ftpUpload(index, filePath, remotePathFile);
+      },
+      err => {
+        console.log(err);
+        let a = filePath
+        let b = remotePathFile
+        let c = index
+        this.ftpUpload(index, filePath, remotePathFile);
+      }
+    );
+  }
+
+  image_upload_params(obj) {
+    return {
+      period_code: this.formPanel.value.period_code,
+      panel_code: this.formPanel.value.panel_code,
+      diary_page_number: obj.page_num,
+      folder_name: this.folder_name(),
+      image_file_name: this.image_file_name(obj.page_num)
+    }
+  }
+
+  folder_name() {
+    return this.formPanel.value.panel_code + this.formPanel.value.period_code
+  }
+
+  image_file_name(page_num) {
+    this.formPanel.value.panel_code + '_' + this.formPanel.value.period_code + '_' + page_num + ".jpeg"
+  }
+
+  ftpUpload(index, filePath, remotePathFile) {
+    debugger
+    this.fTP.upload(filePath, remotePathFile).subscribe(
+      res => {
+        this.zone.run(() => {
+          this.uploading = false;
+          this.images[index]["stored"] = 'true';
+          this.showToast("Image Uploaded");
+          let docupic = new DocuPic(this.images[index])
+          this.sqliteDocupicService.editData(docupic).then(res => {
+            console.log("edited picture")
+          })
+        });
+      },
+      error => {
+        this.zone.run(() => {
+          this.uploading = false;
+        });
+        this.showToast("Something went wrong" + error);
+      }
+    );
+  }
+
+  getAllImages() {
+    this.sqliteDocupicService.createTable().then(
+      (data: any) => {
+        this.sqliteDocupicService.search(this.irfObj.rowId).then(
+          (data: any) => {
+            let result = []
+            for (let i = 0; i < data.rows.length; i++) {
+              let item = data.rows.item(i);
+              // do something with it
+              let value = {
+                page_num: item.page_num,
+                image_path: item.image_path,
+                irf_id: item.irf_id,
+                imageDisplay: this.getTrustImg(item.image_path),
+                rowId: item.rowId,
+                panel_code: this.irfObj.panel_code,
+                period_code: this.irfObj.period_code,
+                stored: item.stored
+              };
+              console.log("value", item)
+              result.push(value);
+            }
+            this.images = result
+          },
+          error => console.error("Error storing item", error)
+        );
+      },
+      error => console.error("Error storing item", error)
+    );
+  }
+
+  removePicture(index, row) {
+    this.sqliteDocupicService.deleteData(row.rowId).then(res => {
+      this.images.splice(index, 1);
+    }, error => {
+      this.showToast(error)
+    })
   }
 }

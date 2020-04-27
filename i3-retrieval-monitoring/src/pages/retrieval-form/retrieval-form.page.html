@@ -13,11 +13,7 @@
       <ion-label>
         <p>Year:</p>
       </ion-label>
-      <ion-input
-        formControlName="year"
-        type="text"
-        placeholder="YYYY"
-      ></ion-input>
+      <ion-input formControlName="year" type="text" placeholder="YYYY"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>
@@ -25,13 +21,9 @@
       </ion-label>
       <ion-select formControlName="period" ok-text="Okay" cancel-text="Dismiss">
         <ion-option value="" selectable="false" selected="true">
-          Select Period</ion-option
-        >
-        <ion-option
-          *ngFor="let type of ['01','02','03','04','05','06','07','08','09','10','11','12','13']"
-          [value]="type"
-          >{{ type }}</ion-option
-        >
+          Select Period</ion-option>
+        <ion-option *ngFor="let type of ['01','02','03','04','05','06','07','08','09','10','11','12','13']"
+          [value]="type">{{ type }}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -40,30 +32,22 @@
       </ion-label>
       <ion-select formControlName="week" ok-text="Okay" cancel-text="Dismiss">
         <ion-option value="" selectable="false" selected="true">
-          Select Week</ion-option
-        >
-        <ion-option *ngFor="let type of ['1','2','3','4']" [value]="type"
-          >{{ type }}</ion-option
-        >
+          Select Week</ion-option>
+        <ion-option *ngFor="let type of ['1','2','3','4']" [value]="type">{{ type }}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>
         <p>Period Code:</p>
       </ion-label>
-      <ion-input
-        formControlName="period_code"
-        type="text"
-        disabled="true"
-        placeholder="YYYY.PP.W"
-      ></ion-input>
+      <ion-input formControlName="period_code" type="text" disabled="true" placeholder="YYYY.PP.W"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>
         Date Retrieved:
       </ion-label>
-      <ion-input formControlName="date_retrieved" type="text"></ion-input>
+      <ion-datetime displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D" formControlName="date_retrieved"></ion-datetime>
     </ion-item>
     <ion-grid>
       <ion-row>
@@ -74,6 +58,7 @@
             </ion-label>
             <ion-input formControlName="panel_code" type="text"></ion-input>
           </ion-item>
+          <button ion-button full (click)="scan()">SCAN</button>
         </ion-col>
         <!-- <ion-col size="4">
           <button ion-button full (click)="scan()">SCAN</button>
@@ -97,16 +82,15 @@
     <ng-container *ngFor="let request of requests; let i = index">
       <!-- <ion-item (click)="editRequest(request.Id)"> -->
       <ion-item (click)="moveToIrf(request)">
-        <ion-col *ngIf="request?.stored == 'true'"
-          ><ion-icon name="cloud-done"></ion-icon
-        ></ion-col>
+        <ion-col *ngIf="request?.stored == 'true'">
+          <ion-icon name="cloud-done"></ion-icon>
+        </ion-col>
         <ion-col>{{i+1}}</ion-col>
         <ion-col>{{request.period_code}}</ion-col>
+        <ion-col>{{request.panel_code}}</ion-col>
         <!-- add field here -->
       </ion-item>
-      <ion-col (click)="removeRequest(request.rowId); $event.stopPropagation()"
-        >remove</ion-col
-      >
+      <ion-col (click)="removeRequest(request.rowId); $event.stopPropagation()">remove</ion-col>
     </ng-container>
   </ion-list>
 </ion-content>

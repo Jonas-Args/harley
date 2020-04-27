@@ -107,6 +107,7 @@ export class PurchaseItemPage implements OnInit {
       purchase_time: ["", [Validators.required]],
       day: ["", [Validators.required]],
       panel_code: ["", [Validators.required]],
+      date_retrieved: ["", [Validators.required]]
     });
     this.formPanel.get("prod_cat").valueChanges.subscribe((value) => {
       if (value != null) {

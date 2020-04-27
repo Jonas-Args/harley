@@ -2,9 +2,10 @@ import { Injectable } from "@angular/core";
 import { NativeStorage } from "@ionic-native/native-storage";
 import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
 import { Irf } from "../../../model/irf";
+import { DocuPic } from "../../../model/docuPic";
 
 @Injectable()
-export class SqliteService {
+export class SqliteDocuPicService {
   constructor(private nativeStorage: NativeStorage, private sqlite: SQLite) { }
 
   createTable() {
@@ -16,26 +17,13 @@ export class SqliteService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "CREATE TABLE IF NOT EXISTS irf(rowId INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "region TEXT, " +
-            "year TEXT, " +
-            "period TEXT, " +
-            "week TEXT, " +
-            "period_code TEXT, " +
-            "fi_name TEXT, " +
-            "last INTEGER, " +
-            "panel_name TEXT, " +
-            "panel_status TEXT, " +
-            "gps_location TEXT, " +
-            "date_retrieved TEXT, " +
-            "accuracy TEXT, " +
-            "panel_remarks TEXT, " +
-            "panel_receipted TEXT, " +
+            "CREATE TABLE IF NOT EXISTS docupics(rowId INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "page_num TEXT, " +
+            "image_path TEXT, " +
             "panel_code TEXT, " +
-            "call_length TEXT, " +
-            "sms TEXT, " +
-            "calls TEXT, " +
-            "project TEXT, " +
+            "period_code TEXT, " +
+            "irf_id integer," +
+            "date_retrieved TEXT, " +
             "stored TEXT)"
           )
             .then(
@@ -56,7 +44,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf where last!=1 ORDER BY rowId DESC")
+          db.executeSql("SELECT * FROM docupics ORDER BY rowId DESC")
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -75,200 +63,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE rowId = ?", [id])
-            .then(
-              (data) => resolve(data),
-              (error) => resolve(error)
-            )
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .catch((e) => console.log(e))
-    );
-  }
-
-  addData(data: Irf) {
-    console.log("adding ", data);
-    return new Promise((resolve, reject) =>
-      this.sqlite
-        .create({
-          name: "ionicdb.db",
-          location: "default",
-        })
-        .then((db: SQLiteObject) => {
-          db.executeSql(
-            "INSERT INTO irf (region, year, period, week, period_code, fi_name, panel_code, panel_name, panel_status, gps_location, date_retrieved, accuracy, panel_remarks, panel_receipted, last, call_length, sms, calls, project) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-            [
-              data.region,
-              data.year,
-              data.period,
-              data.week,
-              data.period_code,
-              data.fi_name,
-              data.panel_code,
-              data.panel_name,
-              data.panel_status,
-              data.gps_location,
-              data.date_retrieved,
-              data.accuracy,
-              data.panel_remarks,
-              data.panel_receipted,
-              data.last,
-              data.call_length,
-              data.sms,
-              data.calls,
-              data.project
-            ]
-          )
-            .then(
-              (data) => resolve(data),
-              (error) => resolve(error)
-            )
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .catch((e) => console.log(e))
-    );
-  }
-
-  editData(data: Irf) {
-    return new Promise((resolve, reject) =>
-      this.sqlite
-        .create({
-          name: "ionicdb.db",
-          location: "default",
-        })
-        .then((db: SQLiteObject) => {
-          db.executeSql(
-            "UPDATE irf SET region=?,year=?,period=?,week=?,period_code=?,fi_name=?,panel_code=?,panel_name=?,panel_status=?,gps_location=?,date_retrieved=?,accuracy=?,panel_remarks=?,panel_receipted=?,last=?,stored=?,call_length=?,sms=?,calls=?,project=? WHERE rowId=?",
-            [
-              data.region,
-              data.year,
-              data.period,
-              data.week,
-              data.period_code,
-              data.fi_name,
-              data.panel_code,
-              data.panel_name,
-              data.panel_status,
-              data.gps_location,
-              data.date_retrieved,
-              data.accuracy,
-              data.panel_remarks,
-              data.panel_receipted,
-              data.last,
-              data.stored,
-              data.call_length,
-              data.sms,
-              data.calls,
-              data.project,
-              data.rowId,
-            ]
-          )
-            .then(
-              (data) => {
-                return resolve(data);
-              },
-              (error) => {
-                return resolve(error);
-              }
-            )
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .catch((e) => console.log(e))
-    );
-  }
-
-  getLastData() {
-    return new Promise((resolve, reject) =>
-      this.sqlite
-        .create({
-          name: "ionicdb.db",
-          location: "default",
-        })
-        .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE last=?", [1])
-            .then(
-              (data) => resolve(data),
-              (error) => resolve(error)
-            )
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .catch((e) => console.log(e))
-    );
-  }
-
-  dropTable() {
-    this.sqlite
-      .create({
-        name: "ionicdb.db",
-        location: "default",
-      })
-      .then((db: SQLiteObject) => {
-        db.executeSql("DROP TABLE IF EXISTS irf")
-          .then((res) => {
-            console.log("table dropped", res);
-            // this.getData();
-          })
-          .catch((e) => console.log(e));
-      })
-      .catch((e) => console.log(e));
-  }
-
-  deleteData(rowid) {
-    return new Promise((resolve, reject) =>
-      this.sqlite
-        .create({
-          name: "ionicdb.db",
-          location: "default",
-        })
-        .then((db: SQLiteObject) => {
-          db.executeSql("DELETE FROM irf WHERE rowId=?", [rowid])
-            .then(
-              (data) => resolve(data),
-              (error) => resolve(error)
-            )
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .catch((e) => console.log(e))
-    );
-  }
-
-  search(data: Irf) {
-    return new Promise((resolve, reject) =>
-      this.sqlite
-        .create({
-          name: "ionicdb.db",
-          location: "default",
-        })
-        .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE panel_code=? AND period_code=? AND last = 0", [
-            data.panel_code,
-            data.period_code,
-          ])
+          db.executeSql("SELECT * FROM docupics WHERE rowId = ?", [id])
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -292,7 +87,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE date_retrieved>=? AND date_retrieved<=? AND last = 0", [from, to])
+          db.executeSql("SELECT * FROM docupics WHERE date_retrieved>=? AND date_retrieved<=?", [from, to])
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -308,7 +103,150 @@ export class SqliteService {
     );
   }
 
-  setItem(object: Irf) {
+  addData(data: DocuPic) {
+    console.log("adding ", data);
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql(
+            "INSERT INTO docupics (page_num, image_path, irf_id, stored,panel_code,period_code,date_retrieved) VALUES(?,?,?,?,?,?,?)",
+            [
+              data.page_num,
+              data.image_path,
+              data.irf_id,
+              data.stored,
+              data.panel_code,
+              data.period_code,
+              data.date_retrieved
+            ]
+          )
+            .then(
+              (data) => resolve(data),
+              (error) => resolve(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
+  }
+
+  editData(data: DocuPic) {
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql(
+            "UPDATE docupics SET page_num=?,image_path=?,irf_id=?,stored=?,panel_code=?,period_code=?,date_retrieved=? WHERE rowId=?",
+            [
+              data.page_num,
+              data.image_path,
+              data.irf_id,
+              data.stored,
+              data.panel_code,
+              data.period_code,
+              data.date_retrieved,
+              data.rowId
+            ]
+          )
+            .then(
+              (data) => {
+                return resolve(data);
+              },
+              (error) => {
+                return resolve(error);
+              }
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
+  }
+
+  dropTable() {
+    this.sqlite
+      .create({
+        name: "ionicdb.db",
+        location: "default",
+      })
+      .then((db: SQLiteObject) => {
+        db.executeSql("DROP TABLE IF EXISTS docupics")
+          .then((res) => {
+            console.log("table dropped", res);
+            // this.getData();
+          })
+          .catch((e) => console.log(e));
+      })
+      .catch((e) => console.log(e));
+  }
+
+  deleteData(rowid) {
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql("DELETE FROM docupics WHERE rowId=?", [rowid])
+            .then(
+              (data) => resolve(data),
+              (error) => resolve(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
+  }
+
+  search(id) {
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql("SELECT * FROM docupics WHERE irf_id=?", [
+            id,
+          ])
+            .then(
+              (data) => resolve(data),
+              (error) => resolve(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
+  }
+
+  setItem(object: DocuPic) {
     let Id;
     if (!!object.rowId) {
       this.editData(object);

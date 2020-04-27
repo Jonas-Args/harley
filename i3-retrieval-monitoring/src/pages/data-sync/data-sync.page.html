@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Maintenance</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label>Date Start:</ion-label>
+    <ion-datetime displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D" [(ngModel)]="date_start"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Date End:</ion-label>
+    <ion-datetime displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D" [(ngModel)]="date_end"></ion-datetime>
+  </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col col="6">
+        <button ion-button full (click)="loadretrievals()">
+          Retrieval
+        </button>
+      </ion-col>
+      <ion-col col="6">
+        <button ion-button full (click)="loadImages()">
+          Images
+        </button>
+
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col="6">
+        <button ion-button full (click)="loadEOPs()">
+          EOP Purchases
+        </button>
+      </ion-col>
+      <ion-col col="6">
+        <button ion-button full (click)="LoadHhps()">
+          HHP Purchases
+        </button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col="6">
+        <button ion-button full (click)="sync()">
+          {{ synching? 'Loading...' : 'Synchronize'}}
+        </button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col="6">
+        <button ion-button full (click)="loadPanelMain()">
+          {{ exporting? 'Exporting...' : 'Export Data'}}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list>
+    <ng-container *ngFor="let request of requests; let i = index">
+      <!-- <ion-item (click)="editRequest(request.Id)"> -->
+      <ion-row>
+        <ion-item>
+          <span *ngIf="selected == 'retrieval'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}
+          </span>
+          <span *ngIf="selected == 'images'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}&nbsp;{{request?.page_num}}
+          </span>
+        </ion-item>
+      </ion-row>
+
+    </ng-container>
+  </ion-list>
+</ion-content>

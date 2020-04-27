@@ -319,32 +319,6 @@ export class SqlitePurchaseService {
     );
   }
 
-  // search(data: PurchaseItem) {
-  //   return new Promise((resolve, reject) =>
-  //     this.sqlite
-  //       .create({
-  //         name: "ionicdb.db",
-  //         location: "default",
-  //       })
-  //       .then((db: SQLiteObject) => {
-  //         db.executeSql("SELECT * FROM purchaseItems WHERE period_code=? AND last = 0", [
-  //           data.period_code,
-  //         ])
-  //           .then(
-  //             (data) => resolve(data),
-  //             (error) => resolve(error)
-  //           )
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       })
-  //       .catch((e) => {
-  //         console.log(e);
-  //       })
-  //       .catch((e) => console.log(e))
-  //   );
-  // }
-
   setItem(object: PurchaseItem) {
     let Id;
     if (!!object.rowId) {

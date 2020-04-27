@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Docupics
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <h3>Encode Purchase</h3>
+    <ion-row *ngFor="let image of images">
+      <button ion-button full color="primary"
+        (click)="moveToPurchaseEOPHHPForm(image)">{{irfObj.period_code}},{{irfObj.panel_code}},{{image.page_num}}</button>
+    </ion-row>
+  </ion-list>
+</ion-content>

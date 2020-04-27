@@ -2,9 +2,10 @@ import { Injectable } from "@angular/core";
 import { NativeStorage } from "@ionic-native/native-storage";
 import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
 import { Irf } from "../../../model/irf";
+import { EopPurchase } from "../../../model/eopPurchase";
 
 @Injectable()
-export class SqliteService {
+export class SqliteEOPService {
   constructor(private nativeStorage: NativeStorage, private sqlite: SQLite) { }
 
   createTable() {
@@ -16,26 +17,24 @@ export class SqliteService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "CREATE TABLE IF NOT EXISTS irf(rowId INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "region TEXT, " +
-            "year TEXT, " +
-            "period TEXT, " +
-            "week TEXT, " +
-            "period_code TEXT, " +
-            "fi_name TEXT, " +
-            "last INTEGER, " +
-            "panel_name TEXT, " +
-            "panel_status TEXT, " +
-            "gps_location TEXT, " +
+            "CREATE TABLE IF NOT EXISTS eop_purchases(rowId INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "date_retrieved TEXT, " +
-            "accuracy TEXT, " +
-            "panel_remarks TEXT, " +
-            "panel_receipted TEXT, " +
-            "panel_code TEXT, " +
-            "call_length TEXT, " +
-            "sms TEXT, " +
-            "calls TEXT, " +
-            "project TEXT, " +
+            "date_ordered TEXT, " +
+            "time_ordered TEXT, " +
+            "outlet_name TEXT, " +
+            "outlet_type TEXT, " +
+            "inside_mall TEXT, " +
+            "access_type TEXT, " +
+            "for_whom INTEGER, " +
+            "food_ordered TEXT, " +
+            "meat_type TEXT, " +
+            "cook_type TEXT, " +
+            "amount_paid TEXT, " +
+            "with_receipt TEXT, " +
+            "group_size TEXT, " +
+            "kids_below_12 TEXT, " +
+            "docupic_Id TEXT, " +
+            "serverId INTEGER, " +
             "stored TEXT)"
           )
             .then(
@@ -56,7 +55,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf where last!=1 ORDER BY rowId DESC")
+          db.executeSql("SELECT * FROM eop_purchases ORDER BY rowId DESC")
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -75,7 +74,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE rowId = ?", [id])
+          db.executeSql("SELECT * FROM eop_purchases WHERE rowId = ?", [id])
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -91,7 +90,7 @@ export class SqliteService {
     );
   }
 
-  addData(data: Irf) {
+  addData(data: EopPurchase) {
     console.log("adding ", data);
     return new Promise((resolve, reject) =>
       this.sqlite
@@ -101,27 +100,26 @@ export class SqliteService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "INSERT INTO irf (region, year, period, week, period_code, fi_name, panel_code, panel_name, panel_status, gps_location, date_retrieved, accuracy, panel_remarks, panel_receipted, last, call_length, sms, calls, project) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO eop_purchases (date_retrieved, date_ordered, time_ordered, outlet_name, outlet_type, inside_mall, access_type, for_whom, food_ordered, meat_type, cook_type, amount_paid, with_receipt, group_size, kids_below_12, stored,docupic_Id,serverId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
-              data.region,
-              data.year,
-              data.period,
-              data.week,
-              data.period_code,
-              data.fi_name,
-              data.panel_code,
-              data.panel_name,
-              data.panel_status,
-              data.gps_location,
               data.date_retrieved,
-              data.accuracy,
-              data.panel_remarks,
-              data.panel_receipted,
-              data.last,
-              data.call_length,
-              data.sms,
-              data.calls,
-              data.project
+              data.date_ordered,
+              data.time_ordered,
+              data.outlet_name,
+              data.outlet_type,
+              data.inside_mall,
+              data.access_type,
+              data.for_whom,
+              data.food_ordered,
+              data.meat_type,
+              data.cook_type,
+              data.amount_paid,
+              data.with_receipt,
+              data.group_size,
+              data.kids_below_12,
+              data.stored,
+              data.docupic_Id,
+              data.serverId
             ]
           )
             .then(
@@ -139,7 +137,8 @@ export class SqliteService {
     );
   }
 
-  editData(data: Irf) {
+  editData(data: EopPurchase) {
+    console.log("editing ", data);
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -148,29 +147,27 @@ export class SqliteService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "UPDATE irf SET region=?,year=?,period=?,week=?,period_code=?,fi_name=?,panel_code=?,panel_name=?,panel_status=?,gps_location=?,date_retrieved=?,accuracy=?,panel_remarks=?,panel_receipted=?,last=?,stored=?,call_length=?,sms=?,calls=?,project=? WHERE rowId=?",
+            "UPDATE eop_purchases SET date_retrieved=?, date_ordered=?, time_ordered=?, outlet_name=?, outlet_type=?, inside_mall=?, access_type=?, for_whom=?, food_ordered=?, meat_type=?, cook_type=?, amount_paid=?, with_receipt=?, group_size=?, kids_below_12=?, stored=?, docupic_Id=?, serverId=? WHERE rowId=?",
             [
-              data.region,
-              data.year,
-              data.period,
-              data.week,
-              data.period_code,
-              data.fi_name,
-              data.panel_code,
-              data.panel_name,
-              data.panel_status,
-              data.gps_location,
               data.date_retrieved,
-              data.accuracy,
-              data.panel_remarks,
-              data.panel_receipted,
-              data.last,
+              data.date_ordered,
+              data.time_ordered,
+              data.outlet_name,
+              data.outlet_type,
+              data.inside_mall,
+              data.access_type,
+              data.for_whom,
+              data.food_ordered,
+              data.meat_type,
+              data.cook_type,
+              data.amount_paid,
+              data.with_receipt,
+              data.group_size,
+              data.kids_below_12,
               data.stored,
-              data.call_length,
-              data.sms,
-              data.calls,
-              data.project,
-              data.rowId,
+              data.docupic_Id,
+              data.serverId,
+              data.rowId
             ]
           )
             .then(
@@ -200,7 +197,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE last=?", [1])
+          db.executeSql("SELECT * FROM eop_purchases WHERE last=?", [1])
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -223,7 +220,7 @@ export class SqliteService {
         location: "default",
       })
       .then((db: SQLiteObject) => {
-        db.executeSql("DROP TABLE IF EXISTS irf")
+        db.executeSql("DROP TABLE IF EXISTS eop_purchases")
           .then((res) => {
             console.log("table dropped", res);
             // this.getData();
@@ -241,34 +238,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("DELETE FROM irf WHERE rowId=?", [rowid])
-            .then(
-              (data) => resolve(data),
-              (error) => resolve(error)
-            )
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .catch((e) => console.log(e))
-    );
-  }
-
-  search(data: Irf) {
-    return new Promise((resolve, reject) =>
-      this.sqlite
-        .create({
-          name: "ionicdb.db",
-          location: "default",
-        })
-        .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE panel_code=? AND period_code=? AND last = 0", [
-            data.panel_code,
-            data.period_code,
-          ])
+          db.executeSql("DELETE FROM eop_purchases WHERE rowId=?", [rowid])
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -285,6 +255,7 @@ export class SqliteService {
   }
 
   searchByDate(from, to) {
+    debugger
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -292,7 +263,7 @@ export class SqliteService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM irf WHERE date_retrieved>=? AND date_retrieved<=? AND last = 0", [from, to])
+          db.executeSql("SELECT * FROM eop_purchases WHERE date_retrieved>=? AND date_retrieved<=?", [from, to])
             .then(
               (data) => resolve(data),
               (error) => resolve(error)
@@ -308,7 +279,33 @@ export class SqliteService {
     );
   }
 
-  setItem(object: Irf) {
+  search(id) {
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql("SELECT * FROM eop_purchases WHERE docupic_Id=?", [
+            id,
+          ])
+            .then(
+              (data) => resolve(data),
+              (error) => resolve(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
+  }
+
+  setItem(object: EopPurchase) {
     let Id;
     if (!!object.rowId) {
       this.editData(object);

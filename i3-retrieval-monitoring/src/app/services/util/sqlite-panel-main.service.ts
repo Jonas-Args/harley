@@ -229,7 +229,7 @@ export class SqlitePanelMainService {
     );
   }
 
-  search(data: PanelMain) {
+  search(panelcode) {
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -237,8 +237,8 @@ export class SqlitePanelMainService {
           location: "default",
         })
         .then((db: SQLiteObject) => {
-          db.executeSql("SELECT * FROM panel_mains WHERE panel_code=? AND last = 0", [
-            data.panel_code,
+          db.executeSql("SELECT * FROM panel_mains WHERE panel_code=?", [
+            panelcode,
           ])
             .then(
               (data) => resolve(data),

@@ -1,5 +1,5 @@
 export class Irf {
-  public proj_type;
+  public project;
   public region;
   public year;
   public period;
@@ -17,9 +17,12 @@ export class Irf {
   public panel_remarks;
   public panel_receipted;
   public stored;
+  public sms;
+  public call_length;
+  public calls;
 
   constructor(fields?: {
-    proj_type?: any;
+    project?: any;
     region?: number;
     year?: string;
     period?: string;
@@ -37,6 +40,9 @@ export class Irf {
     last?: number;
     rowId?: number;
     stored?: string;
+    call_length?: string;
+    sms?: string;
+    calls?: string;
   }) {
     Object.assign(this, fields);
   }

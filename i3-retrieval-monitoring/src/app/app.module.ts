@@ -48,6 +48,14 @@ import { RetrievalPerDatePage } from "../pages/retrieval-summary/per-date/retrie
 import { RetrievalPerPeriodPage } from "../pages/retrieval-summary/per-period/retrieval-per-period.page";
 import { MaintenancePage } from "../pages/maintenance/maintenance.page";
 import { SqlitePanelMainService } from "./services/util/sqlite-panel-main.service";
+import { SqliteDocuPicService } from "./services/util/sqlite-docupic.service";
+import { FTP } from "@ionic-native/ftp";
+import { DocupicItems } from "../pages/docupic-items/docupic-items.page";
+import { SqliteEOPService } from "./services/util/sqlite-eop.service";
+import { DocupicItemEop } from "../pages/docupic-item-eop/docupic-item-eop.page";
+import { DocupicItemHhp } from "../pages/docupic-item-hhp/docupic-item-hhp.page";
+import { SqliteHHPService } from "./services/util/sqlite-hhp.service";
+import { DataSyncPage } from "../pages/data-sync/data-sync.page";
 
 const APP_PROVIDERS = [
   CommonService,
@@ -58,7 +66,10 @@ const APP_PROVIDERS = [
   IrfFormService,
   SqlitePurchaseService,
   SqlitePurchaseEntryService,
-  SqlitePanelMainService
+  SqlitePanelMainService,
+  SqliteDocuPicService,
+  SqliteEOPService,
+  SqliteHHPService
 ];
 
 @NgModule({
@@ -74,7 +85,11 @@ const APP_PROVIDERS = [
     PurchasePerPeriodPage,
     RetrievalPerDatePage,
     RetrievalPerPeriodPage,
-    MaintenancePage
+    MaintenancePage,
+    DocupicItems,
+    DocupicItemEop,
+    DocupicItemHhp,
+    DataSyncPage
   ],
   imports: [
     BrowserModule,
@@ -103,7 +118,11 @@ const APP_PROVIDERS = [
     PurchasePerPeriodPage,
     RetrievalPerDatePage,
     RetrievalPerPeriodPage,
-    MaintenancePage
+    MaintenancePage,
+    DocupicItems,
+    DocupicItemEop,
+    DocupicItemHhp,
+    DataSyncPage
   ],
   providers: [
     StatusBar,
@@ -123,6 +142,10 @@ const APP_PROVIDERS = [
     SqlitePurchaseService,
     SqlitePurchaseEntryService,
     SqlitePanelMainService,
+    SqliteDocuPicService,
+    SqliteEOPService,
+    SqliteHHPService,
+    FTP,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ...APP_PROVIDERS,
   ],

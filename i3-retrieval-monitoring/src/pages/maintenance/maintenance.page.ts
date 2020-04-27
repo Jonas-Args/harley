@@ -30,8 +30,8 @@ declare var AdvancedGeolocation: any;
   templateUrl: "./maintenance.page.html",
 })
 export class MaintenancePage implements OnInit {
-  // url = "http://api.uniserve.ph";
-  url = "http://10.0.2.2:3000";
+  url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
@@ -60,7 +60,7 @@ export class MaintenancePage implements OnInit {
     private toast: Toast,
     private nativeStorage: NativeStorage,
     public navCtrl: NavController,
-    private sqliteService: SqlitePurchaseEntryService,
+    private sqliteService: SqliteService,
     private backgroundGeolocation: BackgroundGeolocation,
     private platform: Platform,
     private httpService: HttpService,
@@ -122,33 +122,6 @@ export class MaintenancePage implements OnInit {
         error => console.error('Error storing item', error)
       );
   }
-  save_last_saved() {
-    if (!!this.lastData) {
-      let last_data = new PurchaseEntry(
-        Object.assign(this.lastData, this.formPanel.value)
-      );
-      console.log("with last data", last_data);
-      this.sqliteService.editData(last_data).then(
-        (data: any) => {
-          console.log("retrieved new data", data);
-          this.get_last_saved();
-        },
-        (error) => console.error("Error storing item", error)
-      );
-    } else {
-      console.log("adding last data", this.lastData);
-      let last_data = new PurchaseEntry(this.formPanel.value);
-      last_data.last = 1;
-
-      this.sqliteService.addData(last_data).then(
-        (data: any) => {
-          console.log("retrieved last data", data);
-          this.get_last_saved();
-        },
-        (error) => console.error("Error storing item", error)
-      );
-    }
-  }
 
   initForm() {
     this.formPanel = this.fb.group({
@@ -179,7 +152,6 @@ export class MaintenancePage implements OnInit {
     });
     this.formPanel.valueChanges.subscribe((value) => {
       console.log("values", this.formPanel.value);
-      this.save_last_saved();
     });
   }
 
@@ -333,6 +305,29 @@ export class MaintenancePage implements OnInit {
   //   );
   // }
 
+  searchRetrieval() {
+    this.sqliteService.searchByDate(this.date_start, this.date_end).then(
+      (data: any) => {
+        this.sqliteService.getAllData().then(
+          (data: any) => {
+            let result = [];
+            for (let i = 0; i < data.rows.length; i++) {
+              let item = data.rows.item(i);
+              // do something with it
+              console.log(item)
+              result.push(item);
+            }
+            console.log("serach data", result.length);
+          },
+          (error) => console.error("Error storing item", error)
+        );
+
+        this.get_last_saved();
+      },
+      (error) => console.error("Error storing item", error)
+    );
+  }
+
   formatDate(date) {
     // mm/dd/yy format
     let d = date.getDate();
@@ -348,38 +343,38 @@ export class MaintenancePage implements OnInit {
     });
   }
 
-  search(value) {
-    if (value.week == "") {
-      this.showToast("Week should not be blank");
-    } else {
-      this.sqliteService.search(this.formPanel.value).then(
-        (data: any) => {
-          console.log("found data on search", data);
-          if (!!data.rows.item(0)) {
-            console.log("found data", data.rows.item(0));
-            let new_data = new PurchaseEntry(
-              Object.assign(data.rows.item(0), this.formPanel.value)
-            );
-            this.sqliteService.editData(new_data).then((data: any) => {
-              this.navCtrl.push(PurchaseItemPage, {
-                irfId: new_data.rowId,
-              });
-            });
-          } else {
-            console.log("adding data on search", data);
-            this.formPanel.value.last = 0;
-            this.sqliteService
-              .addData(this.formPanel.value)
-              .then((data: any) => {
-                this.search(this.formPanel.value);
-                // console.log("new data", data.rows.item(0))
-              });
-          }
-        },
-        (error) => console.error("Error storing item", error)
-      );
-    }
-  }
+  // search(value) {
+  //   if (value.week == "") {
+  //     this.showToast("Week should not be blank");
+  //   } else {
+  //     this.sqliteService.search(this.formPanel.value).then(
+  //       (data: any) => {
+  //         console.log("found data on search", data);
+  //         if (!!data.rows.item(0)) {
+  //           console.log("found data", data.rows.item(0));
+  //           let new_data = new PurchaseEntry(
+  //             Object.assign(data.rows.item(0), this.formPanel.value)
+  //           );
+  //           this.sqliteService.editData(new_data).then((data: any) => {
+  //             this.navCtrl.push(PurchaseItemPage, {
+  //               irfId: new_data.rowId,
+  //             });
+  //           });
+  //         } else {
+  //           console.log("adding data on search", data);
+  //           this.formPanel.value.last = 0;
+  //           this.sqliteService
+  //             .addData(this.formPanel.value)
+  //             .then((data: any) => {
+  //               this.search(this.formPanel.value);
+  //               // console.log("new data", data.rows.item(0))
+  //             });
+  //         }
+  //       },
+  //       (error) => console.error("Error storing item", error)
+  //     );
+  //   }
+  // }
 
   clear() {
     this.initForm();
@@ -506,6 +501,7 @@ export class MaintenancePage implements OnInit {
       .timeout(1800000)
       .subscribe(
         (data) => {
+          debugger
           if (data["success"] == true) {
             this.sqlitePanelMainService.dropTable().then(() => {
               this.sqlitePanelMainService.createTable().then(
