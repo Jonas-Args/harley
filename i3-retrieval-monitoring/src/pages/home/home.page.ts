@@ -27,8 +27,8 @@ declare var AdvancedGeolocation: any;
   templateUrl: "./home.page.html",
 })
 export class Home implements OnInit {
-  // url = "http://10.0.2.2:3000";
   url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
 
   formPanel: FormGroup;
   location;

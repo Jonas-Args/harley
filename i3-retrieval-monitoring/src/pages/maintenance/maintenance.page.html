@@ -36,12 +36,12 @@
   <ion-grid>
     <ion-row>
       <ion-col size="6">
-        <button ion-button full (click)="loadPanelMain()">
+        <button ion-button full (click)="verifyUser('loadPanelMain')">
           {{ loadingPanelMains? 'Loading...' : 'PANEL MAIN'}}
         </button>
       </ion-col>
       <ion-col size="6">
-        <button ion-button full (click)="loadProdMaster()">
+        <button ion-button full (click)="verifyUser('loadProdMaster')">
           {{ loadingLookupTable? 'Loading...' : 'PROD MASTER'}}
         </button>
       </ion-col>
@@ -59,19 +59,61 @@
 
   <ion-grid>
     <ion-row>
-      <button ion-button full (click)="loadPanelMain()">
-        Purchases
-      </button>
+      <ion-col size="6">
+        <button ion-button full (click)="loadretrievals()">
+          Retrieval
+        </button>
+      </ion-col>
+      <ion-col size="6">
+        <button ion-button full (click)="loadImages()">
+          Images
+        </button>
+      </ion-col>
     </ion-row>
     <ion-row>
-      <button ion-button full (click)="loadPanelMain()">
-        Images
-      </button>
+      <ion-col size="6">
+        <button ion-button full (click)="loadEOPs()">
+          EOP Purchases
+        </button>
+      </ion-col>
+      <ion-col size="6">
+        <button ion-button full (click)="loadHhps()">
+          HHP Purchases
+        </button>
+      </ion-col>
     </ion-row>
     <ion-row>
-      <button ion-button full (click)="searchRetrieval()">
-        Retrieval
-      </button>
+      <ion-col col="12">
+        <button ion-button full (click)="delete()">
+          Delete
+        </button>
+      </ion-col>
     </ion-row>
   </ion-grid>
+  <ion-list>
+    <ng-container *ngFor="let request of requests; let i = index">
+      <!-- <ion-item (click)="editRequest(request.Id)"> -->
+      <ion-row>
+        <ion-item>
+          <span *ngIf="selected == 'retrieval'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}
+          </span>
+          <span *ngIf="selected == 'images'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}&nbsp;{{request?.page_num}}
+          </span>
+          <span *ngIf="selected == 'eop'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}&nbsp;{{request?.page_num}}
+          </span>
+          <span *ngIf="selected == 'hhp'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}&nbsp;{{request?.page_num}}
+          </span>
+        </ion-item>
+      </ion-row>
+
+    </ng-container>
+  </ion-list>
 </ion-content>

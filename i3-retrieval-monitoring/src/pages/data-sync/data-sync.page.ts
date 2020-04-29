@@ -25,6 +25,13 @@ import { SqlitePanelMainService } from "../../app/services/util/sqlite-panel-mai
 import { PanelMain } from "../../model/panelMain";
 import { SqliteDocuPicService } from "../../app/services/util/sqlite-docupic.service";
 import { FTP } from "@ionic-native/ftp";
+import { SqliteEOPService } from "../../app/services/util/sqlite-eop.service";
+import { SqliteHHPService } from "../../app/services/util/sqlite-hhp.service";
+import { EopPurchase } from "../../model/eopPurchase";
+import { Irf } from "../../model/irf";
+import { HhpPurchase } from "../../model/hhpPurchase";
+import { File } from "@ionic-native/file";
+import { Network } from "@ionic-native/network";
 
 declare var AdvancedGeolocation: any;
 
@@ -33,8 +40,8 @@ declare var AdvancedGeolocation: any;
   templateUrl: "./data-sync.page.html",
 })
 export class DataSyncPage implements OnInit {
-  // url = "http://api.uniserve.ph";
-  url = "http://10.0.2.2:3000";
+  url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
   formPanel: FormGroup;
   isBarcodeScanned = false;
   location;
@@ -50,6 +57,8 @@ export class DataSyncPage implements OnInit {
 
   date_start;
   date_end;
+  finame;
+  connectedToNet = false;
 
   constructor(
     private toast: Toast,
@@ -59,7 +68,12 @@ export class DataSyncPage implements OnInit {
     private httpService: HttpService,
     private zone: NgZone,
     private sqliteDocupicService: SqliteDocuPicService,
-    private fTP: FTP
+    private sqliteEopService: SqliteEOPService,
+    private sqliteHHPService: SqliteHHPService,
+    private fTP: FTP,
+    private file: File,
+    private nativeStorage: NativeStorage,
+    private network: Network
   ) {
   }
 
@@ -70,13 +84,52 @@ export class DataSyncPage implements OnInit {
 
   ionViewDidEnter() {
     this.platform.ready().then(() => {
-      // this.getAllData();
+      if (this.network.type != "none") {
+        console.log("network connected!");
+        this.connectedToNet = true;
+      } else {
+        this.connectedToNet = false;
+      }
+      this.watchNetwork();
+      this.fTP
+        .connect(
+          "ftp2.uniserve.ph",
+          "diaries@ftp2.uniserve.ph",
+          "DiarieS010101"
+        )
+        .then((res: any) => {
+          console.log("Login successful", res);
+        })
+        .catch((error: any) => {
+          console.error(error);
+        });
+      this.setFiName();
     });
   }
+
+  watchNetwork() {
+    console.log("watching network");
+    this.network.onDisconnect().subscribe(() => {
+      this.showToast("Disconnected from network");
+      console.log("network disconnected!");
+      this.connectedToNet = false;
+    });
+
+    this.network.onConnect().subscribe(() => {
+      console.log("network connected!");
+      // We just got a connection but we need to wait briefly
+      // before we determine the connection type. Might need to wait.
+      // prior to doing any api requests as well.
+      setTimeout(() => {
+        this.showToast("Connected to network");
+        this.connectedToNet = true;
+      }, 1000);
+    });
+  }
+
   handleError(err) {
     console.log("something went wrong: ", err);
   }
-
 
   loadretrievals() {
     this.selected = 'retrieval'
@@ -105,7 +158,7 @@ export class DataSyncPage implements OnInit {
     this.sqliteDocupicService.searchByDate(this.date_start, this.date_end).then(
       (data: any) => {
         let result = [];
-        debugger
+        let synchable = this.requests
         for (let i = 0; i < data.rows.length; i++) {
           let item = data.rows.item(i);
           // do something with it
@@ -115,7 +168,7 @@ export class DataSyncPage implements OnInit {
         this.zone.run(() => {
           this.requests = result
         });
-        console.log("serach data", result.length);
+        console.log("images data", result.length);
       },
       (error) => {
         this.showToast("Error getting data")
@@ -138,11 +191,100 @@ export class DataSyncPage implements OnInit {
       case 'images':
         this.syncImages()
         break;
+      case 'eop':
+        this.syncEop()
+        break;
+      case 'hhp':
+        this.syncHhp()
+        break;
     }
   }
+
+  syncEop() {
+    this.synching = true;
+    let synchable = this.requests
+    synchable.forEach(res => {
+      setTimeout(() => {
+        this.httpService
+          .post(this.url + "/eop_purchases", res, false)
+          .timeout(10000)
+          .subscribe(
+            data => {
+              if (data["success"] == true) {
+                res["stored"] = 'true';
+                res["serverId"] = data["id"];
+                let eop = new EopPurchase(res)
+                this.sqliteEopService.editData(eop).then(
+                  (data: any) => {
+                  },
+                  error => {
+                    this.synching = false
+                    this.showToast("Something went wrong: Code2")
+                    console.error("Error storing item", error);
+                  }
+                );
+              }
+            },
+            err => {
+              this.synching = false
+              this.showToast("Something went wrong" + err.message);
+              console.log(err);
+            }
+          );
+      }, 200);
+    })
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.synching = false;
+        this.loadEOPs()
+      });
+    }, 500 * synchable.length)
+  }
+
+  syncHhp() {
+    this.synching = true;
+    let synchable = this.requests
+    synchable.forEach(res => {
+      setTimeout(() => {
+        this.httpService
+          .post(this.url + "/hhp_purchases", res, false)
+          .timeout(10000)
+          .subscribe(
+            data => {
+              if (data["success"] == true) {
+                res["stored"] = 'true';
+                res["serverId"] = data["id"];
+                let hhp = new HhpPurchase(res)
+                this.sqliteHHPService.editData(hhp).then(
+                  (data: any) => {
+                  },
+                  error => {
+                    this.synching = false
+                    this.showToast("Something went wrong: Code2")
+                    console.error("Error storing item", error);
+                  }
+                );
+              }
+            },
+            err => {
+              this.synching = false
+              this.showToast("Something went wrong" + err.message);
+              console.log(err);
+            }
+          );
+      }, 200);
+    })
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.synching = false;
+        this.loadHhps()
+      });
+    }, 500 * synchable.length)
+  }
+
   syncImages() {
     this.synching = true;
-    let synchable = this.requests.filter(res => res.stored != 'true')
+    let synchable = this.requests
     synchable.forEach(res => {
       setTimeout(() => {
         this.httpService
@@ -196,9 +338,8 @@ export class DataSyncPage implements OnInit {
     );
   }
 
-
   ftpUpload(filePath, remotePathFile, row) {
-    debugger
+    let synchable = this.requests
     this.fTP.upload(filePath, remotePathFile).subscribe(
       res => {
         this.zone.run(() => {
@@ -219,7 +360,7 @@ export class DataSyncPage implements OnInit {
         this.zone.run(() => {
           this.synching = false
         });
-        debugger
+        let synchable = this.requests
         this.showToast("Something went wrong" + error);
       }
     );
@@ -227,7 +368,7 @@ export class DataSyncPage implements OnInit {
 
   syncRetrieval() {
     this.synching = true;
-    let synchable = this.requests.filter(res => res.stored != 'true')
+    let synchable = this.requests
     synchable.forEach(res => {
       setTimeout(() => {
         this.httpService
@@ -236,8 +377,10 @@ export class DataSyncPage implements OnInit {
           .subscribe(
             data => {
               if (data["success"] == true) {
-                res["stored"] = true;
-                this.sqliteService.editData(res).then(
+                res["stored"] = 'true';
+                res["serverId"] = data["id"];
+                let retrieval = new Irf(res)
+                this.sqliteService.editData(retrieval).then(
                   (data: any) => {
                   },
                   error => {
@@ -265,24 +408,139 @@ export class DataSyncPage implements OnInit {
     }, 200 * synchable.length)
   }
 
-  // getAllData() {
-  //   this.sqliteService.createTable().then(
-  //     (data: any) => {
-  //       this.sqliteService.getAllData().then(
-  //         (data: any) => {
-  //           let result = [];
-  //           for (let i = 0; i < data.rows.length; i++) {
-  //             let item = data.rows.item(i);
-  //             // do something with it
-  //             result.push(item);
-  //           }
-  //           console.log("all data", result.length);
-  //           this.requests = result;
-  //         },
-  //         (error) => console.error("Error storing item", error)
-  //       );
-  //     },
-  //     (error) => console.error("Error storing item", error)
-  //   );
-  // }
+  loadEOPs() {
+    this.selected = 'eop'
+    this.sqliteEopService.searchByDate(this.date_start, this.date_end).then(
+      (data: any) => {
+        let result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let item = data.rows.item(i);
+          // do something with it
+          console.log(item)
+          result.push(item);
+        }
+        this.zone.run(() => {
+          let synchable = this.requests
+          this.requests = result
+        });
+        console.log("eop data", result.length);
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+
+  loadHhps() {
+    this.selected = 'hhp'
+    this.sqliteHHPService.searchByDate(this.date_start, this.date_end).then(
+      (data: any) => {
+        let result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let item = data.rows.item(i);
+          // do something with it
+          console.log(item)
+          result.push(item);
+        }
+        this.zone.run(() => {
+          this.requests = result
+        });
+        console.log("hhp data", result.length);
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+
+  saveAsCsv() {
+    if (!!this.requests && this.requests.length == 0) {
+      this.showToast('No data to export')
+      return
+    }
+    if (!this.finame) {
+      this.showToast('FIname is not set in maintenance')
+      return
+    }
+    this.exporting = true
+
+    let csv = '';
+    let header = Object.keys(this.requests[0]).join(',');
+    let values = this.requests.map(o => Object.keys(o).map(key => o[key]).join(',')).join('\n');
+
+    csv += header + '\n' + values;
+    var fileName: any = "team.csv"
+    this.file.writeFile(this.file.externalRootDirectory, fileName, csv, { replace: true })
+      .then(
+        _ => {
+          let filename = '/FI_Output/' + this.tableName() + '_' + this.finame + '.csv'
+          debugger
+          this.ftpCSVUpload(_.nativeURL, filename)
+        }
+      )
+      .catch(
+        err => {
+          this.file.writeExistingFile(this.file.externalRootDirectory, fileName, csv)
+            .then(
+              (_: any) => {
+                let filename = '/FI_Output/' + this.tableName() + '_' + this.finame + '.csv'
+                debugger
+                this.ftpCSVUpload(_.nativeURL, filename)
+              }
+            )
+            .catch(
+              err => {
+                this.exporting = false
+              }
+            )
+        }
+      )
+
+  }
+
+  tableName() {
+    switch (this.selected) {
+      case 'retrieval':
+        return 'retrieval_monitorings';
+      case 'images':
+        return 'docu_pic_images';
+      case 'eop':
+        return 'eop_purchases';
+      case 'hhp':
+        return 'hhp_purchases';
+    }
+  }
+
+  setFiName() {
+    this.nativeStorage.getItem('maintenace')
+      .then(
+        (obj) => {
+          if (!!obj) {
+            this.finame = obj.finame;
+          }
+        },
+        error => console.error('Error storing item', error)
+      );
+  }
+
+
+  ftpCSVUpload(filePath, remotePathFile) {
+    this.fTP.upload(filePath, remotePathFile).subscribe(
+      res => {
+        this.zone.run(() => {
+          let me = res
+          debugger
+          this.exporting = false
+        });
+      },
+      error => {
+        this.zone.run(() => {
+          debugger
+          this.exporting = false
+        });
+        this.showToast("Something went wrong" + error);
+      }
+    );
+  }
 }
+

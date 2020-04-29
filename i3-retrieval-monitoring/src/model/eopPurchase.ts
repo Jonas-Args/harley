@@ -17,7 +17,11 @@ export class EopPurchase {
   public stored;
   public docupic_Id;
   public date_retrieved;
-  public serverId
+  public serverId;
+  public panel_code;
+  public period_code;
+  public page_num;
+  public fi_name;
 
   constructor(fields?: {
     date_retrieved?: string;
@@ -39,6 +43,10 @@ export class EopPurchase {
     stored?: string;
     docupic_Id?: string;
     serverId?: number;
+    panel_code?: string;
+    period_code?: string;
+    page_num?: string;
+    fi_name?: string;
   }) {
     Object.assign(this, fields);
   }

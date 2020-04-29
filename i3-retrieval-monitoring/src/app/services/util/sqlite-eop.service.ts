@@ -35,6 +35,10 @@ export class SqliteEOPService {
             "kids_below_12 TEXT, " +
             "docupic_Id TEXT, " +
             "serverId INTEGER, " +
+            "panel_code TEXT, " +
+            "period_code TEXT, " +
+            "page_num TEXT, " +
+            "fi_name TEXT, " +
             "stored TEXT)"
           )
             .then(
@@ -100,7 +104,7 @@ export class SqliteEOPService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "INSERT INTO eop_purchases (date_retrieved, date_ordered, time_ordered, outlet_name, outlet_type, inside_mall, access_type, for_whom, food_ordered, meat_type, cook_type, amount_paid, with_receipt, group_size, kids_below_12, stored,docupic_Id,serverId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO eop_purchases (date_retrieved, date_ordered, time_ordered, outlet_name, outlet_type, inside_mall, access_type, for_whom, food_ordered, meat_type, cook_type, amount_paid, with_receipt, group_size, kids_below_12, docupic_Id, serverId, panel_code, period_code, page_num, stored, fi_name) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
               data.date_retrieved,
               data.date_ordered,
@@ -117,9 +121,13 @@ export class SqliteEOPService {
               data.with_receipt,
               data.group_size,
               data.kids_below_12,
-              data.stored,
               data.docupic_Id,
-              data.serverId
+              data.serverId,
+              data.panel_code,
+              data.period_code,
+              data.page_num,
+              data.stored,
+              data.fi_name
             ]
           )
             .then(
@@ -147,7 +155,7 @@ export class SqliteEOPService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "UPDATE eop_purchases SET date_retrieved=?, date_ordered=?, time_ordered=?, outlet_name=?, outlet_type=?, inside_mall=?, access_type=?, for_whom=?, food_ordered=?, meat_type=?, cook_type=?, amount_paid=?, with_receipt=?, group_size=?, kids_below_12=?, stored=?, docupic_Id=?, serverId=? WHERE rowId=?",
+            "UPDATE eop_purchases SET date_retrieved=?, date_ordered=?, time_ordered=?, outlet_name=?, outlet_type=?, inside_mall=?, access_type=?, for_whom=?, food_ordered=?, meat_type=?, cook_type=?, amount_paid=?, with_receipt=?, group_size=?, kids_below_12=?,docupic_Id=?, serverId=?, panel_code=?, period_code=?, page_num=?, stored=?, fi_name=? WHERE rowId=?",
             [
               data.date_retrieved,
               data.date_ordered,
@@ -164,9 +172,13 @@ export class SqliteEOPService {
               data.with_receipt,
               data.group_size,
               data.kids_below_12,
-              data.stored,
               data.docupic_Id,
               data.serverId,
+              data.panel_code,
+              data.period_code,
+              data.page_num,
+              data.stored,
+              data.fi_name,
               data.rowId
             ]
           )
@@ -255,7 +267,6 @@ export class SqliteEOPService {
   }
 
   searchByDate(from, to) {
-    debugger
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -312,5 +323,29 @@ export class SqliteEOPService {
     } else {
       this.addData(object);
     }
+  }
+
+  deleteAll(rowids) {
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql('DELETE FROM eop_purchases WHERE rowId IN (' + rowids + ') ')
+            .then(
+              (data) => resolve(data),
+              (error) => resolve(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
   }
 }

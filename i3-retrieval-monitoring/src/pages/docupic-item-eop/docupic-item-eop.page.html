@@ -9,50 +9,46 @@
 </ion-header>
 <!--  *ngIf="this.irfObj.project == 'EOP' -->
 <ion-content padding>
+  <p>{{irfObj.project}}</p>
   <form [formGroup]="formPanel">
-    <ion-col col="12">
-      <ion-item>
-        <ion-label>
-          <p>Period Code:</p>
-        </ion-label>
-        <ion-input disabled=true formControlName="period_code" type="text"></ion-input>
-      </ion-item>
-    </ion-col>
-    <ion-col col="12">
-      <ion-item>
-        <ion-label>
-          <p>Panel Code:</p>
-        </ion-label>
-        <ion-input disabled=true formControlName="panel_code" type="text"></ion-input>
-      </ion-item>
-      <button ion-button full (click)="scan()">SCAN</button>
-    </ion-col>
-    <ion-col col="12">
-      <ion-item>
-        <ion-label>
-          <p>Page Number:</p>
-        </ion-label>
-        <ion-input disabled=true formControlName="page_num" type="text"></ion-input>
-      </ion-item>
-    </ion-col>
-    <ion-col col="12">
-      <ion-item>
-        <ion-label>
-          <p>FIName:</p>
-        </ion-label>
-        <ion-input [disabled]="!canEdit" formControlName="fi_name" type="text"></ion-input>
-      </ion-item>
-    </ion-col>
-    <ion-col col="12">
-      <ion-item>
-        <ion-label>
-          <p>Date Retrieved:</p>
-        </ion-label>
-        <ion-datetime [disabled]="!canEdit" displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D"
-          formControlName="date_retrieved">
-        </ion-datetime>
-      </ion-item>
-    </ion-col>
+
+    <ion-item>
+      <ion-label>
+        <p>Period Code:</p>
+      </ion-label>
+      <ion-input disabled=true formControlName="period_code" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <p>Panel Code:</p>
+      </ion-label>
+      <ion-input disabled=true formControlName="panel_code" type="text"></ion-input>
+    </ion-item>
+    <button ion-button full (click)="scan()">SCAN</button>
+
+    <ion-item>
+      <ion-label>
+        <p>Page Number:</p>
+      </ion-label>
+      <ion-input disabled=true formControlName="page_num" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <p>FIName:</p>
+      </ion-label>
+      <ion-input [disabled]="!canEdit" formControlName="fi_name" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <p>Date Retrieved:</p>
+      </ion-label>
+      <ion-datetime [disabled]="!canEdit" displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D"
+        formControlName="date_retrieved">
+      </ion-datetime>
+    </ion-item>
     <ion-item>
       <ion-label>Date Ordered:</ion-label>
       <ion-datetime [disabled]="!canEdit" displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D"
@@ -63,14 +59,13 @@
       <ion-datetime [disabled]="!canEdit" displayFormat="h:mm A" pickerFormat="h:mm A" formControlName="time_ordered">
       </ion-datetime>
     </ion-item>
-    <ion-col col="12">
-      <ion-item>
-        <ion-label>
-          <p>Outlet Name:</p>
-        </ion-label>
-        <ion-input [disabled]="!canEdit" formControlName="outlet_name" type="text"></ion-input>
-      </ion-item>
-    </ion-col>
+
+    <ion-item>
+      <ion-label>
+        <p>Outlet Name:</p>
+      </ion-label>
+      <ion-input [disabled]="!canEdit" formControlName="outlet_name" type="text"></ion-input>
+    </ion-item>
     <ion-item>
       <ion-label>
         <p>Outlet Type:</p>

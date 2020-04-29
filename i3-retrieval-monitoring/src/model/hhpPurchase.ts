@@ -1,13 +1,10 @@
 export class HhpPurchase {
-  public period_code;
-  public panel_code;
-  public page_num;
-  public fi_name;
+  public rowId;
   public date_retrieved;
-  public date_ordered;
   public time_ordered;
-  public outlet_type;
+  public date_ordered;
   public outlet_name;
+  public outlet_type;
   public prod_cat;
   public brand;
   public variant;
@@ -16,33 +13,36 @@ export class HhpPurchase {
   public price;
   public promo
   public promo_user
-  public rowId;
-  public stored;
   public docupic_Id;
-  public serverId
+  public serverId;
+  public panel_code;
+  public period_code;
+  public page_num;
+  public fi_name;
+  public stored;
 
   constructor(fields?: {
-    period_code?: string;
-    panel_code?: string;
-    page_num?: string;
-    fi_name?: string;
+    rowId?: number;
     date_retrieved?: string;
-    date_ordered?: string;
     time_ordered?: string;
-    outlet_type?: string;
+    date_ordered?: string;
     outlet_name?: string;
+    outlet_type?: string;
     prod_cat?: string;
     brand?: string;
     variant?: string;
     size?: string;
     quantity?: string;
     price?: string;
-    promo?: string;
-    promo_user?: string;
-    rowId?: number;
-    stored?: string;
+    promo
+    promo_user
     docupic_Id?: string;
-    serverId: number;
+    serverId?: number;
+    panel_code?: string;
+    period_code?: string;
+    page_num?: string;
+    stored?: string;
+    fi_name?: string;
   }) {
     Object.assign(this, fields);
   }

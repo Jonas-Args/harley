@@ -56,6 +56,7 @@ import { DocupicItemEop } from "../pages/docupic-item-eop/docupic-item-eop.page"
 import { DocupicItemHhp } from "../pages/docupic-item-hhp/docupic-item-hhp.page";
 import { SqliteHHPService } from "./services/util/sqlite-hhp.service";
 import { DataSyncPage } from "../pages/data-sync/data-sync.page";
+import { SignIn } from "../pages/sign-in/sign-in.page";
 
 const APP_PROVIDERS = [
   CommonService,
@@ -89,7 +90,8 @@ const APP_PROVIDERS = [
     DocupicItems,
     DocupicItemEop,
     DocupicItemHhp,
-    DataSyncPage
+    DataSyncPage,
+    SignIn
   ],
   imports: [
     BrowserModule,
@@ -122,7 +124,8 @@ const APP_PROVIDERS = [
     DocupicItems,
     DocupicItemEop,
     DocupicItemHhp,
-    DataSyncPage
+    DataSyncPage,
+    SignIn
   ],
   providers: [
     StatusBar,

@@ -20,6 +20,7 @@ export class Irf {
   public sms;
   public call_length;
   public calls;
+  public zero_remarks;
 
   constructor(fields?: {
     project?: any;
@@ -43,6 +44,7 @@ export class Irf {
     call_length?: string;
     sms?: string;
     calls?: string;
+    zero_remarks?: string;
   }) {
     Object.assign(this, fields);
   }

@@ -152,15 +152,6 @@ export class PurchaseFormPage implements OnInit {
         } else {
           this.lastData = data.rows.item(0);
           this.formPanel.patchValue(this.lastData, { emitEvent: false });
-
-          // this.formPanel
-          //   .get("period_code")
-          //   .setValue(
-          //     this.formPanel.value["period"] +
-          //       "." +
-          //       this.formPanel.value["week"],
-          //     { emitEvent: false }
-          //   );
           console.log("retrieved last item", this.lastData);
         }
       },
@@ -182,107 +173,6 @@ export class PurchaseFormPage implements OnInit {
       });
   }
 
-  start() {
-    // const config: BackgroundGeolocationConfig = {
-    //   desiredAccuracy: 10,
-    //   stationaryRadius: 20,
-    //   distanceFilter: 30,
-    //   debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-    //   stopOnTerminate: false // enable this to clear background location settings when the app terminates
-    // };
-    // this.backgroundGeolocation
-    //   .configure(config)
-    //   .then((location: BackgroundGeolocationResponse) => {
-    //     console.log(location);
-    //     // IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
-    //     // and the background-task may be completed.  You must do this regardless if your HTTP request is successful or not.
-    //     // IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
-    //     this.backgroundGeolocation.finish(); // FOR IOS ONLY
-    //   });
-    // // start recording location
-    // this.backgroundGeolocation.start();
-    // // If you wish to turn OFF background-tracking, call the #stop method.
-    // this.backgroundGeolocation.stop();
-  }
-
-  // start() {
-  //   AdvancedGeolocation.start(
-  //     success => {
-  //       try {
-  //         let jsonObject: any = JSON.parse(success);
-
-  //         if (!!jsonObject.latitude) {
-  //           this.location = jsonObject;
-  //           this.formPanel
-  //             .get("panel_gps_location")
-  //             .setValue(
-  //               `${this.location.latitude}, ${this.location.longitude}`
-  //             );
-  //           this.formPanel
-  //             .get("panel_gps_location_accuracy")
-  //             .setValue(
-  //               `${parseFloat(this.location.accuracy.toFixed(2))} meters`
-  //             );
-  //         } else {
-  //           this.showToast("lat long not available");
-  //         }
-  //         console.log("Provider now " + JSON.stringify(jsonObject));
-  //         // this.showToast(JSON.stringify(jsonObject))
-  //         switch (jsonObject.provider) {
-  //           case "gps":
-  //             //TODO
-  //             break;
-
-  //           case "network":
-  //             //TODO
-  //             break;
-
-  //           case "satellite":
-  //             //TODO
-  //             break;
-
-  //           case "cell_info":
-  //             //TODO
-  //             break;
-
-  //           case "cell_location":
-  //             //TODO
-  //             break;
-
-  //           case "signal_strength":
-  //             //TODO
-  //             break;
-  //         }
-  //       } catch (exc) {
-  //         //this.showToast("value"+exc)
-  //         console.log("Invalid JSON: " + exc);
-  //       }
-  //     },
-  //     error => {
-  //       this.showToast(JSON.stringify(error));
-  //       console.log("ERROR! " + JSON.stringify(error));
-  //     },
-  //     ////////////////////////////////////////////
-  //     //
-  //     // REQUIRED:
-  //     // These are required Configuration options!
-  //     // See API Reference for additional details.
-  //     //
-  //     ////////////////////////////////////////////
-  //     {
-  //       minTime: 500, // Min time interval between updates (ms)
-  //       minDistance: 1, // Min distance between updates (meters)
-  //       noWarn: true, // Native location provider warnings
-  //       providers: "gps", // Return GPS, NETWORK and CELL locations
-  //       useCache: true, // Return GPS and NETWORK cached locations
-  //       satelliteData: true, // Return of GPS satellite info
-  //       buffer: true, // Buffer location data
-  //       bufferSize: 3, // Max elements in buffer
-  //       signalStrength: false // Return cell signal strength data
-  //     }
-  //   );
-  // }
-
   formatDate(date) {
     // mm/dd/yy format
     let d = date.getDate();
@@ -297,39 +187,6 @@ export class PurchaseFormPage implements OnInit {
       irfId: this.storage.itemId,
     });
   }
-
-  // search(value) {
-  //   if (value.week == "") {
-  //     this.showToast("Week should not be blank");
-  //   } else {
-  //     this.sqliteService.search(this.formPanel.value).then(
-  //       (data: any) => {
-  //         console.log("found data on search", data);
-  //         if (!!data.rows.item(0)) {
-  //           console.log("found data", data.rows.item(0));
-  //           let new_data = new PurchaseEntry(
-  //             Object.assign(data.rows.item(0), this.formPanel.value)
-  //           );
-  //           this.sqliteService.editData(new_data).then((data: any) => {
-  //             this.navCtrl.push(PurchaseItemPage, {
-  //               irfId: new_data.rowId,
-  //             });
-  //           });
-  //         } else {
-  //           console.log("adding data on search", data);
-  //           this.formPanel.value.last = 0;
-  //           this.sqliteService
-  //             .addData(this.formPanel.value)
-  //             .then((data: any) => {
-  //               this.search(this.formPanel.value);
-  //               // console.log("new data", data.rows.item(0))
-  //             });
-  //         }
-  //       },
-  //       (error) => console.error("Error storing item", error)
-  //     );
-  //   }
-  // }
 
   search(value) {
     if (value.week == "") {

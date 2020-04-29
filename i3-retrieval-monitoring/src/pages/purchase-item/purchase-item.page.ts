@@ -28,8 +28,8 @@ import { PurchaseItem } from "../../model/purchaseItem";
   templateUrl: "./purchase-item.page.html",
 })
 export class PurchaseItemPage implements OnInit {
-  // url = "http://10.0.2.2:3000";
   url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
 
   formPanel: FormGroup;
   isBarcodeScanned = false;

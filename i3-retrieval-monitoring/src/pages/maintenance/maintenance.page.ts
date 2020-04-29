@@ -23,6 +23,10 @@ import { PurchaseEntry } from "../../model/purchaseEntry";
 import { PurchaseItemPage } from "../purchase-item/purchase-item.page";
 import { SqlitePanelMainService } from "../../app/services/util/sqlite-panel-main.service";
 import { PanelMain } from "../../model/panelMain";
+import { SqliteDocuPicService } from "../../app/services/util/sqlite-docupic.service";
+import { SqliteEOPService } from "../../app/services/util/sqlite-eop.service";
+import { SqliteHHPService } from "../../app/services/util/sqlite-hhp.service";
+import { SignIn } from "../sign-in/sign-in.page";
 declare var AdvancedGeolocation: any;
 
 @Component({
@@ -51,6 +55,7 @@ export class MaintenancePage implements OnInit {
   finame;
   date_start;
   date_end;
+  selected;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -67,8 +72,10 @@ export class MaintenancePage implements OnInit {
     private zone: NgZone,
     private sqlitePurchaseService: SqlitePurchaseService,
     private sqlitePanelMainService: SqlitePanelMainService,
+    private sqliteDocupicService: SqliteDocuPicService,
+    private sqliteEopService: SqliteEOPService,
+    private sqliteHHPService: SqliteHHPService,
   ) {
-    this.initForm();
   }
 
   ngOnInit() {
@@ -77,18 +84,6 @@ export class MaintenancePage implements OnInit {
     this.getObj()
   }
 
-  ionViewDidEnter() {
-    this.platform.ready().then(() => {
-      // this.getAllData();
-    });
-  }
-  handleError(err) {
-    console.log("something went wrong: ", err);
-  }
-
-  cancel() {
-
-  }
 
   getObj() {
     this.nativeStorage.getItem('maintenace')
@@ -98,11 +93,9 @@ export class MaintenancePage implements OnInit {
             this.finame = obj.finame;
             this.ficode = obj.ficode;
           }
-          // if(url!=null){
-          //   this.router.navigate([url], params)
-          // }
         },
-        error => console.error('Error storing item', error)
+        error => {
+        }
       );
   }
 
@@ -114,55 +107,10 @@ export class MaintenancePage implements OnInit {
     this.nativeStorage.setItem('maintenace', obj)
       .then(
         () => {
-          console.log('Stored item!')
-          // if(url!=null){
-          //   this.router.navigate([url], params)
-          // }
+          this.showToast("FIname FIcode saved")
         },
         error => console.error('Error storing item', error)
       );
-  }
-
-  initForm() {
-    this.formPanel = this.fb.group({
-      year: ["", [Validators.required]],
-      period: ["", [Validators.required]],
-      week: ["", [Validators.required]],
-      period_code: ["", [Validators.required]],
-      panel_code: ["", [Validators.required]],
-      date_retrieved: [
-        new Date().toLocaleString().split(",")[0],
-        [Validators.required],
-      ],
-    });
-
-    // add field here
-    this.formPanel.get("period").valueChanges.subscribe((value) => {
-      this.setPanelCode();
-    });
-    this.formPanel.get("week").valueChanges.subscribe((value) => {
-      if (!!value) {
-        this.setPanelCode();
-      }
-    });
-    this.formPanel.get("year").valueChanges.subscribe((value) => {
-      if (!!value) {
-        this.setPanelCode();
-      }
-    });
-    this.formPanel.valueChanges.subscribe((value) => {
-      console.log("values", this.formPanel.value);
-    });
-  }
-
-  setPanelCode() {
-    let panel_code =
-      this.formPanel.get("year").value +
-      "." +
-      this.formPanel.get("period").value +
-      "." +
-      this.formPanel.get("week").value;
-    this.formPanel.get("period_code").setValue(panel_code);
   }
 
   get_last_saved() {
@@ -204,107 +152,6 @@ export class MaintenancePage implements OnInit {
       });
   }
 
-  start() {
-    // const config: BackgroundGeolocationConfig = {
-    //   desiredAccuracy: 10,
-    //   stationaryRadius: 20,
-    //   distanceFilter: 30,
-    //   debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-    //   stopOnTerminate: false // enable this to clear background location settings when the app terminates
-    // };
-    // this.backgroundGeolocation
-    //   .configure(config)
-    //   .then((location: BackgroundGeolocationResponse) => {
-    //     console.log(location);
-    //     // IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
-    //     // and the background-task may be completed.  You must do this regardless if your HTTP request is successful or not.
-    //     // IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
-    //     this.backgroundGeolocation.finish(); // FOR IOS ONLY
-    //   });
-    // // start recording location
-    // this.backgroundGeolocation.start();
-    // // If you wish to turn OFF background-tracking, call the #stop method.
-    // this.backgroundGeolocation.stop();
-  }
-
-  // start() {
-  //   AdvancedGeolocation.start(
-  //     success => {
-  //       try {
-  //         let jsonObject: any = JSON.parse(success);
-
-  //         if (!!jsonObject.latitude) {
-  //           this.location = jsonObject;
-  //           this.formPanel
-  //             .get("panel_gps_location")
-  //             .setValue(
-  //               `${this.location.latitude}, ${this.location.longitude}`
-  //             );
-  //           this.formPanel
-  //             .get("panel_gps_location_accuracy")
-  //             .setValue(
-  //               `${parseFloat(this.location.accuracy.toFixed(2))} meters`
-  //             );
-  //         } else {
-  //           this.showToast("lat long not available");
-  //         }
-  //         console.log("Provider now " + JSON.stringify(jsonObject));
-  //         // this.showToast(JSON.stringify(jsonObject))
-  //         switch (jsonObject.provider) {
-  //           case "gps":
-  //             //TODO
-  //             break;
-
-  //           case "network":
-  //             //TODO
-  //             break;
-
-  //           case "satellite":
-  //             //TODO
-  //             break;
-
-  //           case "cell_info":
-  //             //TODO
-  //             break;
-
-  //           case "cell_location":
-  //             //TODO
-  //             break;
-
-  //           case "signal_strength":
-  //             //TODO
-  //             break;
-  //         }
-  //       } catch (exc) {
-  //         //this.showToast("value"+exc)
-  //         console.log("Invalid JSON: " + exc);
-  //       }
-  //     },
-  //     error => {
-  //       this.showToast(JSON.stringify(error));
-  //       console.log("ERROR! " + JSON.stringify(error));
-  //     },
-  //     ////////////////////////////////////////////
-  //     //
-  //     // REQUIRED:
-  //     // These are required Configuration options!
-  //     // See API Reference for additional details.
-  //     //
-  //     ////////////////////////////////////////////
-  //     {
-  //       minTime: 500, // Min time interval between updates (ms)
-  //       minDistance: 1, // Min distance between updates (meters)
-  //       noWarn: true, // Native location provider warnings
-  //       providers: "gps", // Return GPS, NETWORK and CELL locations
-  //       useCache: true, // Return GPS and NETWORK cached locations
-  //       satelliteData: true, // Return of GPS satellite info
-  //       buffer: true, // Buffer location data
-  //       bufferSize: 3, // Max elements in buffer
-  //       signalStrength: false // Return cell signal strength data
-  //     }
-  //   );
-  // }
-
   searchRetrieval() {
     this.sqliteService.searchByDate(this.date_start, this.date_end).then(
       (data: any) => {
@@ -343,42 +190,6 @@ export class MaintenancePage implements OnInit {
     });
   }
 
-  // search(value) {
-  //   if (value.week == "") {
-  //     this.showToast("Week should not be blank");
-  //   } else {
-  //     this.sqliteService.search(this.formPanel.value).then(
-  //       (data: any) => {
-  //         console.log("found data on search", data);
-  //         if (!!data.rows.item(0)) {
-  //           console.log("found data", data.rows.item(0));
-  //           let new_data = new PurchaseEntry(
-  //             Object.assign(data.rows.item(0), this.formPanel.value)
-  //           );
-  //           this.sqliteService.editData(new_data).then((data: any) => {
-  //             this.navCtrl.push(PurchaseItemPage, {
-  //               irfId: new_data.rowId,
-  //             });
-  //           });
-  //         } else {
-  //           console.log("adding data on search", data);
-  //           this.formPanel.value.last = 0;
-  //           this.sqliteService
-  //             .addData(this.formPanel.value)
-  //             .then((data: any) => {
-  //               this.search(this.formPanel.value);
-  //               // console.log("new data", data.rows.item(0))
-  //             });
-  //         }
-  //       },
-  //       (error) => console.error("Error storing item", error)
-  //     );
-  //   }
-  // }
-
-  clear() {
-    this.initForm();
-  }
 
   showToast(message) {
     message = message || "null";
@@ -387,48 +198,55 @@ export class MaintenancePage implements OnInit {
     });
   }
 
-  removeRequest(id) {
-    this.sqliteService.deleteData(id).then(
-      (data: any) => {
-        this.getAllData();
-      },
-      (error) => console.error("Error storing item", error)
-    );
-  }
-
-  moveToIrf(row: any) {
-    if (!!row) {
-      this.navCtrl.push(PurchaseItemPage, {
-        irfId: row.rowId,
-      });
-    } else {
-      this.navCtrl.push(PurchaseItemPage, {});
+  verifyUser(method) {
+    let user = {
+      FINAME: this.finame,
     }
-  }
+    this.httpService
+      .post(this.url + "/users/verify", user, false)
+      .timeout(10000)
+      .subscribe(
+        (data) => {
+          if (data.success == true && !!data.user) {
+            if (data.user['STATUS'] == 'ENABLED') {
+              this.nativeStorage.setItem('signin', data)
+                .then(
+                  () => {
+                    let obj = {
+                      ficode: null,
+                      finame: data.user['FINAME']
+                    }
+                    this.nativeStorage.setItem('maintenace', obj)
+                      .then(
+                        () => {
+                          if (method == 'loadProdMaster') {
+                            this.loadProdMaster()
+                          } else {
+                            this.loadEOPs()
+                          }
+                        },
+                        error => console.error('Error storing item', error)
+                      );
+                  },
+                  error => {
+                    this.showToast("Something went wrong" + error.message)
+                  }
+                );
+            } else {
+              this.showToast("You have no access to this application. Contact the supervisor.")
+              this.nativeStorage.remove("signin")
+              this.navCtrl.setRoot(SignIn)
 
-  getAllData() {
-    this.sqliteService.createTable().then(
-      (data: any) => {
-        this.sqliteService.getAllData().then(
-          (data: any) => {
-            let result = [];
-            for (let i = 0; i < data.rows.length; i++) {
-              let item = data.rows.item(i);
-              // do something with it
-              result.push(item);
             }
-            console.log("all data", result.length);
-            this.requests = result;
-          },
-          (error) => console.error("Error storing item", error)
-        );
-
-        this.get_last_saved();
-      },
-      (error) => console.error("Error storing item", error)
-    );
+          } else {
+            this.showToast("Invalid Credentials")
+          }
+        },
+        (err) => {
+          this.showToast("Something went wrong" + err.message);
+        }
+      );
   }
-
   loadProdMaster() {
     this.loadingLookupTable = true;
     this.httpService
@@ -454,6 +272,7 @@ export class MaintenancePage implements OnInit {
                           if (i + 1 == data["result"].length) {
                             this.zone.run(() => {
                               this.loadingLookupTable = false;
+                              this.showToast("Done")
                             });
                           }
                         },
@@ -501,7 +320,7 @@ export class MaintenancePage implements OnInit {
       .timeout(1800000)
       .subscribe(
         (data) => {
-          debugger
+
           if (data["success"] == true) {
             this.sqlitePanelMainService.dropTable().then(() => {
               this.sqlitePanelMainService.createTable().then(
@@ -520,6 +339,7 @@ export class MaintenancePage implements OnInit {
                           if (i + 1 == data["result"].length) {
                             this.zone.run(() => {
                               this.loadingPanelMains = false;
+                              this.showToast("Done")
                             });
                           }
                         },
@@ -554,5 +374,160 @@ export class MaintenancePage implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  loadEOPs() {
+    this.selected = 'eop'
+    this.sqliteEopService.searchByDate(this.date_start, this.date_end).then(
+      (data: any) => {
+        let result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let item = data.rows.item(i);
+          // do something with it
+          console.log(item)
+          result.push(item);
+        }
+        this.zone.run(() => {
+          let synchable = this.requests
+          this.requests = result
+        });
+        console.log("eop data", result.length);
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+
+  loadHhps() {
+    this.selected = 'hhp'
+    this.sqliteHHPService.searchByDate(this.date_start, this.date_end).then(
+      (data: any) => {
+        let result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let item = data.rows.item(i);
+          // do something with it
+          console.log(item)
+          result.push(item);
+        }
+        this.zone.run(() => {
+          this.requests = result
+        });
+        console.log("hhp data", result.length);
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+
+  loadImages() {
+    this.selected = 'images'
+    this.sqliteDocupicService.searchByDate(this.date_start, this.date_end).then(
+      (data: any) => {
+        let result = [];
+        let synchable = this.requests
+        for (let i = 0; i < data.rows.length; i++) {
+          let item = data.rows.item(i);
+          // do something with it
+          console.log(item)
+          result.push(item);
+        }
+        this.zone.run(() => {
+          this.requests = result
+        });
+        console.log("images data", result.length);
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+
+  loadretrievals() {
+    this.selected = 'retrieval'
+    this.sqliteService.searchByDate(this.date_start, this.date_end).then(
+      (data: any) => {
+        let result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let item = data.rows.item(i);
+          // do something with it
+          console.log(item)
+          result.push(item);
+        }
+        this.zone.run(() => {
+          this.requests = result
+        });
+        console.log("serach data", result.length);
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+
+  delete() {
+    switch (this.selected) {
+      case 'retrieval':
+        this.deleteRetrievals()
+        break;
+      case 'images':
+        this.deleteImages()
+        break;
+      case 'eop':
+        this.deleteEops()
+        break;
+      case 'hhp':
+        this.deleteHhps()
+        break;
+    }
+  }
+
+  deleteRetrievals() {
+    let ids = this.requests.map(res => res.rowId)
+    this.sqliteService.deleteAll(ids).then(
+      (data: any) => {
+        this.loadretrievals()
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+
+  deleteImages() {
+    let ids = this.requests.map(res => res.rowId)
+    this.sqliteDocupicService.deleteAll(ids).then(
+      (data: any) => {
+        this.loadImages()
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+  deleteEops() {
+    let ids = this.requests.map(res => res.rowId)
+    this.sqliteEopService.deleteAll(ids).then(
+      (data: any) => {
+        debugger
+        this.loadEOPs()
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
+  }
+  deleteHhps() {
+    let ids = this.requests.map(res => res.rowId)
+
+    this.sqliteHHPService.deleteAll(ids).then(
+      (data: any) => {
+        this.loadHhps()
+      },
+      (error) => {
+        this.showToast("Error getting data")
+      }
+    );
   }
 }

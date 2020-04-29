@@ -30,8 +30,8 @@ declare var AdvancedGeolocation: any;
   templateUrl: "./docupic-items.page.html",
 })
 export class DocupicItems implements OnInit {
-  // url = "http://10.0.2.2:3000";
   url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
 
   formPanel: FormGroup;
   location;
@@ -173,7 +173,7 @@ export class DocupicItems implements OnInit {
     this.navCtrl.push(MaintenancePage);
   }
   moveToPurchaseEOPHHPForm(row) {
-    if (this.irfObj.project == 'HHP') {
+    if (this.irfObj.project == 'HHP' || this.irfObj.project == 'XP') {
       this.navCtrl.push(DocupicItemHhp, {
         irfId: this.irfObj.rowId,
         picId: row.rowId

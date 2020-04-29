@@ -34,6 +34,10 @@ export class SqliteHHPService {
             "promo_user TEXT, " +
             "docupic_Id TEXT, " +
             "serverId INTEGER, " +
+            "panel_code TEXT, " +
+            "period_code TEXT, " +
+            "page_num TEXT, " +
+            "fi_name TEXT, " +
             "stored TEXT)"
           )
             .then(
@@ -99,11 +103,11 @@ export class SqliteHHPService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "INSERT INTO hhp_purchases (date_retrieved, date_ordered, time_ordered, outlet_name, outlet_type, prod_cat, brand, variant, size, quantity, price, promo, promo_user, stored, docupic_Id, serverId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO hhp_purchases (date_retrieved, time_ordered, date_ordered, outlet_name, outlet_type, prod_cat, brand, variant, size, quantity, price, promo, promo_user, docupic_Id, serverId, panel_code, period_code, page_num, stored, fi_name) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
               data.date_retrieved,
-              data.date_ordered,
               data.time_ordered,
+              data.date_ordered,
               data.outlet_name,
               data.outlet_type,
               data.prod_cat,
@@ -114,9 +118,13 @@ export class SqliteHHPService {
               data.price,
               data.promo,
               data.promo_user,
-              data.stored,
               data.docupic_Id,
-              data.serverId
+              data.serverId,
+              data.panel_code,
+              data.period_code,
+              data.page_num,
+              data.stored,
+              data.fi_name
             ]
           )
             .then(
@@ -144,11 +152,11 @@ export class SqliteHHPService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "UPDATE hhp_purchases SET date_retrieved=?, date_ordered=?, time_ordered=?, outlet_name=?, outlet_type=?, prod_cat=?, brand=?, variant=?, size=?, quantity=?, price=?, promo=?, promo_user=?, stored=?, docupic_Id=?, serverId=? WHERE rowId=?",
+            "UPDATE hhp_purchases SET date_retrieved=?, date_ordered=?, time_ordered=?, outlet_name=?, outlet_type=?, prod_cat=?, brand=?, variant=?, size=?, quantity=?, price=?, promo=?, promo_user=?, docupic_Id=?, serverId=?, panel_code=?, period_code=?, page_num=?, stored=?, fi_name=? WHERE rowId=?",
             [
               data.date_retrieved,
-              data.date_ordered,
               data.time_ordered,
+              data.date_ordered,
               data.outlet_name,
               data.outlet_type,
               data.prod_cat,
@@ -159,9 +167,13 @@ export class SqliteHHPService {
               data.price,
               data.promo,
               data.promo_user,
-              data.stored,
               data.docupic_Id,
               data.serverId,
+              data.panel_code,
+              data.period_code,
+              data.page_num,
+              data.stored,
+              data.fi_name,
               data.rowId
             ]
           )
@@ -250,7 +262,6 @@ export class SqliteHHPService {
   }
 
   searchByDate(from, to) {
-    debugger
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -307,5 +318,29 @@ export class SqliteHHPService {
     } else {
       this.addData(object);
     }
+  }
+
+  deleteAll(rowids) {
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql('DELETE FROM hhp_purchases WHERE rowId IN (' + rowids + ') ')
+            .then(
+              (data) => resolve(data),
+              (error) => resolve(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
   }
 }

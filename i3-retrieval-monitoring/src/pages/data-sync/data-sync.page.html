@@ -3,7 +3,7 @@
     <button button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Maintenance</ion-title>
+    <ion-title>Data Sync</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -37,21 +37,21 @@
         </button>
       </ion-col>
       <ion-col col="6">
-        <button ion-button full (click)="LoadHhps()">
+        <button ion-button full (click)="loadHhps()">
           HHP Purchases
         </button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col="6">
-        <button ion-button full (click)="sync()">
+        <button [disabled]="!connectedToNet" ion-button full (click)="sync()">
           {{ synching? 'Loading...' : 'Synchronize'}}
         </button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col="6">
-        <button ion-button full (click)="loadPanelMain()">
+        <button [disabled]="!connectedToNet" ion-button full (click)="saveAsCsv()">
           {{ exporting? 'Exporting...' : 'Export Data'}}
         </button>
       </ion-col>
@@ -67,6 +67,14 @@
             &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}
           </span>
           <span *ngIf="selected == 'images'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}&nbsp;{{request?.page_num}}
+          </span>
+          <span *ngIf="selected == 'eop'">
+            <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
+            &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}&nbsp;{{request?.page_num}}
+          </span>
+          <span *ngIf="selected == 'hhp'">
             <ion-icon *ngIf="request?.stored == 'true'" name="cloud-done"></ion-icon>
             &nbsp;{{i+1}}&nbsp;{{request?.period_code}}&nbsp;{{request?.panel_code}}&nbsp;{{request?.page_num}}
           </span>

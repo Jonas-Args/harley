@@ -36,6 +36,7 @@ export class SqliteService {
             "sms TEXT, " +
             "calls TEXT, " +
             "project TEXT, " +
+            "zero_remarks TEXT, " +
             "stored TEXT)"
           )
             .then(
@@ -101,7 +102,7 @@ export class SqliteService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "INSERT INTO irf (region, year, period, week, period_code, fi_name, panel_code, panel_name, panel_status, gps_location, date_retrieved, accuracy, panel_remarks, panel_receipted, last, call_length, sms, calls, project) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO irf (region, year, period, week, period_code, fi_name, panel_code, panel_name, panel_status, gps_location, date_retrieved, accuracy, panel_remarks, panel_receipted, last, call_length, sms, calls, project, zero_remarks) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
               data.region,
               data.year,
@@ -121,7 +122,8 @@ export class SqliteService {
               data.call_length,
               data.sms,
               data.calls,
-              data.project
+              data.project,
+              data.zero_remarks
             ]
           )
             .then(
@@ -140,6 +142,9 @@ export class SqliteService {
   }
 
   editData(data: Irf) {
+
+    console.log("editin ", data);
+
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -148,7 +153,7 @@ export class SqliteService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "UPDATE irf SET region=?,year=?,period=?,week=?,period_code=?,fi_name=?,panel_code=?,panel_name=?,panel_status=?,gps_location=?,date_retrieved=?,accuracy=?,panel_remarks=?,panel_receipted=?,last=?,stored=?,call_length=?,sms=?,calls=?,project=? WHERE rowId=?",
+            "UPDATE irf SET region=?,year=?,period=?,week=?,period_code=?,fi_name=?,panel_code=?,panel_name=?,panel_status=?,gps_location=?,date_retrieved=?,accuracy=?,panel_remarks=?,panel_receipted=?,last=?,stored=?,call_length=?,sms=?,calls=?,project=?,zero_remarks=? WHERE rowId=?",
             [
               data.region,
               data.year,
@@ -170,6 +175,7 @@ export class SqliteService {
               data.sms,
               data.calls,
               data.project,
+              data.zero_remarks,
               data.rowId,
             ]
           )
@@ -242,6 +248,30 @@ export class SqliteService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql("DELETE FROM irf WHERE rowId=?", [rowid])
+            .then(
+              (data) => resolve(data),
+              (error) => resolve(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .catch((e) => console.log(e))
+    );
+  }
+
+  deleteAll(rowids) {
+    return new Promise((resolve, reject) =>
+      this.sqlite
+        .create({
+          name: "ionicdb.db",
+          location: "default",
+        })
+        .then((db: SQLiteObject) => {
+          db.executeSql('DELETE FROM irf WHERE rowId IN (' + rowids + ') ')
             .then(
               (data) => resolve(data),
               (error) => resolve(error)

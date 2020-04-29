@@ -22,7 +22,7 @@ import { MaintenancePage } from "../maintenance/maintenance.page";
 import { SqliteDocuPicService } from "../../app/services/util/sqlite-docupic.service";
 import { SqliteService } from "../../app/services/util/sqlite.service";
 import { SqliteEOPService } from "../../app/services/util/sqlite-eop.service";
-import { HhpPurchase } from "../../model/HhpPurchase";
+import { HhpPurchase } from "../../model/hhpPurchase";
 import { SqliteHHPService } from "../../app/services/util/sqlite-hhp.service";
 declare var AdvancedGeolocation: any;
 
@@ -31,8 +31,8 @@ declare var AdvancedGeolocation: any;
   templateUrl: "./docupic-item-hhp.page.html",
 })
 export class DocupicItemHhp implements OnInit {
-  // url = "http://10.0.2.2:3000";
   url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
 
   formPanel: FormGroup;
 
@@ -93,7 +93,8 @@ export class DocupicItemHhp implements OnInit {
 
   ngOnInit() {
     this.platform.ready().then(readySource => {
-      this.hhpSqliteService.createTable();
+      // this.hhpSqliteService.dropTable();
+      // this.hhpSqliteService.createTable();
       this.irfId = this.navParams.get("irfId") || "";
       if (!!this.irfId) {
         this.sqliteService.find(this.irfId).then(

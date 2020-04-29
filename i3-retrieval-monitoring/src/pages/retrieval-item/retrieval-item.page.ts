@@ -32,8 +32,8 @@ import { FTP } from "@ionic-native/ftp";
   templateUrl: "./retrieval-item.page.html"
 })
 export class RetrievalItemPage implements OnInit {
-  // url = "http://10.0.2.2:3000";
   url = "http://api.uniserve.ph";
+  // url = "http://10.0.2.2:3000";
 
   formPanel: FormGroup;
   isBarcodeScanned = false;
@@ -94,6 +94,7 @@ export class RetrievalItemPage implements OnInit {
       week: ["", [Validators.required]],
       period_code: ["", [Validators.required]],
       date_retrieved: ["", [Validators.required]],
+      zero_remarks: ["", [Validators.required]],
       call_length: ["", [Validators.required]],
       sms: ["", [Validators.required]],
       calls: ["", [Validators.required]]
@@ -131,6 +132,7 @@ export class RetrievalItemPage implements OnInit {
       }
       // this.sqliteService.dropTable()
       // this.sqliteDocupicService.dropTable()
+      this.sqliteService.createTable()
       this.sqliteDocupicService.createTable()
     });
   }
@@ -250,15 +252,18 @@ export class RetrievalItemPage implements OnInit {
     let formValue = this.formPanel.value;
     let message =
       "RET;" +
+      `${formValue.project || ""};` +
       `${formValue.panel_code || ""};` +
-      `${formValue.panel_name || ""};` +
       `${formValue.period_code || ""};` +
-      `${formValue.finame || ""};` +
-      `${formValue.region || ""};` +
+      `${formValue.panel_name || ""};` +
       `${formValue.panel_status || ""};` +
       `${formValue.panel_remarks || ""};` +
-      `${formValue.panel_receipted || ""};` +
-      `${this.date_send}`;
+      `${formValue.fi_name || ""};` +
+      `${formValue.region || ""};` +
+      `${formValue.date_retrieved || ""};` +
+      `${formValue.call_length || ""};` +
+      `${formValue.sms || ""};` +
+      `${formValue.calls || ""};`
     // add field here
     return message;
   }

@@ -11,6 +11,7 @@
 <ion-content padding>
   <ion-list>
     <h3>Encode Purchase</h3>
+    <h4 *ngIf="images.length==0">No Images Found</h4>
     <ion-row *ngFor="let image of images">
       <button ion-button full color="primary"
         (click)="moveToPurchaseEOPHHPForm(image)">{{irfObj.period_code}},{{irfObj.panel_code}},{{image.page_num}}</button>
