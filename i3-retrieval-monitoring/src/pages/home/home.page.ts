@@ -20,6 +20,8 @@ import { PurchasePerDatePage } from "../purchase-summary/per-date/purchase-per-d
 import { PurchasePerPeriodPage } from "../purchase-summary/per-period/purchase-per-period.page";
 import { MaintenancePage } from "../maintenance/maintenance.page";
 import { DataSyncPage } from "../data-sync/data-sync.page";
+import { ServerUploadPage } from "../server-upload/server-upload.page";
+import { SignIn } from "../sign-in/sign-in.page";
 declare var AdvancedGeolocation: any;
 
 @Component({
@@ -44,6 +46,7 @@ export class Home implements OnInit {
   uploading = false;
   saving = false;
   type = "irf";
+  access_type;
 
   private win: any = window;
 
@@ -112,6 +115,7 @@ export class Home implements OnInit {
 
   ionViewDidEnter() {
     this.platform.ready().then(() => {
+      this.getMaintenance()
       if (this.network.type != "none") {
         console.log("network connected!");
         this.connectedToNet = true;
@@ -387,6 +391,33 @@ export class Home implements OnInit {
 
   moveToDataSync() {
     this.navCtrl.push(DataSyncPage);
+  }
+
+  moveToServerUpload() {
+    this.navCtrl.push(ServerUploadPage);
+  }
+
+  logout() {
+    this.navCtrl.setRoot(SignIn)
+  }
+
+  getMaintenance() {
+    this.nativeStorage.getItem('maintenace')
+      .then(
+        (obj) => {
+          if (!!obj) {
+            this.access_type = obj.access_type;
+            console.log("user", obj)
+          } else {
+            this.nativeStorage.remove("maintenace")
+            this.showToast("No Access Type Found")
+            this.navCtrl.setRoot(SignIn)
+          }
+        },
+        error => {
+          this.showToast("Something went wrong")
+        }
+      );
   }
 }
 

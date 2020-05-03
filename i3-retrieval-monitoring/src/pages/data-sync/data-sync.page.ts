@@ -207,7 +207,7 @@ export class DataSyncPage implements OnInit {
       setTimeout(() => {
         this.httpService
           .post(this.url + "/eop_purchases", res, false)
-          .timeout(10000)
+          .timeout(120000)
           .subscribe(
             data => {
               if (data["success"] == true) {
@@ -248,7 +248,7 @@ export class DataSyncPage implements OnInit {
       setTimeout(() => {
         this.httpService
           .post(this.url + "/hhp_purchases", res, false)
-          .timeout(10000)
+          .timeout(120000)
           .subscribe(
             data => {
               if (data["success"] == true) {
@@ -289,7 +289,7 @@ export class DataSyncPage implements OnInit {
       setTimeout(() => {
         this.httpService
           .post(this.url + "/retrieval_monitorings/upload", res, false)
-          .timeout(10000)
+          .timeout(120000)
           .subscribe(
             data => {
               this.uploadFtp(res)
@@ -373,7 +373,7 @@ export class DataSyncPage implements OnInit {
       setTimeout(() => {
         this.httpService
           .post(this.url + "/retrieval_monitorings", res, false)
-          .timeout(10000)
+          .timeout(120000)
           .subscribe(
             data => {
               if (data["success"] == true) {

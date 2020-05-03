@@ -57,6 +57,9 @@ import { DocupicItemHhp } from "../pages/docupic-item-hhp/docupic-item-hhp.page"
 import { SqliteHHPService } from "./services/util/sqlite-hhp.service";
 import { DataSyncPage } from "../pages/data-sync/data-sync.page";
 import { SignIn } from "../pages/sign-in/sign-in.page";
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { ServerUploadPage } from "../pages/server-upload/server-upload.page";
+import { FileChooser } from '@ionic-native/file-chooser';
 
 const APP_PROVIDERS = [
   CommonService,
@@ -91,7 +94,8 @@ const APP_PROVIDERS = [
     DocupicItemEop,
     DocupicItemHhp,
     DataSyncPage,
-    SignIn
+    SignIn,
+    ServerUploadPage
   ],
   imports: [
     BrowserModule,
@@ -125,7 +129,8 @@ const APP_PROVIDERS = [
     DocupicItemEop,
     DocupicItemHhp,
     DataSyncPage,
-    SignIn
+    SignIn,
+    ServerUploadPage
   ],
   providers: [
     StatusBar,
@@ -148,7 +153,10 @@ const APP_PROVIDERS = [
     SqliteDocuPicService,
     SqliteEOPService,
     SqliteHHPService,
+    FileTransferObject,
+    FileTransfer,
     FTP,
+    FileChooser,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ...APP_PROVIDERS,
   ],

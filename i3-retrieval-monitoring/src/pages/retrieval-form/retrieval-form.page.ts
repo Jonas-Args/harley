@@ -199,32 +199,37 @@ export class RetrieveilFormPage implements OnInit {
     this.sqlitePanelService.search(this.formPanel.value["panel_code"]).then((res: any) => {
       if (res.rows.length == 1) {
         console.log("found panel code data", res.rows.item(0));
-        this.sqliteService.search(value).then(
-          (data: any) => {
-            console.log("found data on search", data);
-            if (!!data.rows.item(0)) {
-              console.log("found data", data.rows.item(0));
-              let new_data = new Irf(
-                Object.assign(data.rows.item(0), value)
-              );
-              this.sqliteService.editData(new_data).then((data: any) => {
-                this.navCtrl.push(RetrievalItemPage, {
-                  irfId: new_data.rowId
+        if (res.rows.item(0).panel_stat == "DROPPED") {
+          this.showToast("This panelist is dropped already.")
+        } else {
+          this.sqliteService.search(value).then(
+            (data: any) => {
+              console.log("found data on search", data);
+              if (!!data.rows.item(0)) {
+                console.log("found data", data.rows.item(0));
+                let new_data = new Irf(
+                  Object.assign(data.rows.item(0), value)
+                );
+                this.sqliteService.editData(new_data).then((data: any) => {
+                  this.navCtrl.push(RetrievalItemPage, {
+                    irfId: new_data.rowId
+                  });
                 });
-              });
-            } else {
-              console.log("adding data on search", data);
-              value.last = 0;
-              this.sqliteService
-                .addData(value)
-                .then((data: any) => {
-                  this.search(value);
-                  // console.log("new data", data.rows.item(0))
-                });
-            }
-          },
-          error => console.error("Error storing item", error)
-        );
+
+              } else {
+                console.log("adding data on search", data);
+                value.last = 0;
+                this.sqliteService
+                  .addData(value)
+                  .then((data: any) => {
+                    this.search(value);
+                    // console.log("new data", data.rows.item(0))
+                  });
+              }
+            },
+            error => console.error("Error storing item", error)
+          );
+        }
       }
       else if (res.rows.length > 1) {
         this.showToast("Multiple match to panelcode")

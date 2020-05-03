@@ -1,18 +1,21 @@
 <ion-content padding>
   <img src="assets/imgs/uniserve_logo.png" id="imgPlacement" style="align-items: center" />
   <h2 style="text-align: center;">Retrieval Monitoring</h2>
-  <h4>Activity:</h4>
   <button ion-button full (click)="moveRetrieval()">Diary Retrieval</button>
-  <button ion-button full (click)="moveToPurchase()">Purchase Entry</button>
+  <button *ngIf="access_type!='1'" ion-button full (click)="moveToPurchase()">Purchase Entry</button>
   <button ion-button full (click)="moveToMaintenace()">Maintenance</button>
   <button ion-button full (click)="moveToDataSync()">Data Sync</button>
+  <button *ngIf="access_type=='3'" ion-button full (click)="moveToServerUpload()">Server Upload</button>
+  <button ion-button full>Summary</button>
   <br />
-  <h4>Summary:</h4>
+  <button ion-button full (click)="logout()">Logout</button>
+  <br />
+  <!-- <h4>Summary:</h4>
   <h5 style="text-align: center;">Retrieval</h5>
   <button ion-button full (click)="moveRetrievalPerPeriod()">Per Period</button>
   <button ion-button full (click)="moveRetrievalPerDate()">Per Date Range</button>
   <br />
   <h5 style="text-align: center;">Purchases</h5>
   <button ion-button full color="secondary" (click)="movePurchasePerPeriod()">Per Period</button>
-  <button ion-button full color="secondary" (click)="movePurchasePerDate()">Per Date Range</button>
+  <button ion-button full color="secondary" (click)="movePurchasePerDate()">Per Date Range</button> -->
 </ion-content>

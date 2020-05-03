@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Data Sync</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row>
+    <ion-col size="12">
+      <button ion-button full (click)="selectFile()">Select File</button>
+    </ion-col>
+  </ion-row>
+  <p *ngIf="!!this.csvFile">File: {{this.csvFile}}</p>
+  <p *ngIf="!!data?.size && selected=='panel_main'">Updated Panel Main Size {{data?.size}}</p>
+  <p *ngIf="!!data?.size && selected=='product_master' ">Updated Product Master Size {{data?.size}}</p>
+  <p *ngIf="!!data?.size && selected=='user'">Updated User Size {{data?.size}}</p>
+
+  <ion-row>
+    <ion-col size="6">
+      <button ion-button full
+        (click)="updatePanelMain()">{{(uploading && selected=='panel_main') ? 'Uploading...' : 'Upload Panel Main'}}</button>
+    </ion-col>
+    <ion-col size="6">
+      <button ion-button full
+        (click)="getPanelMainStatus()">{{(getting && selected=='panel_main') ? 'Getting...' : 'Panel Main Status'}}</button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6">
+      <button ion-button full
+        (click)="updateProductMaster()">{{(uploading && selected=='product_master') ? 'Uploading...' : 'Upload Product Master'}}</button>
+    </ion-col>
+    <ion-col size="6">
+      <button ion-button full
+        (click)="getProductMasterStatus()">{{(getting && selected=='product_master') ? 'Getting...' : 'Product Master Status'}}</button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6">
+      <button ion-button full
+        (click)="updateUsers()">{{(uploading && selected=='user') ? 'Uploading...' : 'Upload Users'}}</button>
+    </ion-col>
+    <ion-col size="6">
+      <button ion-button full
+        (click)="getUserStatus()">{{(getting && selected=='user') ? 'Getting...' : 'Users Status'}}</button>
+    </ion-col>
+  </ion-row>
+</ion-content>

@@ -209,34 +209,32 @@ export class MaintenancePage implements OnInit {
         (data) => {
           if (data.success == true && !!data.user) {
             if (data.user['STATUS'] == 'ENABLED') {
-              this.nativeStorage.setItem('signin', data)
+              let obj = {
+                ficode: data.user['USERID'],
+                finame: data.user['FINAME'],
+                access_type: data.user['ACCESSTYPE']
+              }
+              debugger
+              this.nativeStorage.setItem('maintenace', obj)
                 .then(
                   () => {
-                    let obj = {
-                      ficode: null,
-                      finame: data.user['FINAME']
+                    debugger
+                    if (method == 'loadProdMaster') {
+                      this.loadProdMaster()
+                    } else {
+                      this.loadPanelMain()
                     }
-                    this.nativeStorage.setItem('maintenace', obj)
-                      .then(
-                        () => {
-                          if (method == 'loadProdMaster') {
-                            this.loadProdMaster()
-                          } else {
-                            this.loadEOPs()
-                          }
-                        },
-                        error => console.error('Error storing item', error)
-                      );
                   },
-                  error => {
-                    this.showToast("Something went wrong" + error.message)
-                  }
+                  error => console.error('Error storing item', error)
                 );
             } else {
               this.showToast("You have no access to this application. Contact the supervisor.")
-              this.nativeStorage.remove("signin")
-              this.navCtrl.setRoot(SignIn)
-
+              this.nativeStorage.remove("maintenace")
+              this.sqlitePanelMainService.dropTable().then(res => {
+                this.sqlitePanelMainService.createTable().then(res => {
+                  this.navCtrl.setRoot(SignIn)
+                })
+              })
             }
           } else {
             this.showToast("Invalid Credentials")
@@ -272,7 +270,7 @@ export class MaintenancePage implements OnInit {
                           if (i + 1 == data["result"].length) {
                             this.zone.run(() => {
                               this.loadingLookupTable = false;
-                              this.showToast("Done")
+                              this.showToast("DONE")
                             });
                           }
                         },
@@ -339,7 +337,7 @@ export class MaintenancePage implements OnInit {
                           if (i + 1 == data["result"].length) {
                             this.zone.run(() => {
                               this.loadingPanelMains = false;
-                              this.showToast("Done")
+                              this.showToast("Loading list of panelist.  DONE.")
                             });
                           }
                         },

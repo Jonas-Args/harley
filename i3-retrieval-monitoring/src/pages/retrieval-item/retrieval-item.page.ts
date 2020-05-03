@@ -54,6 +54,7 @@ export class RetrievalItemPage implements OnInit {
   imageSrc;
   takingPicture = false;
   images = [];
+  selectedAction = ''
 
   private win: any = window;
   constructor(
@@ -117,7 +118,6 @@ export class RetrievalItemPage implements OnInit {
     { value: "NA" },
     { value: "HATCHING" },
     { value: "DROPPED" },
-    { value: "MY LOCATION" },
     { value: "CALLBACK" },
     { value: "UNATTENDED" },
     { value: "REFUSED" }
@@ -234,7 +234,11 @@ export class RetrievalItemPage implements OnInit {
     });
   }
 
-  sendSMS() {
+  sendSMS(action = null) {
+    this.selectedAction = action || this.selectedAction
+    if (!this.validate()) {
+      return
+    }
     if (this.isDataValid(this.formPanel.value)) {
       console.log("sending", this.formatMessage());
       this.date_send = new Date().toLocaleString();
@@ -246,6 +250,15 @@ export class RetrievalItemPage implements OnInit {
         error => console.error("Error removing item", error)
       );
     }
+  }
+
+  validate() {
+
+    if (this.formPanel.value["panel_status"] == "" || this.formPanel.value["panel_status"] == null) {
+      this.showToast("Panel Status should not be blank.")
+      return false
+    }
+    return true;
   }
 
   formatMessage() {
@@ -268,18 +281,29 @@ export class RetrievalItemPage implements OnInit {
     return message;
   }
 
-  save(value = this.formPanel.value) {
+  save(value = this.formPanel.value, action = null) {
+    this.selectedAction = action || this.selectedAction
+    if (!this.validate()) {
+      return
+    }
     this.saving = true;
     this.zone.run(() => {
       value.rowId = this.irfId;
       value = Object.assign(this.irfObj, value);
       console.log("editing data", value);
-      debugger;
       this.sqliteService.editData(value).then(
         (data: any) => {
           console.log("retrieved new data", data);
           console.log("popping", data);
-          this.navCtrl.pop();
+          if (this.selectedAction != 'sync') {
+            this.navCtrl.pop();
+          } else {
+
+            this.zone.run(() => {
+              this.showToast("Your data is synced")
+            });
+
+          }
           this.saving = false;
         },
         error => {
@@ -290,7 +314,11 @@ export class RetrievalItemPage implements OnInit {
     });
   }
 
-  sync() {
+  sync(action = null) {
+    this.selectedAction == action
+    if (!this.validate()) {
+      return
+    }
     console.log("syncing", this.formPanel.value);
     this.uploading = true;
 
@@ -324,7 +352,6 @@ export class RetrievalItemPage implements OnInit {
             this.zone.run(() => {
               this.uploading = false;
             });
-            this.showToast("Data Uploaded");
             this.sendSMS();
           }
         },
@@ -362,7 +389,7 @@ export class RetrievalItemPage implements OnInit {
     let cameraOptions = {
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       destinationType: this.camera.DestinationType.FILE_URI,
-      quality: 50,
+      quality: 70,
       targetWidth: 500,
       targetHeight: 500,
       encodingType: this.camera.EncodingType.JPEG,
@@ -407,7 +434,7 @@ export class RetrievalItemPage implements OnInit {
             }
           })
           .catch(err => {
-            debugger;
+            ;
             console.error(err);
           });
       },
@@ -426,7 +453,7 @@ export class RetrievalItemPage implements OnInit {
   ) {
     this.takingPicture = true;
     const options: CameraOptions = {
-      quality: 50,
+      quality: 40,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
@@ -470,12 +497,12 @@ export class RetrievalItemPage implements OnInit {
             }
           })
           .catch(err => {
-            debugger;
+            ;
             console.error(err);
           });
       })
       .catch(err => {
-        debugger;
+        ;
         console.error(err);
       });
   }
@@ -507,7 +534,7 @@ export class RetrievalItemPage implements OnInit {
         console.log(newFile);
       })
       .catch(err => {
-        debugger;
+        ;
         console.error(err);
       });
   }
@@ -560,7 +587,7 @@ export class RetrievalItemPage implements OnInit {
           }, error => {
             this.showToast("Something went wrong");
           })
-      debugger
+
 
     }
   }
@@ -613,7 +640,7 @@ export class RetrievalItemPage implements OnInit {
   }
 
   ftpUpload(index, filePath, remotePathFile) {
-    debugger
+
     this.fTP.upload(filePath, remotePathFile).subscribe(
       res => {
         this.zone.run(() => {

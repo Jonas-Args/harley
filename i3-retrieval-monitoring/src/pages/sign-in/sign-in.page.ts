@@ -36,7 +36,7 @@ export class SignIn {
   private win: any = window;
   userid
   password
-
+  data
   constructor(
     private sms: SMS,
     public camera: Camera,
@@ -62,18 +62,24 @@ export class SignIn {
       }
       this.watchNetwork();
     });
-    // this.nativeStorage.remove("signin")
-    this.nativeStorage.getItem("signin").then(
+    this.getSignIn()
+  }
+
+
+  getSignIn() {
+    this.nativeStorage.getItem("maintenace").then(
       (data) => {
-        console.log("data is", data)
-        this.navCtrl.push(Home);
+        this.data = data
+        debugger
+        console.log("signin data", data)
       },
       (error) => {
-        console.log("here")
+        this.data = null
+        debugger
+        console.log("signin data", error)
       }
     );
   }
-
   showToast(message) {
     message = message || "null";
     this.toast.show(message, "5000", "top").subscribe((toast) => {
@@ -102,11 +108,24 @@ export class SignIn {
   }
 
   signIn() {
+    if (!!this.data) {
+      if (this.userid == this.data.ficode && this.password == this.data.password) {
+        this.navCtrl.push(Home);
+      } else {
+        this.singInOnline()
+      }
+    } else {
+      this.singInOnline()
+    }
+  }
+
+  singInOnline() {
     this.signing = true;
     let sigin = {
       USERID: this.userid,
       PASSWORD: this.password
     }
+
     this.httpService
       .post(this.url + "/users/signin", sigin, false)
       .timeout(10000)
@@ -115,12 +134,14 @@ export class SignIn {
           this.signing = false;
           if (data.success == true && !!data.user) {
             if (data.user['STATUS'] == 'ENABLED') {
-              this.nativeStorage.setItem('signin', data)
+              this.nativeStorage.setItem('maintenance', data)
                 .then(
                   () => {
                     let obj = {
-                      ficode: null,
-                      finame: data.user['FINAME']
+                      ficode: data.user['USERID'],
+                      finame: data.user['FINAME'],
+                      password: data.user['PASSWORD'],
+                      access_type: data.user['ACCESSTYPE']
                     }
                     this.nativeStorage.setItem('maintenace', obj)
                       .then(

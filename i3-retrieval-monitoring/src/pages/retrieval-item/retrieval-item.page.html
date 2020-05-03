@@ -62,8 +62,6 @@
         <p>Region:</p>
       </ion-label>
       <ion-select formControlName="region" ok-text="Okay" cancel-text="Dismiss">
-        <ion-option value="" selectable="false" selected="true">
-          Select Region</ion-option>
         <ion-option *ngFor="let type of ['NCR','NL','SL','VIS','MIN']" [value]="type">{{ type }}</ion-option>
       </ion-select>
     </ion-item>
@@ -107,8 +105,6 @@
     <ion-item>
       <ion-label>STATUS</ion-label>
       <ion-select formControlName="panel_status" ok-text="Okay" cancel-text="Dismiss">
-        <ion-option value="" selectable="false" selected="true">
-          Select Status</ion-option>
         <ion-option *ngFor="let status of statuses" [value]="status.value">{{status.value | uppercase}}</ion-option>
       </ion-select>
     </ion-item>
@@ -126,21 +122,21 @@
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>Call Length:</p>
+        <p>Call Length (mins):</p>
       </ion-label>
-      <ion-input formControlName="call_length" type="text"></ion-input>
+      <ion-input formControlName="call_length" type="number"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>SMS:</p>
+        <p>SMS sent:</p>
       </ion-label>
-      <ion-input formControlName="sms" type="text"></ion-input>
+      <ion-input formControlName="sms" type="number"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>Calls:</p>
+        <p>Call attempts:</p>
       </ion-label>
-      <ion-input formControlName="calls" type="text"></ion-input>
+      <ion-input formControlName="calls" type="number"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>
@@ -151,12 +147,12 @@
     <ion-grid>
       <ion-row>
         <ion-col col="4">
-          <button ion-button full type="submit" (click)="save()">
+          <button ion-button full type="submit" (click)="save('save')">
             SAVE
           </button>
         </ion-col>
         <ion-col *ngIf="!!irfObj?.rowId && connectedToNet" col="4">
-          <button ion-button full (click)="sync()">SYNC</button>
+          <button ion-button full (click)="sync('sync')">SYNC</button>
         </ion-col>
         <ion-col col="4">
           <button ion-button full navPop>Cancel</button>
