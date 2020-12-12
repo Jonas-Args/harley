@@ -15,6 +15,7 @@ import {
 } from "@ionic-native/background-geolocation";
 import { RetrievalItemPage } from "../retrieval-item/retrieval-item.page";
 import { SqlitePanelMainService } from "../../app/services/util/sqlite-panel-main.service";
+import { SqliteDocuPicService } from "../../app/services/util/sqlite-docupic.service";
 
 declare var AdvancedGeolocation: any;
 
@@ -34,6 +35,7 @@ export class RetrieveilFormPage implements OnInit {
 
   csvData: any[] = [];
   headerRow: any[] = [];
+  weeks = ['1', '2', '3', '4']
 
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -46,7 +48,8 @@ export class RetrieveilFormPage implements OnInit {
     private sqliteService: SqliteService,
     private backgroundGeolocation: BackgroundGeolocation,
     private sqlitePanelService: SqlitePanelMainService,
-    private platform: Platform
+    private platform: Platform,
+    private sqliteDocupicService: SqliteDocuPicService,
   ) {
     this.initForm();
   }
@@ -111,6 +114,11 @@ export class RetrieveilFormPage implements OnInit {
 
     // add field here
     this.formPanel.get("period").valueChanges.subscribe(value => {
+      if (value == '07') {
+        this.weeks = ['1', '2', '3', '4', '5']
+      } else {
+        this.weeks = ['1', '2', '3', '4']
+      }
       this.setPanelCode();
     });
     this.formPanel.get("week").valueChanges.subscribe(value => {
@@ -142,7 +150,7 @@ export class RetrieveilFormPage implements OnInit {
   get_last_saved() {
     this.sqliteService.getLastData().then(
       (data: any) => {
-        if (data.rows.length == 0) {
+        if (!!data.rows && data.rows.length == 0) {
           console.log("retrieved no last item");
           this.lastData = null;
         } else {
@@ -188,16 +196,40 @@ export class RetrieveilFormPage implements OnInit {
   search(value) {
     if (value.week == "") {
       this.showToast("Week should not be blank");
+    } else if (value.year == "") {
+      this.showToast("Year should not be blank");
+    } else if (value.period == "") {
+      this.showToast("Period should not be blank");
     } else {
       this.searchPanelCode()
     }
+  }
+
+
+  addImageFlag(index) {
+    let request = this.requests[index]
+    this.requests[index]["with_image"] = false
+    this.sqliteDocupicService.createTable().then(
+      (data: any) => {
+        this.sqliteDocupicService.search(request.rowId).then(
+          (data: any) => {
+            let result = []
+            if (!!data.rows && !!data.rows.length) {
+              this.requests[index]["with_image"] = true
+            }
+          },
+          error => console.error("Error storing item", error)
+        );
+      },
+      error => console.error("Error storing item", error)
+    );
   }
 
   searchPanelCode() {
     let value = this.formPanel.value
     value["date_retrieved"] = value["date_retrieved"].split("T")[0]
     this.sqlitePanelService.search(this.formPanel.value["panel_code"]).then((res: any) => {
-      if (res.rows.length == 1) {
+      if (!!res.rows && res.rows.length == 1) {
         console.log("found panel code data", res.rows.item(0));
         if (res.rows.item(0).panel_stat == "DROPPED") {
           this.showToast("This panelist is dropped already.")
@@ -231,7 +263,7 @@ export class RetrieveilFormPage implements OnInit {
           );
         }
       }
-      else if (res.rows.length > 1) {
+      else if (!!res.rows && res.rows.length > 1) {
         this.showToast("Multiple match to panelcode")
       } else {
         this.showToast("Panelcode did not match")
@@ -283,6 +315,11 @@ export class RetrieveilFormPage implements OnInit {
             }
             console.log("all data", result);
             this.requests = result;
+            this.requests.forEach((element, index) => {
+              if (element.panel_status == 'RETRIEVED' || element.panel_status == 'HATCHING') {
+                this.addImageFlag(index)
+              }
+            });
           },
           error => console.error("Error storing item", error)
         );

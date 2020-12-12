@@ -32,6 +32,7 @@ import { Irf } from "../../model/irf";
 import { HhpPurchase } from "../../model/hhpPurchase";
 import { File } from "@ionic-native/file";
 import { Network } from "@ionic-native/network";
+import { Base64 } from '@ionic-native/base64/index';
 
 declare var AdvancedGeolocation: any;
 
@@ -59,6 +60,8 @@ export class DataSyncPage implements OnInit {
   date_end;
   finame;
   connectedToNet = false;
+  numberToSync;
+  uploaded = 0
 
   constructor(
     private toast: Toast,
@@ -73,7 +76,8 @@ export class DataSyncPage implements OnInit {
     private fTP: FTP,
     private file: File,
     private nativeStorage: NativeStorage,
-    private network: Network
+    private network: Network,
+    private base64: Base64
   ) {
   }
 
@@ -162,8 +166,11 @@ export class DataSyncPage implements OnInit {
         for (let i = 0; i < data.rows.length; i++) {
           let item = data.rows.item(i);
           // do something with it
+          if (item["stored"] == "false") {
+            result.push(item);
+          }
           console.log(item)
-          result.push(item);
+
         }
         this.zone.run(() => {
           this.requests = result
@@ -189,7 +196,9 @@ export class DataSyncPage implements OnInit {
         this.syncRetrieval()
         break;
       case 'images':
+        this.synching = true;
         this.syncImages()
+
         break;
       case 'eop':
         this.syncEop()
@@ -282,89 +291,216 @@ export class DataSyncPage implements OnInit {
     }, 500 * synchable.length)
   }
 
+  formatImages(res) {
+    console.log("res is", res)
+    let project = "not_project_name"
+    if (res["image_path"].search("HHP") > -1) {
+      project = "HHP"
+    }
+    if (res["image_path"].search("EOP") > -1) {
+      project = "EOP"
+    }
+    if (res["image_path"].search("XP") > -1) {
+      project = "XP"
+    }
+    res["project"] = project
+    return {
+      period_code: res["period_code"],
+      panel_code: res["panel_code"],
+      diary_page_number: res["page_num"],
+      folder_name: this.folder_name(res),
+      image_file_name: this.image_file_name(res)
+    }
+  }
+
+  folder_name(res) {
+    return res.project + '_' + res.panel_code + '_' + res.period_code
+  }
+
+  image_file_name(res) {
+    return res.project + '_' + res.panel_code + '_' + res.period_code + '_' + res.page_num + ".jpeg"
+  }
+
   syncImages() {
     this.synching = true;
-    let synchable = this.requests
-    synchable.forEach(res => {
-      setTimeout(() => {
-        this.httpService
-          .post(this.url + "/retrieval_monitorings/upload", res, false)
-          .timeout(120000)
-          .subscribe(
-            data => {
-              this.uploadFtp(res)
-            },
-            err => {
-              this.zone.run(() => {
-                this.synching = false;
-                this.showToast("Something went wrong" + err.message);
-                console.log(err);
-              });
-            }
-          );
-      }, 200);
-    })
-
-    setTimeout(() => {
-      this.zone.run(() => {
-        this.synching = false;
-        this.loadImages()
+    this.uploaded = 0
+    this.requests.forEach((el, index) => {
+      this.base64.encodeFile(el.image_path).then((base64File: string) => {
+        console.log(base64File);
+        let params = this.formatImages(this.requests[index])
+        params["base64"] = base64File
+        this.uploadToServer(params, index)
+      }, (err) => {
+        console.log(err);
       });
-    }, 1000 * synchable.length)
+    })
   }
 
-  uploadFtp(row) {
-    let filePath = row.image_path;
-    let remotePath =
-      "/" + row.panel_code + row.period_code;
-    let remotePathFile =
-      "/" +
-      row.panel_code +
-      row.period_code +
-      "/" +
-      row.panel_code +
-      "_" +
-      row.period_code +
-      "_" +
-      row["page_num"] +
-      ".jpeg";
-    this.fTP.mkdir(remotePath).then(
-      res => {
-        this.ftpUpload(filePath, remotePathFile, row);
-      },
-      err => {
-        this.ftpUpload(filePath, remotePathFile, row);
-      }
-    );
+  uploadToServer(params, index) {
+    this.httpService
+      .post(this.url + "/retrieval_monitorings/is_image_uploaded", params, false)
+      .timeout(400000)
+      .subscribe(
+        data => {
+          if (data["success"] == true) {
+            this.zone.run(() => {
+              this.requests[index]["stored"] = 'true';
+              this.showToast("Image Uploaded");
+              let docupic = new DocuPic(this.requests[index])
+              this.sqliteDocupicService.editData(docupic).then(res => {
+                console.log("edited picture")
+              })
+            });
+          }
+          this.uploaded = this.uploaded + 1
+          if (this.uploaded == this.requests.length) {
+            this.zone.run(() => {
+              this.synching = false;
+            })
+          }
+        },
+        err => {
+          this.uploaded = this.uploaded + 1
+          if (this.uploaded == this.requests.length) {
+            this.zone.run(() => {
+              this.synching = false;
+            })
+          }
+        }
+      );
   }
 
-  ftpUpload(filePath, remotePathFile, row) {
-    let synchable = this.requests
-    this.fTP.upload(filePath, remotePathFile).subscribe(
-      res => {
-        this.zone.run(() => {
-          row["stored"] = true;
-          let docupic = new DocuPic(row)
-          this.sqliteDocupicService.editData(docupic).then(
-            (data: any) => {
+  // if (num < this.requests.length && this.requests.length > 0) {
+  //   let res = this.requests[num]
 
-            },
-            error => {
-              this.synching = false
-              this.showToast("Something went wrong: Code1")
-            }
-          );
-        });
-      },
-      error => {
-        this.zone.run(() => {
-          this.synching = false
-        });
-        let synchable = this.requests
-        this.showToast("Something went wrong" + error);
-      }
-    );
-  }
+  //   this.httpService
+  //     .post(this.url + "/retrieval_monitorings/upload", this.formatImages(res), false)
+  //     .timeout(120000)
+  //     .subscribe(
+  //       data => {
+
+  //         console.log("uploading now", res)
+  //         // this.uploadFtp(res).then((val: any) => this.ftpUpload(val.a, val.b, val.c).then(res => {
+  //         //   console.log("num is", num)
+  //         //   if (num + 1 == this.requests.length) {
+  //         //     this.zone.run(() => {
+  //         //       this.synching = false;
+  //         //       this.loadImages()
+  //         //     });
+  //         //   } else {
+  //         //     this.syncImages(num + 1)
+  //         //   }
+  //         // }))
+
+  //       },
+  //       err => {
+  //         this.zone.run(() => {
+  //           this.synching = false;
+  //           this.showToast("Something went wrong" + err.message);
+  //           console.log(err);
+  //         });
+  //       }
+  //     );
+  // }
+
+  // }
+
+  // uploadToServer(params, index) {
+  //   this.httpService
+  //     .post(this.url + "/retrieval_monitorings/is_image_uploaded", params, false)
+  //     .timeout(100000)
+  //     .subscribe(
+  //       data => {
+  //         debugger
+  //         if (data["success"] == true) {
+  //           this.zone.run(() => {
+  //             this.uploading = false;
+  //             this.images[index]["stored"] = 'true';
+  //             this.showToast("Image Uploaded");
+  //             let docupic = new DocuPic(this.images[index])
+  //             this.sqliteDocupicService.editData(docupic).then(res => {
+  //               console.log("edited picture")
+  //             })
+  //           });
+  //         }
+  //       },
+  //       err => {
+  //         this.url;
+  //         this.zone.run(() => {
+  //           this.uploading = false;
+  //         });
+  //         this.showToast("Something went wrong" + err.message);
+  //         console.log(err);
+  //       }
+  //     );
+  // }
+
+  // uploadFtp(row) {
+  //   let filePath = row.image_path;
+  //   let remotePath =
+  //     "/" + row.panel_code + row.period_code;
+  //   let remotePathFile =
+  //     "/" +
+  //     row.panel_code +
+  //     row.period_code +
+  //     "/" +
+  //     row.panel_code +
+  //     "_" +
+  //     row.period_code +
+  //     "_" +
+  //     row["page_num"] +
+  //     ".jpeg";
+  //   return new Promise((resolve) => {
+  //     this.fTP.mkdir(remotePath).then(
+  //       res => {
+  //         console.log("result is", res)
+  //         resolve({ a: filePath, b: remotePathFile, c: row, error: false })
+  //       },
+  //       err => {
+  //         console.log("error is", err)
+  //         resolve({ a: filePath, b: remotePathFile, c: row, error: true })
+  //       }
+  //     );
+  //   });
+
+  // }
+
+  // ftpUpload(filePath, remotePathFile, row) {
+  //   return new Promise((resolve) => {
+  //     let synchable = this.requests
+  //     this.fTP.upload(filePath, remotePathFile).subscribe(
+  //       res => {
+  //         this.zone.run(() => {
+  //           console.log("Uploaded", filePath, remotePathFile)
+  //           row["stored"] = true;
+  //           let docupic = new DocuPic(row)
+  //           this.sqliteDocupicService.editData(docupic).then(
+  //             (data: any) => {
+  //               console.log("resolved c")
+  //               resolve(true)
+  //             },
+  //             error => {
+  //               this.synching = false
+  //               this.showToast("Something went wrong: Code1")
+  //               console.log("resolved c")
+  //               resolve(false)
+  //             }
+  //           );
+  //         });
+  //       },
+  //       error => {
+  //         this.zone.run(() => {
+  //           this.synching = false
+  //         });
+  //         let synchable = this.requests
+  //         this.showToast("Something went wrong" + error);
+  //         console.log("resolved c")
+  //         resolve(false)
+  //       }
+  //     );
+
+  //   })
+  // }
 
   syncRetrieval() {
     this.synching = true;

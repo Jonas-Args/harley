@@ -11,6 +11,7 @@ export class SqlitePurchaseEntryService {
   constructor(private nativeStorage: NativeStorage, private sqlite: SQLite) { }
 
   createTable() {
+    debugger
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -77,6 +78,7 @@ export class SqlitePurchaseEntryService {
   }
 
   getAllData() {
+    debugger
     return new Promise((resolve, reject) =>
       this.sqlite
         .create({
@@ -120,6 +122,7 @@ export class SqlitePurchaseEntryService {
   }
 
   addData(data: PurchaseEntry) {
+    debugger
     console.log("adding ", data);
     return new Promise((resolve, reject) =>
       this.sqlite
@@ -376,7 +379,7 @@ export class SqlitePurchaseEntryService {
         })
         .then((db: SQLiteObject) => {
           db.executeSql(
-            "SELECT * FROM purchaseEntries WHERE Date >= ? and Date <= ? AND last = 0",
+            "SELECT * FROM purchaseEntries WHERE date_retrieved>=? AND date_retrieved<=? AND last = 0",
             [from, to]
           )
             .then(

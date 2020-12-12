@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Summary Per-Cutoff {{selectedTable}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label>Date Start:</ion-label>
+    <ion-datetime displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D" [(ngModel)]="date_start"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Date End:</ion-label>
+    <ion-datetime displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D" [(ngModel)]="date_end"></ion-datetime>
+  </ion-item>
+  <ion-grid>
+    <ion-row>
+      <button ion-button full (click)="getData()">
+        Retrieve
+      </button>
+    </ion-row>
+  </ion-grid>
+  <ion-list *ngIf="selectedTable == 'retrieval'">
+    <label *ngIf="requests.length > 0">Total: {{requests.length}}</label>
+    <ng-container *ngFor="let request of requests; let i = index">
+      <ion-row>
+        <ion-item>
+          <ion-row>
+            <ion-col col="12">
+              <p>{{request.period_code}},&nbsp; {{request.panel_name}},&nbsp; {{request.panel_status}}</p>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-row>
+    </ng-container>
+  </ion-list>
+  <ion-list *ngIf="selectedTable == 'eop_purchase' || selectedTable == 'hhp_purchase'">
+    <label *ngIf="requests.length > 0">Total: {{requests.length}}</label>
+    <ng-container *ngFor="let status of myObject.keys(statuses||{}); let i = index">
+      <ion-item>
+        <p>{{status}} {{statuses[status]?.length}}</p>
+        <ng-container *ngFor="let period of myObject.keys(statuses[status]['panel_code']||{}); let i = index">
+          <p>&nbsp;&nbsp;{{period}} {{statuses[status]['panel_code'][period]?.length}}</p>
+        </ng-container>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+</ion-content>

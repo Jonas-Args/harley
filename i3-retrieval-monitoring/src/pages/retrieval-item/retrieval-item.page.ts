@@ -26,6 +26,8 @@ import { FilePath } from "@ionic-native/file-path";
 import { File } from "@ionic-native/file";
 import { DocuPic } from "../../model/docuPic";
 import { FTP } from "@ionic-native/ftp";
+import { PARAMETERS } from "@angular/core/src/util/decorators";
+import { Base64 } from '@ionic-native/base64/index';
 
 @Component({
   selector: "app-retrieval",
@@ -40,6 +42,7 @@ export class RetrievalItemPage implements OnInit {
   location;
   tagPanelObj;
   showZeroRemarks = false;
+  showBy = false;
   irfId;
   irfObj: any = { stored: 'false' };
   date_send;
@@ -55,6 +58,7 @@ export class RetrievalItemPage implements OnInit {
   takingPicture = false;
   images = [];
   selectedAction = ''
+  page_num_unique = true;
 
   private win: any = window;
   constructor(
@@ -79,6 +83,7 @@ export class RetrievalItemPage implements OnInit {
     private file: File,
     private platform: Platform,
     private fTP: FTP,
+    private base64: Base64
   ) {
     this.formPanel = fb.group({
       rowId: ["", [Validators.required]],
@@ -98,7 +103,9 @@ export class RetrievalItemPage implements OnInit {
       zero_remarks: ["", [Validators.required]],
       call_length: ["", [Validators.required]],
       sms: ["", [Validators.required]],
-      calls: ["", [Validators.required]]
+      calls: ["", [Validators.required]],
+      method: ["", [Validators.required]],
+      by: ["", [Validators.required]]
     });
 
     // add field here
@@ -110,17 +117,24 @@ export class RetrievalItemPage implements OnInit {
       }
     });
     // add field here
+    this.formPanel.get("method").valueChanges.subscribe(value => {
+      if (value == "CATI") {
+        this.showBy = true;
+      } else {
+        this.showBy = false;
+      }
+    });
   }
 
   statuses = [
     { value: "RETRIEVED" },
     { value: "ZERO" },
     { value: "NA" },
-    { value: "HATCHING" },
     { value: "DROPPED" },
     { value: "CALLBACK" },
     { value: "UNATTENDED" },
-    { value: "REFUSED" }
+    { value: "REFUSED" },
+    { value: "FOR UPLOADING" },
   ];
 
   ngOnInit() {
@@ -156,7 +170,7 @@ export class RetrievalItemPage implements OnInit {
     let value = this.formPanel.value
     value["date_retrieved"] = value["date_retrieved"].split("T")[0]
     this.sqlitePanelService.search(this.formPanel.value["panel_code"]).then((res: any) => {
-      if (res.rows.length == 1) {
+      if (!!res.rows && !!res.rows.length && res.rows.length == 1) {
         if (!!res.rows.item(0)) {
           this.mainpanelcode = res.rows.item(0)
           this.formPanel.get("fi_name").setValue(this.mainpanelcode.fi_name)
@@ -164,10 +178,12 @@ export class RetrievalItemPage implements OnInit {
           if (this.irfObj.region == null) {
             this.formPanel.get("region").setValue(this.mainpanelcode.region)
           }
-          this.formPanel.get("project").setValue(this.mainpanelcode.proj_type)
+          if (this.irfObj.project == null) {
+            this.formPanel.get("project").setValue(this.mainpanelcode.proj_type)
+          }
         }
       }
-      else if (res.rows.length > 1) {
+      else if (!!res.rows && !!res.rows.length && res.rows.length > 1) {
         this.showToast("Multiple match to panelcode")
       } else {
         this.showToast("Panelcode did not match")
@@ -253,11 +269,44 @@ export class RetrievalItemPage implements OnInit {
   }
 
   validate() {
-
-    if (this.formPanel.value["panel_status"] == "" || this.formPanel.value["panel_status"] == null) {
+    let panel_status = (this.formPanel.value["panel_status"]||'').trim()
+    if(!panel_status || 0 === panel_status.length){
       this.showToast("Panel Status should not be blank.")
       return false
     }
+    if (this.formPanel.value["panel_status"] == 'ZERO') {
+      let zero_remarks = (this.formPanel.value["zero_remarks"]||'').trim()
+      if (!zero_remarks || 0 === zero_remarks.length) {
+        this.showToast("Zero Remarks should not be empty")
+        return false
+      }
+    }
+    if (this.formPanel.value["panel_status"] == 'NA') {
+      let panel_remarks = (this.formPanel.value["panel_remarks"]||'').trim()
+      if(!panel_remarks || 0 === panel_remarks.length){
+        this.showToast("Remarks should not be empty")
+        return false
+      }
+    }
+    if(this.showBy){
+      let str = (this.formPanel.value["by"]||'').trim()
+      if(!str || 0 === str.length){
+        this.showToast("By should not be empty")
+        return false
+      }
+    }
+    if(this.showZeroRemarks){
+      let str = (this.formPanel.value["zero_remarks"]||'').trim()
+      if(!str || 0 === str.length){
+        this.showToast("Zero Remarks should not be empty")
+        return false
+      }
+    }
+    if(this.images.length > 0 && this.formPanel.value["panel_status"] != "RETRIEVED"){
+      this.showToast("Status should be RETRIEVED")
+      return false
+    }
+    
     return true;
   }
 
@@ -282,6 +331,7 @@ export class RetrievalItemPage implements OnInit {
   }
 
   save(value = this.formPanel.value, action = null) {
+
     this.selectedAction = action || this.selectedAction
     if (!this.validate()) {
       return
@@ -289,6 +339,7 @@ export class RetrievalItemPage implements OnInit {
     this.saving = true;
     this.zone.run(() => {
       value.rowId = this.irfId;
+      debugger
       value = Object.assign(this.irfObj, value);
       console.log("editing data", value);
       this.sqliteService.editData(value).then(
@@ -321,10 +372,10 @@ export class RetrievalItemPage implements OnInit {
     }
     console.log("syncing", this.formPanel.value);
     this.uploading = true;
-
+    console.log("syncing", this.images[0]);
     this.httpService
       .post(this.url + "/retrieval_monitorings", this.formPanel.value, false)
-      .timeout(10000)
+      .timeout(40000)
       .subscribe(
         data => {
           if (data["success"] == true) {
@@ -340,6 +391,11 @@ export class RetrievalItemPage implements OnInit {
                 this.zone.run(() => {
                   this.saving = false;
                 });
+                this.images.forEach((el, index) => {
+                  if (el["stored"] != 'true') {
+                    this.uploadImageToServer(index, el)
+                  }
+                })
               },
               error => {
                 console.error("Error storing item", error);
@@ -353,6 +409,48 @@ export class RetrievalItemPage implements OnInit {
               this.uploading = false;
             });
             this.sendSMS();
+          }
+        },
+        err => {
+          this.url;
+          this.zone.run(() => {
+            this.uploading = false;
+          });
+          this.showToast("Something went wrong" + err.message);
+          console.log(err);
+        }
+      );
+  }
+
+  uploadImageToServer(i, row: any) {
+    this.uploading = true;
+    this.base64.encodeFile(row.image_path).then((base64File: string) => {
+      console.log(base64File);
+      let params = this.image_upload_params(row)
+      params["base64"] = base64File
+      this.uploadToServer(params, i)
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+  uploadToServer(params, index) {
+    this.httpService
+      .post(this.url + "/retrieval_monitorings/is_image_uploaded", params, false)
+      .timeout(400000)
+      .subscribe(
+        data => {
+          debugger
+          if (data["success"] == true) {
+            this.zone.run(() => {
+              this.uploading = false;
+              this.images[index]["stored"] = 'true';
+              this.showToast("Image Uploaded");
+              let docupic = new DocuPic(this.images[index])
+              this.sqliteDocupicService.editData(docupic).then(res => {
+                console.log("edited picture")
+              })
+            });
           }
         },
         err => {
@@ -390,8 +488,6 @@ export class RetrievalItemPage implements OnInit {
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       destinationType: this.camera.DestinationType.FILE_URI,
       quality: 70,
-      targetWidth: 500,
-      targetHeight: 500,
       encodingType: this.camera.EncodingType.JPEG,
       correctOrientation: true
     }
@@ -510,8 +606,7 @@ export class RetrievalItemPage implements OnInit {
   directory() {
     let panel_code = this.formPanel.get("panel_code").value;
     let period_code = this.formPanel.get("period_code").value;
-
-    return "docupic/" + panel_code + "_" + period_code;
+    return "docupic/" + this.formPanel.get("project").value + '_' + panel_code + "_" + period_code;
   }
 
   moveToFile(imagePath, imageName, type) {
@@ -573,53 +668,55 @@ export class RetrievalItemPage implements OnInit {
     //sql save
   }
 
-  uploadImage(index, row) {
-    if (!this.irfObj.stored) {
-      this.showToast("Make sure to sync data first")
-    } else {
-      this.uploading = true;
-      this.httpService.post(this.url + "/retrieval_monitorings/upload", this.image_upload_params(row), false)
-        .timeout(10000).subscribe(
-          data => {
-            if (data.success) {
-              this.uploadFtp(row, index)
-            }
-          }, error => {
-            this.showToast("Something went wrong");
-          })
+  // uploadImage(index, row) {
+  //   if (!this.irfObj.stored) {
+  //     this.showToast("Make sure to sync data first")
+  //   } else {
+  //     this.uploading = true;
+  //     this.httpService.post(this.url + "/retrieval_monitorings/upload", this.image_upload_params(row), false)
+  //       .timeout(10000).subscribe(
+  //         data => {
+  //           if (data.success) {
+  //             this.uploadFtp(row, index)
+  //           }
+  //         }, error => {
+  //           this.showToast("Something went wrong");
+  //         })
 
 
-    }
-  }
+  //   }
+  // }
 
-  uploadFtp(row, index) {
-    let filePath = row.image_path;
-    let remotePath =
-      "/" + this.formPanel.value.panel_code + this.formPanel.value.period_code;
-    let remotePathFile =
-      "/" +
-      this.formPanel.value.panel_code +
-      this.formPanel.value.period_code +
-      "/" +
-      this.formPanel.value.panel_code +
-      "_" +
-      this.formPanel.value.period_code +
-      "_" +
-      row["page_num"] +
-      ".jpeg";
-    this.fTP.mkdir(remotePath).then(
-      res => {
-        this.ftpUpload(index, filePath, remotePathFile);
-      },
-      err => {
-        console.log(err);
-        let a = filePath
-        let b = remotePathFile
-        let c = index
-        this.ftpUpload(index, filePath, remotePathFile);
-      }
-    );
-  }
+  // uploadFtp(row, index) {
+  //   let filePath = row.image_path;
+  //   let remotePath =
+  //     "/" + this.formPanel.value.project + '_' + this.formPanel.value.panel_code + this.formPanel.value.period_code;
+  //   let remotePathFile =
+  //     "/" +
+  //     this.formPanel.value.project + '_' +
+  //     this.formPanel.value.panel_code +
+  //     this.formPanel.value.period_code +
+  //     "/" +
+  //     this.formPanel.value.project + '_' +
+  //     this.formPanel.value.panel_code +
+  //     "_" +
+  //     this.formPanel.value.period_code +
+  //     "_" +
+  //     row["page_num"] +
+  //     ".jpeg";
+  //   this.fTP.mkdir(remotePath).then(
+  //     res => {
+  //       this.ftpUpload(index, filePath, remotePathFile);
+  //     },
+  //     err => {
+  //       console.log(err);
+  //       let a = filePath
+  //       let b = remotePathFile
+  //       let c = index
+  //       this.ftpUpload(index, filePath, remotePathFile);
+  //     }
+  //   );
+  // }
 
   image_upload_params(obj) {
     return {
@@ -632,11 +729,11 @@ export class RetrievalItemPage implements OnInit {
   }
 
   folder_name() {
-    return this.formPanel.value.panel_code + this.formPanel.value.period_code
+    return this.formPanel.value.project + '_' + this.formPanel.value.panel_code + '_' + this.formPanel.value.period_code
   }
 
   image_file_name(page_num) {
-    this.formPanel.value.panel_code + '_' + this.formPanel.value.period_code + '_' + page_num + ".jpeg"
+    return this.formPanel.value.project + '_' + this.formPanel.value.panel_code + '_' + this.formPanel.value.period_code + '_' + page_num + ".jpeg"
   }
 
   ftpUpload(index, filePath, remotePathFile) {
@@ -668,21 +765,23 @@ export class RetrievalItemPage implements OnInit {
         this.sqliteDocupicService.search(this.irfObj.rowId).then(
           (data: any) => {
             let result = []
-            for (let i = 0; i < data.rows.length; i++) {
-              let item = data.rows.item(i);
-              // do something with it
-              let value = {
-                page_num: item.page_num,
-                image_path: item.image_path,
-                irf_id: item.irf_id,
-                imageDisplay: this.getTrustImg(item.image_path),
-                rowId: item.rowId,
-                panel_code: this.irfObj.panel_code,
-                period_code: this.irfObj.period_code,
-                stored: item.stored
-              };
-              console.log("value", item)
-              result.push(value);
+            if (!!data.rows && !!data.rows.length) {
+              for (let i = 0; i < data.rows.length; i++) {
+                let item = data.rows.item(i);
+                // do something with it
+                let value = {
+                  page_num: item.page_num,
+                  image_path: item.image_path,
+                  irf_id: item.irf_id,
+                  imageDisplay: this.getTrustImg(item.image_path),
+                  rowId: item.rowId,
+                  panel_code: this.irfObj.panel_code,
+                  period_code: this.irfObj.period_code,
+                  stored: item.stored
+                };
+                console.log("value", item)
+                result.push(value);
+              }
             }
             this.images = result
           },
@@ -699,5 +798,16 @@ export class RetrievalItemPage implements OnInit {
     }, error => {
       this.showToast(error)
     })
+  }
+
+  isPageNumberUnique(event) {
+    console.log(event)
+    debugger
+    let same_value = this.images.filter(obj => obj.page_num + '' == event + '')
+    if (same_value.length > 0) {
+      this.page_num_unique = false
+    } else {
+      this.page_num_unique = true
+    }
   }
 }

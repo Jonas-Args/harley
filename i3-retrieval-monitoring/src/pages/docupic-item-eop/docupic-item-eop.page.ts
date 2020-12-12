@@ -111,7 +111,7 @@ export class DocupicItemEop implements OnInit {
             this.picObj = data.rows.item(0);
             this.setImageValues()
             console.log("found Pic item", this.picObj);
-            if (this.irfObj.project == 'HHP') {
+            if (this.irfObj.project == 'HHP' || this.irfObj.project == 'XP') {
             } else if (this.irfObj.project == 'EOP') {
               this.getAllEOP()
             }
@@ -172,7 +172,7 @@ export class DocupicItemEop implements OnInit {
   }
 
   delete(row: any) {
-    if (this.irfObj.project == 'HHP') {
+    if (this.irfObj.project == 'HHP' || this.irfObj.project == 'XP') {
       // this.getAllHHP()
     } else if (this.irfObj.project == 'EOP') {
       this.eopSqliteService.deleteData(this.selectedEop.rowId).then(
@@ -187,7 +187,7 @@ export class DocupicItemEop implements OnInit {
 
   save() {
     this.canEdit = false
-    if (this.irfObj.project == 'HHP') {
+    if (this.irfObj.project == 'HHP' || this.irfObj.project == 'XP') {
       // this.getAllHHP()
     } else if (this.irfObj.project == 'EOP') {
       if (!!this.selectedEop) {
@@ -220,7 +220,7 @@ export class DocupicItemEop implements OnInit {
   }
 
   sync() {
-    if (this.irfObj.project == 'HHP') {
+    if (this.irfObj.project == 'HHP' || this.irfObj.project == 'XP') {
       // this.getAllHHP()
     } else if (this.irfObj.project == 'EOP') {
       this.saveBeforeSyncEOP()

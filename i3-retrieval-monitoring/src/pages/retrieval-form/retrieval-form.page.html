@@ -13,7 +13,7 @@
       <ion-label>
         <p>Year:</p>
       </ion-label>
-      <ion-input formControlName="year" type="text" placeholder="YYYY"></ion-input>
+      <ion-input formControlName="year" type="text" placeholder="YYYY" maxlength="4"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>
@@ -30,7 +30,7 @@
       </ion-label>
       <ion-select formControlName="week" ok-text="Okay" cancel-text="Dismiss">
 
-        <ion-option *ngFor="let type of ['1','2','3','4']" [value]="type">{{ type }}</ion-option>
+        <ion-option *ngFor="let type of weeks" [value]="type">{{ type }}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -83,6 +83,10 @@
           <ion-icon name="cloud-done"></ion-icon>
         </ion-col>
         <ion-col>{{i+1}}</ion-col>
+        <ion-col *ngIf="request.panel_status == 'RETRIEVED' && request.with_image == false" style=color:red>x Diary
+        </ion-col>
+        <ion-col *ngIf="request.panel_status == 'HATCHING' && request.with_image == false" style=color:red>x Diary
+        </ion-col>
         <ion-col>{{request.period_code}}</ion-col>
         <ion-col>{{request.panel_code}}</ion-col>
         <!-- add field here -->

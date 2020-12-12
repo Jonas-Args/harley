@@ -1,0 +1,128 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>Main Form</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formPanel">
+    <ion-item>
+      <ion-label>
+        <p>FI Name:</p>
+      </ion-label>
+      <ion-input formControlName="fi_name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Panel Type:</p>
+      </ion-label>
+      <ion-select
+        formControlName="panel_type"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="HHP"> HHP </ion-option>
+        <ion-option value="EOP"> EOP </ion-option>
+        <ion-option value="EXP"> EXP </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Start Hatching:</p>
+      </ion-label>
+      <ion-input
+        formControlName="start_hatching"
+        type="text"
+        placeholder="YYYY.PP.W"
+      ></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+            <ion-label>
+              <p>Panel Code:</p>
+            </ion-label>
+            <ion-input formControlName="panel_code" type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-12>
+          <button ion-button full (click)="scan()">SCAN</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-item>
+      <ion-label>
+        <p>Brgy Code:</p>
+      </ion-label>
+      <ion-input formControlName="brgy_code" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Brgy Name:</p>
+      </ion-label>
+      <ion-input formControlName="brgy_name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Region:</p>
+      </ion-label>
+      <ion-input formControlName="region" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Province:</p>
+      </ion-label>
+      <ion-input formControlName="province" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Municipality:</p>
+      </ion-label>
+      <ion-input formControlName="municipality" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Urbanity:</p>
+      </ion-label>
+      <ion-input formControlName="urbanity" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-4>
+          <button ion-button full (click)="clear()">CLEAR</button>
+        </ion-col>
+        <ion-col col-4>
+          <button ion-button full (click)="search(formPanel.value)">
+            SEARCH
+          </button>
+        </ion-col>
+        <ion-col col-4>
+          <button ion-button full (click)="logout()">
+            LOG-OUT
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+  <ion-list>
+    <ng-container *ngFor="let row of list; let i = index">
+      <!-- <ion-item (click)="editRequest(request.Id)"> -->
+      <ion-item (click)="moveToIrf(row)">
+        <ion-col *ngIf="row.stored == true"
+          ><ion-icon name="cloud-done"></ion-icon
+        ></ion-col>
+        <ion-col>{{i+1}}</ion-col>
+        <ion-col>{{row.panel_code}}</ion-col>
+        <ion-col>{{row.fi_name}}</ion-col>
+        <!-- add field here -->
+      </ion-item>
+      <ion-col (click)="removeRequest(row.Id); $event.stopPropagation()"
+        >remove</ion-col
+      >
+    </ng-container>
+  </ion-list>
+</ion-content>

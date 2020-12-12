@@ -1,0 +1,463 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title
+      >Panelist Info<ion-col
+        *ngIf="irfObj['stored']==true && !saving && !uploading"
+        ><ion-icon name="cloud-done"></ion-icon
+      ></ion-col>
+      <p *ngIf="saving">Saving ....</p>
+      <p *ngIf="uploading">Uploading ....</p></ion-title
+    >
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formPanel">
+    <ion-item *ngIf="false">
+      <ion-label>
+        <p>Id:</p>
+      </ion-label>
+      <ion-input formControlName="Id" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>PanelCode:</p>
+      </ion-label>
+      <ion-input
+        formControlName="panel_code"
+        disabled="true"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-7>
+          <ion-item>
+            <ion-label>
+              <p>GPS Accuracy:</p>
+            </ion-label>
+            <ion-input
+              disabled="true"
+              formControlName="loc_accuracy"
+              type="text"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="!isCaptureLoc"
+            ion-button
+            full
+            (click)="captureLoc(true)"
+          >
+            Capture
+          </button>
+          <button
+            *ngIf="isCaptureLoc"
+            ion-button
+            full
+            (click)="captureLoc(false)"
+          >
+            Stop
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-item>
+      <ion-label>
+        <p>Panelist Name:</p>
+      </ion-label>
+      <ion-input formControlName="panel_name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>SEC:</p>
+      </ion-label>
+      <ion-select formControlName="sec" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="AB"> AB </ion-option>
+        <ion-option value="C1"> C1 </ion-option>
+        <ion-option value="C2"> C2 </ion-option>
+        <ion-option value="D"> D </ion-option>
+        <ion-option value="E"> E </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item
+      *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+    >
+      <ion-label>
+        <p>Kids:</p>
+      </ion-label>
+      <ion-select formControlName="kids" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="without"> without </ion-option>
+        <ion-option value="0-12mos"> 0-12mos </ion-option>
+        <ion-option value="13-24mos"> 13-24mos </ion-option>
+        <ion-option value="25-36mos"> 25-36mos </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="formPanel.value.panel_type == 'EOP'">
+      <ion-label>
+        <p>Gender:</p>
+      </ion-label>
+      <ion-select formControlName="gender" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="M"> M </ion-option>
+        <ion-option value="F"> F </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p
+          *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+        >
+          PanelistAGE:
+        </p>
+        <p *ngIf="formPanel.value.panel_type == 'EOP'">Age group:</p>
+      </ion-label>
+      <ion-select
+        formControlName="panelist_age"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="&lt;25"> &lt;25 </ion-option>
+        <ion-option value="25-34"> 25-34 </ion-option>
+        <ion-option value="35-44"> 35-44 </ion-option>
+        <ion-option value="45-54"> 45-54 </ion-option>
+        <ion-option value="55 up"> 55 up </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item
+      *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+    >
+      <ion-label>
+        <p>WorkStatus:</p>
+      </ion-label>
+      <ion-select
+        formControlName="work_status"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="WORKING"> WORKING </ion-option>
+        <ion-option value="NOT WORKING"> NOT WORKING </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item
+      *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
+    >
+      <ion-label>
+        <p>HHSize:</p>
+      </ion-label>
+      <ion-select
+        formControlName="hh_size"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="1-2"> 1-2 </ion-option>
+        <ion-option value="3-4"> 3-4 </ion-option>
+        <ion-option value="5-6"> 5-6 </ion-option>
+        <ion-option value="7 or more"> 7 or more </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>RedemptionMode:</p>
+      </ion-label>
+      <ion-select
+        formControlName="redemption_mode"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select:
+        </ion-option>
+        <ion-option value="Manual"> Manual </ion-option>
+        <ion-option value="Online"> Online </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>ContactNumber:</p>
+      </ion-label>
+      <ion-input formControlName="contact_number" type="text"></ion-input>
+    </ion-item>
+    <ion-item
+      *ngIf="!!formPanel.get('contact_number').errors && !!formPanel.get('contact_number').errors.pattern && (formPanel.get('contact_number').dirty || formPanel.get('contact_number').touched)"
+    >
+      <ion-label color="danger">
+        Invalid Mobile Number
+      </ion-label>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('House_Image')">
+            + House Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!houseImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('House_Image',houseImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['House_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+          <img *ngIf="houseImageImagePath && !takingPicture" [src]="houseImageImagePath" />
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('ID_Image')">
+            + ID Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!idImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('ID_Image',idImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['ID_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="idImageImagePath && !takingPicture" [src]="idImageImagePath" />
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('POB_Image')">
+            + POB Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!pobImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('POB_Image',pobImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['POB_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="pobImageImagePath && !takingPicture" [src]="pobImageImagePath" />
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('IFF1_Image')">
+            + IFF1 Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!iff1ImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('IFF1_Image',iff1ImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['IFF1_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="iff1ImageImagePath && !takingPicture" [src]="iff1ImageImagePath" />
+      </ion-row>
+       <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('IFF2_Image')">
+          + IFF2 Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!iff2ImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('IFF2_Image',iff2ImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['IFF2_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="iff2ImageImagePath && !takingPicture" [src]="iff2ImageImagePath" />
+       </ion-row>
+       <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('IFF3_Image')">
+            + IFF3 Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!iff3ImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('IFF3_Image',iff3ImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['IFF3_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="iff3ImageImagePath && !takingPicture" [src]="iff3ImageImagePath" />
+       </ion-row>
+       <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('IFF4_Image')">
+            + IFF4 Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!iff4ImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('IFF4_Image',iff4ImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['IFF4_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="iff4ImageImagePath && !takingPicture" [src]="iff4ImageImagePath" />
+       </ion-row>
+       <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('DPA1_Image')">
+            + DPA1 Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!dpa1ImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('DPA1_Image',dpa1ImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['DPA1_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="dpa1ImageImagePath && !takingPicture" [src]="dpa1ImageImagePath" />
+       </ion-row>
+       <ion-row>
+        <ion-col col-5>
+          <button ion-button full (click)="takePicture('DPA2_Image')">
+            + DPA2 Pic
+          </button>
+        </ion-col>
+        <ion-col col-5>
+          <button
+            *ngIf="irfObj['stored']==true && !!dpa2ImagePathNative && connectedToNet"
+            ion-button
+            full
+            (click)="upload('DPA2_Image',dpa2ImagePathNative)"
+          >
+            Upload
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <ion-icon
+            *ngIf="irfObj['DPA2_Imagestored']==true"
+            style="zoom:2.0;"
+            name="cloud-done"
+          ></ion-icon>
+        </ion-col>
+        <img *ngIf="dpa2ImageImagePath && !takingPicture" [src]="dpa2ImageImagePath" />
+       </ion-row>
+
+    </ion-grid>
+    <!-- add field here -->
+    <ion-item *ngIf="false">
+      <ion-label>
+        <p>GPS LOCATION:</p>
+      </ion-label>
+      <ion-input formControlName="gps_location" type="text"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col="4">
+          <button ion-button full type="submit" (click)="save(formPanel.value)">
+            SAVE
+          </button>
+        </ion-col>
+        <ion-col col="4">
+          <button ion-button full (click)="sendSMS()">SEND</button>
+        </ion-col>
+        <ion-col *ngIf="!!irfObj?.Id && connectedToNet" col="4">
+          <button ion-button full (click)="sync()">SYNC</button>
+        </ion-col>
+        <ion-col col="4">
+          <button ion-button full navPop>Cancel</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

@@ -212,13 +212,12 @@ export class MaintenancePage implements OnInit {
               let obj = {
                 ficode: data.user['USERID'],
                 finame: data.user['FINAME'],
-                access_type: data.user['ACCESSTYPE']
+                access_type: data.user['ACCESSTYPE'],
+                password: data.user['PASSWORD']
               }
-              debugger
               this.nativeStorage.setItem('maintenace', obj)
                 .then(
                   () => {
-                    debugger
                     if (method == 'loadProdMaster') {
                       this.loadProdMaster()
                     } else {

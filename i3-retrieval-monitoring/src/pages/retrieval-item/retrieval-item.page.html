@@ -3,7 +3,7 @@
     <button button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Retrieval Form<ion-col *ngIf="irfObj?.stored == 'true' && !saving && !uploading">
+    <ion-title>Status Entry<ion-col *ngIf="irfObj?.stored == 'true' && !saving && !uploading">
         <ion-icon name="cloud-done"></ion-icon>
       </ion-col>
       <p *ngIf="saving">Saving ....</p>
@@ -24,38 +24,35 @@
       <ion-label>
         <p>FIName:</p>
       </ion-label>
-      <ion-input formControlName="fi_name" type="text"></ion-input>
+      <ion-input formControlName="fi_name" type="text" disabled="true"></ion-input>
     </ion-item>
     <ion-row>
-      <ion-col col="12">
-        <ion-item>
-          <ion-label>
-            <p>Project:</p>
-          </ion-label>
-          <ion-input formControlName="project" type="text"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col col="12">
-        <ion-item>
-          <ion-label>
-            <p>Period Code:</p>
-          </ion-label>
-          <ion-input formControlName="period_code" type="text"></ion-input>
-        </ion-item>
-      </ion-col>
+      <ion-item>
+        <ion-label>
+          <p>Project:</p>
+        </ion-label>
+        <ion-input formControlName="project" type="text" disabled="true"></ion-input>
+      </ion-item>
+    </ion-row>
+    <ion-row>
+      <ion-item>
+        <ion-label>
+          <p>Period Code:</p>
+        </ion-label>
+        <ion-input formControlName="period_code" type="text" disabled="true"></ion-input>
+      </ion-item>
     </ion-row>
     <ion-item>
       <ion-label>
         <p>Panel Code:</p>
       </ion-label>
-      <ion-input formControlName="panel_code" type="text"></ion-input>
+      <ion-input formControlName="panel_code" type="text" disabled="true"></ion-input>
     </ion-item>
-    <button ion-button full (click)="scan()">SCAN</button>
     <ion-item>
       <ion-label>
         <p>Panel Name:</p>
       </ion-label>
-      <ion-input formControlName="panel_name" type="text"></ion-input>
+      <ion-input formControlName="panel_name" type="text" disabled="true"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>
@@ -122,6 +119,22 @@
     </ion-item>
     <ion-item>
       <ion-label>
+        <p>Method:</p>
+      </ion-label>
+      <ion-select formControlName="method" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option *ngFor="let type of ['CATI','F2F']" [value]="type">{{ type }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="showBy">
+      <ion-label>
+        <p>By:</p>
+      </ion-label>
+      <ion-select formControlName="by" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option *ngFor="let type of ['PANELIST','FI']" [value]="type">{{ type }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
         <p>Call Length (mins):</p>
       </ion-label>
       <ion-input formControlName="call_length" type="number"></ion-input>
@@ -147,12 +160,12 @@
     <ion-grid>
       <ion-row>
         <ion-col col="4">
-          <button ion-button full type="submit" (click)="save('save')">
+          <button ion-button full type="submit" (click)="save(formPanel.value,'save')">
             SAVE
           </button>
         </ion-col>
         <ion-col *ngIf="!!irfObj?.rowId && connectedToNet" col="4">
-          <button ion-button full (click)="sync('sync')">SYNC</button>
+          <button ion-button full (click)="sync('sync')">SUBMIT</button>
         </ion-col>
         <ion-col col="4">
           <button ion-button full navPop>Cancel</button>
@@ -179,8 +192,8 @@
         </button>
       </ion-col>
       <ion-col col-6>
-        <button ion-button full (click)="uploadImage(i,row)">
-          Upload
+        <button ion-button full (click)="uploadImageToServer(i,row)">
+          Uploads
         </button>
       </ion-col>
     </ion-row>
@@ -192,18 +205,19 @@
           <ion-label>
             <p>Page Number:</p>
           </ion-label>
-          <ion-input [(ngModel)]="page_number" type="text"></ion-input>
+          <ion-input [(ngModel)]="page_number" (ngModelChange)="isPageNumberUnique($event)" type="number"></ion-input>
         </ion-item>
+        <p style="margin-left: 12px;" *ngIf="!page_num_unique" ion-text color="danger">Page Num not unique</p>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col-5>
-        <button [disabled]="page_number==''" ion-button full (click)="takePicture('House_Image')">
+        <button [disabled]="page_number=='' || !page_num_unique" ion-button full (click)="takePicture('House_Image')">
           Add Picture
         </button>
       </ion-col>
       <ion-col col-5>
-        <button [disabled]="page_number==''" ion-button full (click)="openGallery('House_Image')">
+        <button [disabled]="page_number=='' || !page_num_unique" ion-button full (click)="openGallery('House_Image')">
           Gallery
         </button>
       </ion-col>

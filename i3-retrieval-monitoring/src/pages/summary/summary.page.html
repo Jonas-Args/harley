@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Summary</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list radio-group [(ngModel)]="selectedSummaryTable">
+    <ion-item>
+      <ion-label>User EOP Purchase Table</ion-label>
+      <ion-radio value="eop_purchase"></ion-radio>
+    </ion-item>
+    <ion-item>
+      <ion-label>User HHP Purchase Table</ion-label>
+      <ion-radio value="hhp_purchase"></ion-radio>
+    </ion-item>
+    <ion-item>
+      <ion-label>Use Retrieval Table</ion-label>
+      <ion-radio value="retrieval"></ion-radio>
+    </ion-item>
+  </ion-list>
+  <button ion-button full (click)="moveToRetrievalDate()">Summary Per Cut-off Date</button>
+  <button ion-button full (click)="moveToPeriodCode()">Summary Per Period</button>
+</ion-content>

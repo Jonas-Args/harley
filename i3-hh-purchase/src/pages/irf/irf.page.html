@@ -1,0 +1,376 @@
+<ion-header>
+  <ion-navbar>
+    <button button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Purchases</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formPanel">
+    <ion-item>
+      <ion-label>
+        <p>Panel Code:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="panel_code"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Period Code:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="period_code"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Day:</p>
+      </ion-label>
+      <ion-select formControlName="day" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Day</ion-option
+        >
+        <ion-option *ngFor="let day of [1,2,3,4,5,6,7]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>ProdCat:</p>
+      </ion-label>
+      <ion-select
+        formControlName="prod_cat"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select ProdCat</ion-option
+        >
+        <ion-option *ngFor="let day of [3,12]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Manufacturer:</p>
+      </ion-label>
+      <ion-select
+        formControlName="manufacturer"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Manufacturer</ion-option
+        >
+        <ion-option *ngFor="let day of ['MAGNOLIA INC']" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Brand:</p>
+      </ion-label>
+      <ion-select
+        formControlName="manufacturer"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Brand</ion-option
+        >
+        <ion-option *ngFor="let day of ['MAGNOLIA INC']" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>SubBrand:</p>
+      </ion-label>
+      <ion-select
+        formControlName="sub_brand"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select SubBrand</ion-option
+        >
+        <ion-option *ngFor="let day of ['MAGNOLIA INC']" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Formula:</p>
+      </ion-label>
+      <ion-select
+        formControlName="formula"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Formula</ion-option
+        >
+        <ion-option *ngFor="let day of [3,12]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Flavor:</p>
+      </ion-label>
+      <ion-select formControlName="flavor" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Flavor</ion-option
+        >
+        <ion-option *ngFor="let day of [3,12]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Variant:</p>
+      </ion-label>
+      <ion-select
+        formControlName="variant"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Variant</ion-option
+        >
+        <ion-option *ngFor="let day of [3,12]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Weight Size:</p>
+      </ion-label>
+      <ion-select
+        formControlName="weight_size"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Weight Size</ion-option
+        >
+        <ion-option *ngFor="let day of [3,12]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Packaging:</p>
+      </ion-label>
+      <ion-select
+        formControlName="packaging"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Packaging</ion-option
+        >
+        <ion-option *ngFor="let day of [3,12]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Packaging Color:</p>
+      </ion-label>
+      <ion-select
+        formControlName="packaging_color"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Packaging Color</ion-option
+        >
+        <ion-option *ngFor="let day of [3,12]" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Use Type:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="use_type"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Form:</p>
+      </ion-label>
+      <ion-input disabled="true" formControlName="form" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Skin Type:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="skin_type"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Hair Type:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="hair_type"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Product Type:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="product_type"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Gender:</p>
+      </ion-label>
+      <ion-select formControlName="gender" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Gender</ion-option
+        >
+        <ion-option *ngFor="let day of ['M','F']" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Age:</p>
+      </ion-label>
+      <ion-input disabled="true" formControlName="age" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Quantity:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="quantity"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Price:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="price"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Promo:</p>
+      </ion-label>
+      <ion-select formControlName="promo" ok-text="Okay" cancel-text="Dismiss">
+        <ion-option value="" selectable="false" selected="true">
+          Select Promo</ion-option
+        >
+        <ion-option *ngFor="let day of ['Y','N']" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Purchase Time:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="purchase_time"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Outlet Type:</p>
+      </ion-label>
+      <ion-select
+        formControlName="outlet_type"
+        ok-text="Okay"
+        cancel-text="Dismiss"
+      >
+        <ion-option value="" selectable="false" selected="true">
+          Select Promo</ion-option
+        >
+        <ion-option *ngFor="let day of ['SM','SS','GS','CV','MS']" [value]="day"
+          >{{ day }}</ion-option
+        >
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Outlet Name:</p>
+      </ion-label>
+      <ion-input
+        disabled="true"
+        formControlName="outlet_name"
+        type="text"
+      ></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-6>
+          <button ion-button full (click)="clear()">CLEAR</button>
+        </ion-col>
+        <ion-col col-6>
+          <button ion-button full (click)="search(formPanel.value)">
+            SEARCH
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+  <ion-list>
+    <ng-container *ngFor="let row of list; let i = index">
+      <!-- <ion-item (click)="editRequest(request.Id)"> -->
+      <ion-item (click)="moveToIrf(row)">
+        <ion-col *ngIf="row.stored == true"
+          ><ion-icon name="cloud-done"></ion-icon
+        ></ion-col>
+        <ion-col>{{i+1}}</ion-col>
+        <ion-col>{{row.panel_code}}</ion-col>
+        <ion-col>{{row.fi_name}}</ion-col>
+        <!-- add field here -->
+      </ion-item>
+      <ion-col (click)="removeRequest(row.Id); $event.stopPropagation()"
+        >remove</ion-col
+      >
+    </ng-container>
+  </ion-list>
+</ion-content>

@@ -22,6 +22,7 @@ import { MaintenancePage } from "../maintenance/maintenance.page";
 import { DataSyncPage } from "../data-sync/data-sync.page";
 import { ServerUploadPage } from "../server-upload/server-upload.page";
 import { SignIn } from "../sign-in/sign-in.page";
+import { SummaryPage } from "../summary/summary.page";
 declare var AdvancedGeolocation: any;
 
 @Component({
@@ -397,8 +398,12 @@ export class Home implements OnInit {
     this.navCtrl.push(ServerUploadPage);
   }
 
+  moveToSummary() {
+    this.navCtrl.push(SummaryPage);
+  }
+
   logout() {
-    this.navCtrl.setRoot(SignIn)
+    this.platform.exitApp();
   }
 
   getMaintenance() {

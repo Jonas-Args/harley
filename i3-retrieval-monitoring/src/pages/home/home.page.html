@@ -1,14 +1,14 @@
 <ion-content padding>
   <img src="assets/imgs/uniserve_logo.png" id="imgPlacement" style="align-items: center" />
-  <h2 style="text-align: center;">Retrieval Monitoring</h2>
+  <h2 style="text-align: center;">My Panel Keeper</h2>
   <button ion-button full (click)="moveRetrieval()">Diary Retrieval</button>
   <button *ngIf="access_type!='1'" ion-button full (click)="moveToPurchase()">Purchase Entry</button>
   <button ion-button full (click)="moveToMaintenace()">Maintenance</button>
-  <button ion-button full (click)="moveToDataSync()">Data Sync</button>
-  <button *ngIf="access_type=='3'" ion-button full (click)="moveToServerUpload()">Server Upload</button>
-  <button ion-button full>Summary</button>
+  <!-- <button ion-button full (click)="moveToDataSync()">Data Sync</button> -->
+  <button *ngIf="access_type=='3'" ion-button full (click)="moveToServerUpload()">MASTER FILES</button>
+  <button ion-button full (click)="moveToSummary()">Summary</button>
   <br />
-  <button ion-button full (click)="logout()">Logout</button>
+  <button ion-button full (click)="logout()">LOG-OUT</button>
   <br />
   <!-- <h4>Summary:</h4>
   <h5 style="text-align: center;">Retrieval</h5>

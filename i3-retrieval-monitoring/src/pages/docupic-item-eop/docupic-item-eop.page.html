@@ -3,52 +3,19 @@
     <button button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Docupics
+    <ion-title>Purchase Entry EOP
     </ion-title>
   </ion-navbar>
 </ion-header>
 <!--  *ngIf="this.irfObj.project == 'EOP' -->
 <ion-content padding>
-  <p>{{irfObj.project}}</p>
   <form [formGroup]="formPanel">
-
     <ion-item>
       <ion-label>
-        <p>Period Code:</p>
+        <p>{{formPanel?.value?.period_code}},{{formPanel?.value?.panel_code}},{{formPanel?.value?.page_num}}</p>
       </ion-label>
-      <ion-input disabled=true formControlName="period_code" type="text"></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label>
-        <p>Panel Code:</p>
-      </ion-label>
-      <ion-input disabled=true formControlName="panel_code" type="text"></ion-input>
-    </ion-item>
-    <button ion-button full (click)="scan()">SCAN</button>
-
-    <ion-item>
-      <ion-label>
-        <p>Page Number:</p>
-      </ion-label>
-      <ion-input disabled=true formControlName="page_num" type="text"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>
-        <p>FIName:</p>
-      </ion-label>
-      <ion-input [disabled]="!canEdit" formControlName="fi_name" type="text"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>
-        <p>Date Retrieved:</p>
-      </ion-label>
-      <ion-datetime [disabled]="!canEdit" displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D"
-        formControlName="date_retrieved">
-      </ion-datetime>
-    </ion-item>
     <ion-item>
       <ion-label>Date Ordered:</ion-label>
       <ion-datetime [disabled]="!canEdit" displayFormat="YYYY-MM-D" pickerFormat="YYYY-MM-D"

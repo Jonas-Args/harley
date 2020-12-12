@@ -60,6 +60,9 @@ import { SignIn } from "../pages/sign-in/sign-in.page";
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { ServerUploadPage } from "../pages/server-upload/server-upload.page";
 import { FileChooser } from '@ionic-native/file-chooser';
+import { SummaryPage } from "../pages/summary/summary.page";
+import { SummaryRetrievalPage } from "../pages/summary/summary-retrieval/summary-retrieval.page";
+import { SummaryPeriodCodePage } from "../pages/summary/summary-period-code/summary-period-code.page";
 
 const APP_PROVIDERS = [
   CommonService,
@@ -95,7 +98,10 @@ const APP_PROVIDERS = [
     DocupicItemHhp,
     DataSyncPage,
     SignIn,
-    ServerUploadPage
+    ServerUploadPage,
+    SummaryPage,
+    SummaryRetrievalPage,
+    SummaryPeriodCodePage
   ],
   imports: [
     BrowserModule,
@@ -130,7 +136,10 @@ const APP_PROVIDERS = [
     DocupicItemHhp,
     DataSyncPage,
     SignIn,
-    ServerUploadPage
+    ServerUploadPage,
+    SummaryPage,
+    SummaryRetrievalPage,
+    SummaryPeriodCodePage
   ],
   providers: [
     StatusBar,

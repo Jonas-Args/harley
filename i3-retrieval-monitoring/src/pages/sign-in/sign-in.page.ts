@@ -61,16 +61,19 @@ export class SignIn {
         this.connectedToNet = false;
       }
       this.watchNetwork();
+      this.getSignIn();
+      this.delay(10000)
     });
-    this.getSignIn()
   }
 
+  async delay(ms: number) {
+    await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log("fired"));
+  }
 
   getSignIn() {
     this.nativeStorage.getItem("maintenace").then(
       (data) => {
         this.data = data
-        debugger
         console.log("signin data", data)
       },
       (error) => {

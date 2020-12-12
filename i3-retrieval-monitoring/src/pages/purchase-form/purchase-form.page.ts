@@ -146,13 +146,15 @@ export class PurchaseFormPage implements OnInit {
   get_last_saved() {
     this.sqlitePurchaseEntryService.getLastData().then(
       (data: any) => {
-        if (data.rows.length == 0) {
-          console.log("retrieved no last item");
-          this.lastData = null;
-        } else {
-          this.lastData = data.rows.item(0);
-          this.formPanel.patchValue(this.lastData, { emitEvent: false });
-          console.log("retrieved last item", this.lastData);
+        if (!!data.rows) {
+          if (data.rows.length == 0) {
+            console.log("retrieved no last item");
+            this.lastData = null;
+          } else {
+            this.lastData = data.rows.item(0);
+            this.formPanel.patchValue(this.lastData, { emitEvent: false });
+            console.log("retrieved last item", this.lastData);
+          }
         }
       },
       (error) => console.error("Error storing item", error)
