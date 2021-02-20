@@ -15,6 +15,7 @@
 </ion-header>
 
 <ion-content padding>
+  <span>Panel Type: {{formPanel.value.panel_type}}</span>
   <form [formGroup]="formPanel">
     <ion-item *ngIf="false">
       <ion-label>
@@ -24,7 +25,7 @@
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>PanelCode:</p>
+        <p>*PanelCode:</p>
       </ion-label>
       <ion-input
         formControlName="panel_code"
@@ -37,7 +38,7 @@
         <ion-col col-7>
           <ion-item>
             <ion-label>
-              <p>GPS Accuracy:</p>
+              <p>*GPS Accuracy:</p>
             </ion-label>
             <ion-input
               disabled="true"
@@ -68,13 +69,13 @@
     </ion-grid>
     <ion-item>
       <ion-label>
-        <p>Panelist Name:</p>
+        <p>*Panelist Name:</p>
       </ion-label>
       <ion-input formControlName="panel_name" type="text"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>SEC:</p>
+        <p>*SEC:</p>
       </ion-label>
       <ion-select formControlName="sec" ok-text="Okay" cancel-text="Dismiss">
         <ion-option value="" selectable="false" selected="true">
@@ -91,7 +92,7 @@
       *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
     >
       <ion-label>
-        <p>Kids:</p>
+        <p>*Kids:</p>
       </ion-label>
       <ion-select formControlName="kids" ok-text="Okay" cancel-text="Dismiss">
         <ion-option value="" selectable="false" selected="true">
@@ -105,7 +106,7 @@
     </ion-item>
     <ion-item *ngIf="formPanel.value.panel_type == 'EOP'">
       <ion-label>
-        <p>Gender:</p>
+        <p>*Gender:</p>
       </ion-label>
       <ion-select formControlName="gender" ok-text="Okay" cancel-text="Dismiss">
         <ion-option value="" selectable="false" selected="true">
@@ -120,7 +121,7 @@
         <p
           *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
         >
-          PanelistAGE:
+        *PanelistAGE:
         </p>
         <p *ngIf="formPanel.value.panel_type == 'EOP'">Age group:</p>
       </ion-label>
@@ -132,18 +133,24 @@
         <ion-option value="" selectable="false" selected="true">
           Select:
         </ion-option>
-        <ion-option value="&lt;25"> &lt;25 </ion-option>
-        <ion-option value="25-34"> 25-34 </ion-option>
-        <ion-option value="35-44"> 35-44 </ion-option>
-        <ion-option value="45-54"> 45-54 </ion-option>
-        <ion-option value="55 up"> 55 up </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type != 'EOP'" value="&lt;25"> &lt;25 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type != 'EOP'" value="25-34"> 25-34 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type != 'EOP'" value="35-44"> 35-44 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type != 'EOP'" value="45-54"> 45-54 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type != 'EOP'" value="55 up"> 55 up </ion-option>
+        
+        <ion-option *ngIf="formPanel.value.panel_type == 'EOP'" value="&lt;25"> 13-16 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type == 'EOP'" value="25-34"> 17-20 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type == 'EOP'" value="35-44"> 21-30 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type == 'EOP'" value="45-54"> 31-40 </ion-option>
+        <ion-option *ngIf="formPanel.value.panel_type == 'EOP'" value="55 up"> 41-59 </ion-option>
       </ion-select>
     </ion-item>
     <ion-item
       *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
     >
       <ion-label>
-        <p>WorkStatus:</p>
+        <p>*WorkStatus:</p>
       </ion-label>
       <ion-select
         formControlName="work_status"
@@ -161,7 +168,7 @@
       *ngIf="formPanel.value.panel_type == 'HHP' || formPanel.value.panel_type == 'EXP'"
     >
       <ion-label>
-        <p>HHSize:</p>
+        <p>*HHSize:</p>
       </ion-label>
       <ion-select
         formControlName="hh_size"
@@ -179,7 +186,7 @@
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>RedemptionMode:</p>
+        <p>*RedemptionMode:</p>
       </ion-label>
       <ion-select
         formControlName="redemption_mode"
@@ -195,7 +202,7 @@
     </ion-item>
     <ion-item>
       <ion-label>
-        <p>ContactNumber:</p>
+        <p>*ContactNumber:</p>
       </ion-label>
       <ion-input formControlName="contact_number" type="text"></ion-input>
     </ion-item>

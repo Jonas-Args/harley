@@ -62,7 +62,7 @@ export class irfPage implements OnInit {
       panel_type: ["", [Validators.required]],
       start_hatching: ["", [Validators.required]],
       panel_code: ["", [Validators.required]],
-      brgy_code: ["", [Validators.required]],
+      brgy_code: ["", ],
       brgy_name: ["", [Validators.required]],
       region: ["", [Validators.required]],
       province: ["", [Validators.required]],
@@ -207,14 +207,13 @@ export class irfPage implements OnInit {
       !!value.start_hatching &&
       !!value.start_hatching &&
       !!value.panel_code &&
-      !!value.brgy_code &&
       !!value.brgy_name &&
       !!value.region &&
       !!value.province &&
       !!value.municipality &&
       !!value.urbanity
     if(!valid){
-      this.showToast("Pleass Fill All The Fields");
+      this.showToast("Pleass fill all fields with (*)");
     }
     return valid
   }

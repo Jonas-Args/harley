@@ -189,7 +189,7 @@ export class tagpanelPage implements OnInit {
   sendSMS() {
     console.log("sending", this.formatMessage());
     if (this.isDataValid(this.formPanel.value)) {
-      this.sms.send("09177131456", this.formatMessage()).then(
+      this.sms.send("09321607171", this.formatMessage()).then(
         () => {
           this.save(this.formPanel.value);
           console.log("message sent");
@@ -418,7 +418,7 @@ export class tagpanelPage implements OnInit {
       result = false;
     }
     if(!result){
-      this.showToast("Pleass Fill All The Fields");
+      this.showToast("Pleass fill all fields with (*)");
     }
     return result
   }
